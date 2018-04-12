@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  margin-top: 50px;
+
+  .createForm {
+    width: 400px;
+
+    .nameFields {
+      margin-top: 0;
+      margin-bottom: 10px;
+
+      .row {
+        padding: 0;
+      }
+
+      .column:last-of-type {
+        padding-left: 5px;
+      }
+      .column:first-of-type {
+        padding-right: 5px;
+      }
+    }
+
+    .friendEmailInput {
+      margin-bottom: 10px;
+    }
+
+    .preview {
+      margin-top: 10px;
+      color: #aaa;
+      text-align: center;
+
+      span {
+        color: black;
+      }
+    }
+  }
+
+}

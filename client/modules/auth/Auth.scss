@@ -1,0 +1,50 @@
+.container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  margin-top: 50px;
+
+  .form {
+    width: 400px;
+    text-align: center;   
+
+    .dummyInput {
+      display: none;
+    }
+  }
+
+  .textFields {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .nameFields {
+    margin-top: 0;
+    margin-bottom: 10px;
+
+    .row {
+      padding: 0;
+    }
+
+    .column:last-of-type {
+      padding-left: 5px;
+    }
+    .column:first-of-type {
+      padding-right: 5px;
+    }
+  }
+
+  .rememberMe {
+    float: right;
+  }
+
+  .raisingHandEmoji {
+    display: block;
+    width: 10rem;
+    height: 10rem;
+    background-image: url('../../assets/raising_hand_emoji.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin: 0 auto;
+  }
+}

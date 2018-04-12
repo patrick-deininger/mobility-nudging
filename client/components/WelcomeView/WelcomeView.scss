@@ -1,0 +1,40 @@
+@import "./global.scss";
+
+.container {
+  //height: 400vh;
+
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-color: #fff;
+
+  .emph {
+    font-style: italic;
+  }
+
+  .header {
+    height: 100px;
+    line-height: 100px;
+    width: $contentWidth;
+    margin: 0 auto;
+
+    .brandName {
+      font-size: 2.9rem;
+      font-weight: 800;
+      display: inline;
+      line-height: 100px;
+    }
+
+  
+    .nav {
+      float: right;
+
+      .item {
+        margin-left: 10px;
+      }
+    }
+  }
+
+
+
+
+}

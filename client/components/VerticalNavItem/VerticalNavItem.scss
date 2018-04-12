@@ -1,0 +1,47 @@
+.root {
+  display: flex;
+  padding: 12px 20px;
+  user-select: none;
+  overflow: hidden;
+  position: relative;
+  align-items: center;
+
+  .content {
+    z-index: 1;
+  }
+
+  &.active {
+    z-index: 10;
+    font-weight: bold;
+    color: #fff;
+
+    .dot {
+      border-width: 400px;
+      transition: border 0.5s;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .dotWrap {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    left: 0px;
+  }
+
+  .dot {
+    position: absolute;
+    border: 0px solid rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+
+    &.peaked {
+      border-width: 5px;
+      transition: border 0.1s;
+    }
+  }
+
+}

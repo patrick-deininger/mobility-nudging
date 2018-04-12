@@ -1,0 +1,11 @@
+Django==1.10.7
+graphene>=2.0
+graphene-django>=2.0
+django-filter==1.0.4
+django-environ==0.4.1
+django-webpack-loader==0.4.1
+django-custom-user==0.7
+PyJWT==1.5.0
+whitenoise==3.2.2
+boto3==1.4.8
+djangorestframework==3.7.7

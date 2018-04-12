@@ -1,0 +1,22 @@
+@import "./global.scss";
+
+.container {
+  width: $contentWidth;
+  margin: 0 auto;
+
+  .segment {
+    display: flex;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .content {
+    flex: 1;
+    padding: 1.5rem;
+  }
+
+  .nav {
+    width: 220px;
+    min-height: 350px;
+  }
+}

@@ -1,0 +1,15 @@
+@import "./variables.scss";
+
+body {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.upperText {
+  text-transform: uppercase!important;
+}

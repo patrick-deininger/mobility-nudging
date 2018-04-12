@@ -1,0 +1,30 @@
+@import "./global.scss";
+
+.root {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  font-weight: 300;
+  color: #aaa;
+  border-top: 1px solid #f8f8f8;
+
+  .inner {
+    display: flex;
+    width: $contentWidth;
+    margin: 0 auto;
+    justify-content: space-evenly;
+  }
+
+  .code {
+    padding: 0 3px;
+    font-family: Consolas, Courier;
+  }
+
+  .love {
+    padding-left: 4px;
+    color: #ef5350;
+    font-weight: bold;
+  }
+}

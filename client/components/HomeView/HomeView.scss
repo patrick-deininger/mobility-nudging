@@ -1,0 +1,27 @@
+@import "./global.scss";
+
+.container {
+  width: $contentWidth;
+  margin: 0 auto;
+
+  .head:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .test {
+    color: red!important;
+
+  }
+  .reading{
+
+  }
+  .read{
+    margin-top: 60px;
+  }
+  .to_read{
+    margin-top: 60px;
+  }
+
+}

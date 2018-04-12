@@ -1,0 +1,38 @@
+@import "./global.scss";
+
+.flexcontainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  // height: 50px;
+
+
+  .main{
+    //display: flex;
+    //flex-direction: column;
+    padding: 15px;
+    // text-align: left;
+    // flex-wrap: wrap;, not as not linebreak is intended
+
+    .title{
+      font-size: large;
+      font-style: normal;
+      vertical-align: text-bottom;
+      margin: 0;
+    }
+
+    .author{
+      font-size: small;
+      font-style: normal;
+      text-align: top;
+      vertical-align: text-top;
+      margin: 0;
+    }
+  }
+
+  .picture {
+    order:-1;
+  }
+}

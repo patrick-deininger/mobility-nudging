@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  margin-top: 100px;
+
+  .head {
+    margin-bottom: 40px;
+
+    h1, p {
+      width: 400px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin: 0;
+    }
+
+    p {
+      color: #888;
+    }
+  
+  }
+
+  .form {
+    width: 400px;
+    text-align: center;   
+
+    .dummyInput {
+      display: none;
+    }
+  }
+
+  .textFields {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .nameFields {
+    margin-bottom: 10px;
+
+    .row {
+      padding: 0;
+    }
+
+    .column:last-of-type {
+      padding-left: 5px;
+    }
+    .column:first-of-type {
+      padding-right: 5px;
+    }
+  }
+
+  .rememberMe {
+    float: right;
+  }
+}

@@ -1,0 +1,9 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+/*@borderWidth: 2px;*/
+
+/*@border: @borderWidth solid @borderColor;*/
+
+/*@focusBorderColor: #ea1773;*/

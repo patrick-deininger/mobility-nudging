@@ -1,0 +1,39 @@
+.root {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  margin-top: 100px;
+  
+  .books {
+    width: 800px;
+  }
+
+  .loaderContainer {
+    background-color: blue;
+  }
+
+  .loader {
+    background-color: red;
+    margin: 20px;
+  }
+
+
+  .booksMissing {
+  
+     width: 800px;
+
+    .emoji{
+      width: 128px;
+      height: 128px;
+      background-image: url('../../assets/pondering_emoji.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      float: left;
+    }
+
+    .warning {
+      margin-left: calc(128px + 3em);
+
+    }
+  }
+}

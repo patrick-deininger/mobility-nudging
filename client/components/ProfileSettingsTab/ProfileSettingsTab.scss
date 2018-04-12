@@ -1,0 +1,85 @@
+@import "./global.scss";
+
+.root {
+  .overlayContainer {
+    position: relative;
+    float: right;
+    width: 200px;
+    border-radius: 100px;
+  
+    &:hover .profileImage {
+      opacity: 0.5;
+    }
+
+    &:hover .overlayWrap {
+      opacity: 1;
+    }
+
+    .profileImage {
+      z-index: 99;
+      //box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
+      opacity: 1;
+      display: block;
+      width: 200px;
+      height: 200px;
+      transition: .5s ease;
+      backface-visibility: hidden;
+    }
+
+    .overlayWrap {
+      z-index: 99;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      border-radius: 100px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: rgba(255, 255, 255, 1);
+      transition: .3s ease;
+      opacity: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+    }
+  }
+}
+
+
+.saveImage {
+  float: right;
+  margin-top: 21px!important;
+  margin-right: 0!important;
+}
+
+.dropzone {
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+  border-radius: 0.28571429rem;
+  padding: 50px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    background-color: #fafafa;
+    color: #444;
+    cursor: pointer;
+  }
+
+  .imageIcon {
+    color: rgba(0, 0, 0, 0.1);
+  }
+
+  .descWrapper {
+    display: inline;
+
+    span {
+      font-weight: normal;
+      display: inline;
+      vertical-align: top;
+      font-size: 1.3rem;
+    }
+  
+  }
+}
