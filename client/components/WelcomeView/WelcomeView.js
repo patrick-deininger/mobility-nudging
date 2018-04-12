@@ -6,14 +6,12 @@ import { Helmet } from 'react-helmet';
 
 import styles from './WelcomeView.scss';
 
-import Footer from '../Footer';
 
 class WelcomeView extends React.Component {
 
 
   render() {
     return (
-      <BodyClassName className={styles.welcome}>
         <div className={styles.container} onScroll={this.onScroll}>
           <Helmet>
             <title>Mobility Nudging</title>
@@ -24,7 +22,7 @@ class WelcomeView extends React.Component {
             </h1>
             <nav className={styles.nav}>
               <div>
-                <Button basic inverted as={Link} to='/login' className={styles.item}>Log in</Button>
+                <Button basic as={Link} to='/login' className={styles.item}>Log in</Button>
                 <Button color='green' as={Link} to='/signup' className={styles.item}>Sign up</Button>
               </div>
             </nav>
@@ -33,8 +31,7 @@ class WelcomeView extends React.Component {
             Here we go
           </main>
         </div>
-      </BodyClassName>
-    );
+      );
   }
 }
 

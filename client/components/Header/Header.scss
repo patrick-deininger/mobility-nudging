@@ -33,38 +33,12 @@
     padding-top: 22px!important;
     padding-bottom: 22px!important;
     color: #fefefe;
-    
+
     &:hover {
       background-color: rgba(0, 0, 0, 0.7);
       cursor: default!important;
     }
   }
 
-  .menuDropdown {
-    position: relative;
-    top: 1px;
-    margin-right: 7px!important;
-  }
-
-  .loggedOutView {
-    padding-top: 7px;
-    padding-bottom: 7px;
-  }
-
-  .createGroupLink {
-    &:hover {
-      background-color: #fff!important;
-    }
-  }
-
-  #dropdownMenu {
-    width: 200px!important;
-    z-index: 999999;
-
-    &::after {
-      display: none;
-    
-    }
-  }
+  
 }
-

@@ -24,7 +24,16 @@
       line-height: 100px;
     }
 
-  
+    .brandNameLink {
+      color: rgba(0, 0, 0, 0.4);
+      //line-height: 100px;
+
+      &:hover {
+        color: rgba(0, 0, 0, 0.7);
+      }
+    }
+
+
     .nav {
       float: right;
 
@@ -33,8 +42,4 @@
       }
     }
   }
-
-
-
-
 }

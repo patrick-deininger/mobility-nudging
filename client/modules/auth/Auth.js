@@ -145,7 +145,6 @@ class Auth extends React.Component {
       <Page viewer={this.props.viewer} title={title}>
         <div className={styles.container}>
           <Segment className={styles.paddedSegment} padded='very'>
-          <div className={styles.raisingHandEmoji}></div>
           <Header as='h1' textAlign='center'>{ title }</Header>
           <Form
             id={isLogin ? 'Login' : ' Sign up'}
@@ -226,12 +225,7 @@ class Auth extends React.Component {
                 Sign up
               </Button>
             }
-            { isLogin &&
-              <div>
-                <br />
-                <Checkbox className={styles.rememberMe} label='Remember me' />
-              </div>
-            }
+
           </Form>
         </Segment>
         </div>
