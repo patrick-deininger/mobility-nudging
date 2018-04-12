@@ -7,7 +7,6 @@ import { logoutViewer } from 'modules/auth/jwtUtils';
 import { isAuthenticated } from 'modules/auth/utils';
 import styles from './Header.scss';
 
-import UserAvatar from '../UserAvatar/UserAvatar.js';
 
 class Header extends React.Component {
   static defaultProps = {
