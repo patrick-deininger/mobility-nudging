@@ -55,23 +55,6 @@ export default createFragmentContainer(
   graphql`
     fragment Header_viewer on Viewer {
       id
-      user {
-        firstName
-        lastName
-        email
-        profileImage
-        groups {
-          edges {
-            node {
-              group {
-                id
-                name
-                nameUrl
-              }
-            }
-          }
-        }
-      }
     }
   `,
 );

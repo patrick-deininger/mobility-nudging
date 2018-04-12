@@ -27,12 +27,6 @@ export default createFragmentContainer(
   graphql`
     fragment HomeView_viewer on Viewer {
       ...Page_viewer
-      id
-      user {
-        books {
-          ...MyBookList_books
-        }
-      }
     }
   `,
 );
