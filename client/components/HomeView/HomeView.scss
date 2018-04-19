@@ -1,6 +1,9 @@
 @import "./global.scss";
 
 .container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
   width: $contentWidth;
   margin: 0 auto;
 
@@ -9,6 +12,21 @@
     display: table;
     clear: both;
   }
+
+  .form {
+    width: 500px;
+  }
+
+  .timeSegment {
+    width: 200px;
+    height: 200px;
+  }
+  .timeLabel {
+    size: 'medium';
+
+  }
+
+
 
 
 
