@@ -13,32 +13,20 @@ import classNames from 'classnames';
 class HomeView extends React.Component {
 
   state = {
-    endTime: '',
+    endTime: '19:28',
     active: 'flexibility',
   }
 
   onClickFlexibility = () => {
-      console.log(this.state.endTime)
-    console.log("onClickFlexibility")
     const endTime = '19:28';
     const newStatus = 'flexibility';
-    //console.log(newTime)
     this.setState({...this.state, endTime: '19:28', active: newStatus});
-    //this.setState({...this.state, active: newStatus});
-    console.log(this.state.endTime)
-    console.log(this.state)
   }
 
   onClickNoFlexibility = () => {
-      console.log(this.state.endTime)
-    console.log("onClickNoFlexibility")
     const endTime = '18:15';
     const newStatus = 'noFlexibility';
-    //console.log(newTime)
     this.setState({...this.state, endTime: '18:15', active: newStatus});
-    //this.setState({...this.state, active: newStatus});
-    console.log(this.state.endTime)
-    console.log(this.state)
   }
 
   render() {
@@ -47,16 +35,26 @@ class HomeView extends React.Component {
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
 
-          <Segment className={styles.segment} padded='very'>
 
-            <Segment circular className={styles.timeSegment}>
-              <Statistic className={styles.timeLabel}>
-                <Statistic.Label>Geladen um</Statistic.Label>
-                <Statistic.Value>{this.state.endTime}</Statistic.Value>
-              </Statistic>
-            </Segment>
+          <Segment padded='very'>
+
+            <div className={styles.currentTime}>
+              <Segment floated='right'>
+                16:11
+              </Segment>
+            </div>
+
+            <div className={styles.timeContainer}>
+              <Segment circular className={styles.timeSegment}>
+                <Statistic className={styles.timeLabel}>
+                  <Statistic.Label>Geladen um</Statistic.Label>
+                  <Statistic.Value>{this.state.endTime}</Statistic.Value>
+                </Statistic>
+              </Segment>
+            </div>
+
         <Form className={styles.form}>
-          <Button.Group widths="2" basic>
+          <Button.Group widths="2" basic className={styles.buttonGroup}>
             <Button
               id="flexibility"
               onClick={this.onClickFlexibility}
@@ -75,7 +73,7 @@ class HomeView extends React.Component {
 
           </Button.Group>
 
-          <Button fluid color="green">
+          <Button fluid color="green" className={styles.conformationButton}>
             Bestätigen
           </Button>
         </Form>
