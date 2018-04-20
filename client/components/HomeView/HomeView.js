@@ -13,7 +13,7 @@ import classNames from 'classnames';
 class HomeView extends React.Component {
 
   state = {
-    endTime: '19:28',
+    endTime: '',
     active: 'flexibility',
   }
 
@@ -23,10 +23,10 @@ class HomeView extends React.Component {
     const endTime = '19:28';
     const newStatus = 'flexibility';
     //console.log(newTime)
-    this.setState({...this.state, endTime});
-    this.setState({...this.state, active: newStatus});
+    this.setState({...this.state, endTime: '19:28', active: newStatus});
+    //this.setState({...this.state, active: newStatus});
     console.log(this.state.endTime)
-    console.log(this.state.active)
+    console.log(this.state)
   }
 
   onClickNoFlexibility = () => {
@@ -35,10 +35,10 @@ class HomeView extends React.Component {
     const endTime = '18:15';
     const newStatus = 'noFlexibility';
     //console.log(newTime)
-    this.setState({...this.state, endTime});
-    this.setState({...this.state, active: newStatus});
+    this.setState({...this.state, endTime: '18:15', active: newStatus});
+    //this.setState({...this.state, active: newStatus});
     console.log(this.state.endTime)
-    console.log(this.state.active)
+    console.log(this.state)
   }
 
   render() {
@@ -51,7 +51,7 @@ class HomeView extends React.Component {
 
             <Segment circular className={styles.timeSegment}>
               <Statistic className={styles.timeLabel}>
-                <Statistic.Label>Zeit</Statistic.Label>
+                <Statistic.Label>Geladen um</Statistic.Label>
                 <Statistic.Value>{this.state.endTime}</Statistic.Value>
               </Statistic>
             </Segment>
