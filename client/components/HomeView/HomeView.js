@@ -1,6 +1,7 @@
 import React from 'react';
 import { graphql, createFragmentContainer } from 'react-relay';
 import Page from 'components/Page/Page';
+import RankingScreen from 'components/Nudges/RankingScreen/RankingScreen';
 
 import { withAuth } from 'modules/auth/utils';
 import { Button, Segment, Header, Label, Statistic, Form } from 'semantic-ui-react';
@@ -78,7 +79,9 @@ class HomeView extends React.Component {
           </Button>
         </Form>
 
+
           </Segment>
+          <RankingScreen/>
       </section>
       </Page>
     );
