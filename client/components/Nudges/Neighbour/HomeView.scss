@@ -1,0 +1,52 @@
+@import "./global.scss";
+
+.container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  width: $contentWidth;
+  margin: 0 auto;
+
+  .head:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .form {
+    width: 500px;
+  }
+
+  .currentTime {
+    margin-bottom: 10px;
+  }
+
+  .timeContainer {
+
+    display: flex;
+    justify-content: center;
+    margin-top: 98px;
+    margin-bottom: 32px;
+  }
+
+  .timeSegment {
+    display: flex;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+  }
+
+  .timeLabel {
+    size: 'medium';
+
+  }
+
+  .buttonGroup {
+    margin-bottom: 10px;
+  }
+
+  .confirmationButton {
+    margin-bottom: 10px;
+  }
+
+}
