@@ -21,7 +21,7 @@ class RankingScreen extends React.Component {
 
       return (
         <div className={styles.root}>
-          <h2 className={styles.heading}>Clique</h2>
+          <h2 className={styles.heading}>#369 Clique</h2>
           <Table singleLine className={styles.books}>
             <Table.Header>
               <Table.Row>

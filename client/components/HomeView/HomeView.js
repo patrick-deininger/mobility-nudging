@@ -4,7 +4,7 @@ import Page from 'components/Page/Page';
 import RankingScreen from 'components/Nudges/RankingScreen/RankingScreen';
 
 import { withAuth } from 'modules/auth/utils';
-import { Button, Segment, Header, Label, Statistic, Form } from 'semantic-ui-react';
+import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'semantic-ui-react';
 import { Link } from 'found';
 import styles from './HomeView.scss';
 import classNames from 'classnames';
@@ -41,9 +41,19 @@ class HomeView extends React.Component {
 
             <div className={styles.currentTime}>
               <Segment floated='right'>
+                  <Icon name='clock' size='large' />
                 16:11
               </Segment>
             </div>
+
+
+           <Popup position='top-left'
+           trigger={
+              <Icon name='winner' size='huge' />
+            }
+            content={<RankingScreen/>}
+            />
+
 
             <div className={styles.timeContainer}>
               <Segment circular className={styles.timeSegment}>
@@ -78,10 +88,8 @@ class HomeView extends React.Component {
             Bestätigen
           </Button>
         </Form>
-
-
           </Segment>
-          <RankingScreen/>
+
       </section>
       </Page>
     );
