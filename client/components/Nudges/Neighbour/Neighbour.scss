@@ -1,0 +1,20 @@
+@import "./global.scss";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: space-around;
+  justify-content: space-around;
+  // justify-content: center;
+  // width: $contentWidth;
+  // margin: 10 auto;
+}
+
+.image {
+
+}
+
+.text {
+
+}
