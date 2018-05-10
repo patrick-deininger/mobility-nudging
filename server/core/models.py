@@ -34,7 +34,6 @@ class Group(models.Model):
         return name.strip().lower().replace('.', '').replace(',', '').replace(' ', '-')
 
 
-
 class CustomUser(AbstractEmailUser):
     username = models.CharField(max_length=31, blank=True)
     first_name = models.CharField(max_length=31, blank=True)
@@ -46,31 +45,50 @@ class CustomUser(AbstractEmailUser):
     updated_at = AutoDateTimeField(default=timezone.now)
 
 # new
-
 class Experiment(models.Model):
     started_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(default=timezone.now)
     number_of_participants = models.PositiveSmallIntegerField(null=True)
 
-class Session(models.Model):
-    experiment = models.ForeignKey(Experiment)
-    user = models.ForeignKey(CustomUser)
-    #session_config
-    started_at = models.DateTimeField(default=timezone.now)
-    finished_at = models.DateTimeField(default=timezone.now)
 
-    class Meta:
-        unique_together = ('user', 'experiment')
+class BlockConfig(models.Model):
+    clocktime = models.DateTimeField(default=timezone.now)
+    charge_status =  models.DecimalField(max_digits=50, decimal_places=5)
+    charge_price = models.DecimalField(max_digits=50, decimal_places=5)
+    flexibility_hours = models.DecimalField(max_digits=50, decimal_places=5)
+    flexiblity_clock =  models.DateTimeField(default=timezone.now)
+    nudge = models.CharField(max_length=63)
+
 
 class Block(models.Model):
     user = models.ForeignKey(CustomUser)
-    session = models.ForeignKey(Session)
-    #block_config
+    #session = models.ForeignKey(Session)
+    block_config = models.ForeignKey(BlockConfig, default="1")
     started_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        unique_together = ('user', 'session')
+        unique_together = ('user', 'block_config')
+
+
+class SessionConfig(models.Model):
+    block_first = models.CharField(max_length=31, blank=True)
+    block_second = models.CharField(max_length=31, blank=True)
+    block_third = models.CharField(max_length=31, blank=True)
+    block_fourth = models.CharField(max_length=31, blank=True)
+    block_fifth = models.CharField(max_length=31, blank=True)
+
+
+class Session(models.Model):
+    experiment = models.ForeignKey(Experiment)
+    user = models.ForeignKey(CustomUser)
+    session_config = models.ForeignKey(SessionConfig, default="1")
+    started_at = models.DateTimeField(default=timezone.now)
+    finished_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        unique_together = ('user', 'experiment', 'session_config')
+
 
 class EventHistory(models.Model):
     session = models.ForeignKey(Session)
@@ -79,15 +97,6 @@ class EventHistory(models.Model):
     event = models.CharField(max_length=255)
     nudge = models.CharField(max_length=255)
     time_stamp = models.DateTimeField(default=timezone.now)
-
-
-
-#TODO
-# class BlockConfig(models.Model)
-# class SessionConfig(models.Model)
-
-
-
 
 
 
