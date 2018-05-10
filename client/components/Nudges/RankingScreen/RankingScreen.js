@@ -11,6 +11,7 @@ const rankingEntries = [
                         {id: "3", name: "Daniel", score: "26", rank: "#3"},
                         {id: "4", name: "Paul", score: "13", rank: "#4"},
                         {id: "5", name: "David", score: "7", rank: "#5"},
+                        {id: "6", name: "David", score: "5", rank: "#6"}
                       ];
 
 class RankingScreen extends React.Component {

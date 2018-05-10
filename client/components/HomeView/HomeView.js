@@ -8,14 +8,23 @@ import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'se
 import { Link } from 'found';
 import styles from './HomeView.scss';
 import classNames from 'classnames';
+//import Slider from 'react-rangeslider';
+//import 'react-rangeslider/lib/index.css'
+//import Slider2, { Range } from 'rc-slider';
+//import Tooltip from 'rc-tooltip';
+//import ReactSlider from 'react-slider';
+//import Horizontal from 'components/Slider/Slider';
+//import SliderUI from 'material-ui/Slider';
 
 
+const REACT_VERSION = React.version
 
 class HomeView extends React.Component {
 
   state = {
     endTime: '19:28',
     active: 'flexibility',
+    value: 10,
   }
 
   onClickFlexibility = () => {
@@ -30,6 +39,19 @@ class HomeView extends React.Component {
     this.setState({...this.state, endTime: '18:15', active: newStatus});
   }
 
+
+  // handleOnSliderChange = (value) => {
+  //   this.setState({
+  //     value: value
+  //   })
+  // }
+  //
+  // handle = (value) => {
+  //   this.setState({
+  //     value: value
+  //   })
+  // }
+
   render() {
 
     return (
@@ -37,13 +59,19 @@ class HomeView extends React.Component {
         <section className={styles.container}>
 
 
+
+
           <Segment padded='very'>
+
+
 
             <div className={styles.currentTime}>
               <Segment floated='right'>
                   <Icon name='clock' size='large' />
                 16:11
               </Segment>
+
+
             </div>
 
 
@@ -56,6 +84,8 @@ class HomeView extends React.Component {
 
 
             <div className={styles.timeContainer}>
+
+
               <Segment circular className={styles.timeSegment}>
                 <Statistic className={styles.timeLabel}>
                   <Statistic.Label>Geladen um</Statistic.Label>
@@ -69,7 +99,6 @@ class HomeView extends React.Component {
 
         </Neighbour>
 
-        <div> </div>
 
         <Form className={styles.form}>
           <Button.Group widths="2" basic className={styles.buttonGroup}>
