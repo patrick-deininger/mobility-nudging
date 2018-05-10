@@ -11,9 +11,9 @@ import classNames from 'classnames';
 
 class BeginningScreen extends React.Component {
 
-  handleButtonClick = () => {
-    this.props.router.push("/")
-  }
+  // handleButtonClick = () => {
+  //   this.props.router.push('/')
+  // }
 
   render() {
 
@@ -21,7 +21,7 @@ class BeginningScreen extends React.Component {
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
           <Segment padded='very'>
-            <Button fluid color="green" className={styles.conformationButton} onClick={this.handleButtonClick}>
+            <Button as={Link} to='/run' fluid color="green" className={styles.conformationButton} >
               Start
             </Button>
           </Segment>
