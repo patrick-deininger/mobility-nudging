@@ -5,9 +5,16 @@ from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType, ObjectType
 from core.user_helper.jwt_util import get_token_user_id
 from core.user_helper.jwt_schema import TokensInterface
-from .models import Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
+from .models import EventHistory as EventHistory, Session as SessionModal, SessionConfig as SessionConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal, Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
 from .utils import Utils
 from .email import Email, EmailBuilder
+
+class BlockConfig(DjangoObjectType):
+    class Meta:
+        model = BlockConfigModal
+        filter_fields = ['clocktime', 'charge_status', 'charge_price', 'flexibility_hours', 'flexiblity_clock', 'nudge']
+        interfaces = (graphene.Node, )
+
 
 class Book(DjangoObjectType):
     class Meta:
@@ -95,6 +102,17 @@ class CoreQueries:
 
     group = graphene.Field(Group, id=graphene.ID(), name_url=graphene.String())
     all_groups = DjangoFilterConnectionField(Group)
+
+    block_config = graphene.Field(BlockConfig, id=graphene.ID())
+    block_configs = graphene.List(BlockConfig)
+
+    def resolve_block_config(self, info, **args):
+        if 'id' in args:
+            return BlockConfigModal.objects.get(pk=args['id'])
+
+    def resolve_block_configs(self, info, **args):
+        block_configs = BlockConfigModal.objects.all()
+        return block_configs
 
     def resolve_book(self, info, **args):
         if 'id' in args:
