@@ -12,16 +12,12 @@ import Slider from 'react-rangeslider';
 import 'react-rangeslider/lib/index.css'
 //import Slider, { Range } from 'rc-slider';
 //import 'rc-slider/assets/index.css';
-
-//import Tooltip from 'rc-tooltip';
-//import ReactSlider from 'react-slider';
-import HorizontalSlider from 'components/Slider/Slider';
+// import HorizontalSlider from 'components/Slider/Slider';
 import SliderUI from 'material-ui/Slider';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 
-const REACT_VERSION = React.version
 const flexibilityEndTime = '19:28';
 const IndividualFlexibilityEndTime = 'tbd';
 const noFlexibilityEndTime = '18:15';
@@ -54,17 +50,6 @@ class HomeView extends React.Component {
   handleSliderChange = (event, value) => {
      this.setState({sliderValue: value});
    };
-  // handleOnSliderChange = (value) => {
-  //   this.setState({
-  //     value: value
-  //   })
-  // }
-  //
-  // handle = (value) => {
-  //   this.setState({
-  //     value: value
-  //   })
-  // }
 
   render() {
     console.log(this.props.viewer)
@@ -72,44 +57,41 @@ class HomeView extends React.Component {
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
 
-
-
-
           <Segment padded='very'>
-
-
-
             <div className={styles.currentTime}>
               <Segment floated='right'>
                   <Icon name='clock' size='large' />
                 16:11
               </Segment>
-
-
             </div>
 
 
-           <Popup position='top-left'
+           <Popup
            trigger={
               <Icon name='winner' size='huge' />
             }
             content={<RankingScreen/>}
             />
 
-
-            <div className={styles.timeContainer}>
-
+          <div className={styles.objectivesContainer}>
 
               <div className={styles.timeSegment}>
-
-                <Statistic className={styles.timeLabel}>
+                <Statistic size='small'>
                   <Statistic.Label>Geladen um</Statistic.Label>
                   <Statistic.Value>{this.state.endTime}</Statistic.Value>
                 </Statistic>
-
               </div>
-            </div>
 
+
+
+              <div className={styles.chargingLevelSegment}>
+                <Statistic size='small'>
+                  <Statistic.Label>Ladeziel</Statistic.Label>
+                  <Statistic.Value>{this.state.sliderValue}%</Statistic.Value>
+                </Statistic>
+              </div>
+
+         </div>
 
 
             <div className={styles.sliderContainer}>
@@ -125,7 +107,7 @@ class HomeView extends React.Component {
               </MuiThemeProvider>
 
               <div className={styles.chargingLabel}>
-                Ladeziel {this.state.sliderValue} %
+                Ladeziel {this.state.sliderValue}%
               </div>
             </div>
 
@@ -133,33 +115,55 @@ class HomeView extends React.Component {
 
         <Form className={styles.form}>
           <Button.Group widths="3" basic className={styles.buttonGroup}>
-            <Button
-              id="flexibility"
-              onClick={this.onClickFlexibility}
-              active={this.state.active == "flexibility"}
-              >
-              <p>Flexibilität bereitstellen bis</p>
-              {flexibilityEndTime}
-            </Button>
+            <Popup
+            trigger={
+              <Button
+                id="flexibility"
+                onClick={this.onClickFlexibility}
+                active={this.state.active == "flexibility"}
+                >
+                <p>Flexibilität bereitstellen bis</p>
+                {flexibilityEndTime}
+              </Button>
+             }
+             content={
+               <div>
+                 Der Ladezeitpunkt wird auf Vorschlag des Netzbetreibers definiert.
+               </div>}
+             />
 
-            <Button
-              id="individualFlexibility"
-              onClick={this.onClickIndividualFlexibility}
-              active={this.state.active == "individualFlexibility"}
-              >
-              Individueller Ladezeitpunkt
+             <Popup
+             trigger={
+               <Button
+                 id="individualFlexibility"
+                 onClick={this.onClickIndividualFlexibility}
+                 active={this.state.active == "individualFlexibility"}
+                 >
+                 Individueller Ladezeitpunkt bestimmen
+               </Button>
+              }
+              content={
+                <div>
+                  Individuellen Ladezeitpunkt bestimmen, bei dem das Fahrzeug spätestens den definierten Ladezustand hat.
+                </div>}
+              />
 
-            </Button>
-
-            <Button
-              id="noFlexibility"
-              onClick={this.onClickNoFlexibility}
-              active={this.state.active == "noFlexibility"}
-              >
-              <p>Schnellstmögliches Laden bis</p>
-              {noFlexibilityEndTime}
-            </Button>
-
+              <Popup
+              trigger={
+                <Button
+                  id="noFlexibility"
+                  onClick={this.onClickNoFlexibility}
+                  active={this.state.active == "noFlexibility"}
+                  >
+                  <p>Schnellstmögliches Laden bis</p>
+                  {noFlexibilityEndTime}
+                </Button>
+               }
+               content={
+                 <div>
+                   Schnelles Aufladen bis zum defnierten Ladezustand. Es wird keine Flexibilität bereitgestellt.
+                 </div>}
+               />
           </Button.Group>
 
           <Button fluid color="green" className={styles.conformationButton}>

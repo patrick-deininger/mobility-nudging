@@ -34,9 +34,11 @@
     margin-bottom: 10px;
   }
 
-  .timeContainer {
+  .objectivesContainer{
     display: flex;
     justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
     margin-top: 98px;
     margin-bottom: 32px;
   }
@@ -47,12 +49,19 @@
     justify-content: center;
     border-radius: 50%;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
+    margin-right: 48px;
   }
 
-  .timeLabel {
-    size: 'medium';
+  .chargingLevelSegment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    width: 150px;
+    height: 150px;
 
   }
 
