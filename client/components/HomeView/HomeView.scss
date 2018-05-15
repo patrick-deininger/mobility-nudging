@@ -30,7 +30,18 @@
     width: 500px;
   }
 
+  .currentKPIsContainer{
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    align-items: center;
+  }
+
   .currentTime {
+    margin-bottom: 10px;
+  }
+
+  .currentChargingLevel {
     margin-bottom: 10px;
   }
 
@@ -62,7 +73,6 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     width: 150px;
     height: 150px;
-
   }
 
   .buttonGroup {

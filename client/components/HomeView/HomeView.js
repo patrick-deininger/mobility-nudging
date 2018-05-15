@@ -28,6 +28,28 @@ class HomeView extends React.Component {
     endTime: flexibilityEndTime,
     active: 'flexibility',
     sliderValue: 85,
+    currentChargingLevel: 50,
+    batteryIcon: 'battery full',
+  }
+
+  componentWillMount(){
+    let batteryStatus = 'battery full'
+    if (this.state.currentChargingLevel <= 20){
+      batteryStatus = 'battery empty'
+    }
+    else if(this.state.currentChargingLevel <= 40){
+      batteryStatus = 'battery low'
+    }
+    else if(this.state.currentChargingLevel <= 60){
+      batteryStatus = 'battery medium'
+    }
+    else if(this.state.currentChargingLevel <= 80){
+      batteryStatus = 'battery high'
+    }
+    else if(this.state.currentChargingLevel <= 100){
+      batteryStatus = 'battery full'
+    }
+    this.setState({batteryIcon: batteryStatus});
   }
 
   onClickFlexibility = () => {
@@ -51,19 +73,30 @@ class HomeView extends React.Component {
      this.setState({sliderValue: value});
    };
 
+
   render() {
     console.log(this.props.viewer)
+
     return (
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
 
           <Segment padded='very'>
+          <div className={styles.currentKPIsContainer}>
             <div className={styles.currentTime}>
               <Segment floated='right'>
                   <Icon name='clock' size='large' />
                 16:11
               </Segment>
             </div>
+
+            <div className={styles.currentChargingLevel}>
+              <Segment floated='left'>
+                  <Icon name={this.state.batteryIcon} size='large' />
+                 {this.state.currentChargingLevel}%
+              </Segment>
+            </div>
+          </div>
 
 
            <Popup
