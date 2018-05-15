@@ -111,9 +111,18 @@ module.exports = {
             exclude: /node_modules/
         }, {
       test: /\.css$/,
-      exclude: [
-        __dirname + '/node_modules/semantic-ui-css'
-      ],
+      include: [path.join(__dirname, 'node_modules'), path.join(__dirname, 'client', 'styles')],
+      use: ExtractTextPlugin.extract({
+        fallback: "style-loader",
+        use: {
+          loader: 'css-loader',
+        }
+      }),
+    },
+    {
+      test: /\.css$/,
+      exclude: [path.join(__dirname, 'node_modules'), path.join(__dirname, 'client', 'styles')],
+      include: path.join(__dirname, 'client'),
       use: ExtractTextPlugin.extract({
         fallback: "style-loader",
         use: {
@@ -123,7 +132,8 @@ module.exports = {
           }
         }
       }),
-    }, {
+    },
+    {
       test: /\.scss$/,
       include: [path.join(__dirname, 'node_modules'), path.join(__dirname, 'client', 'styles')],
       use: ExtractTextPlugin.extract({
