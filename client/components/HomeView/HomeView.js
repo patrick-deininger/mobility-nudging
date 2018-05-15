@@ -10,7 +10,9 @@ import styles from './HomeView.scss';
 import classNames from 'classnames';
 //import Slider from 'react-rangeslider';
 //import 'react-rangeslider/lib/index.css'
-//import Slider2, { Range } from 'rc-slider';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
 //import Tooltip from 'rc-tooltip';
 //import ReactSlider from 'react-slider';
 //import Horizontal from 'components/Slider/Slider';
@@ -53,7 +55,7 @@ class HomeView extends React.Component {
   // }
 
   render() {
-
+    console.log(this.props.viewer)
     return (
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
@@ -86,18 +88,26 @@ class HomeView extends React.Component {
             <div className={styles.timeContainer}>
 
 
-              <Segment circular className={styles.timeSegment}>
+              <div circular className={styles.timeSegment}>
+
                 <Statistic className={styles.timeLabel}>
                   <Statistic.Label>Geladen um</Statistic.Label>
                   <Statistic.Value>{this.state.endTime}</Statistic.Value>
                 </Statistic>
-              </Segment>
+
+              </div>
             </div>
 
+            <Neighbour/>
 
-        <Neighbour className={styles.neighbour}>
+          <div>
+            <Slider />
+          </div>
 
-        </Neighbour>
+
+
+
+
 
 
         <Form className={styles.form}>
@@ -137,6 +147,16 @@ export default createFragmentContainer(
   graphql`
     fragment HomeView_viewer on Viewer {
       ...Page_viewer
+      user{
+        id
+      }
+      blockConfigs {
+          id
+          nudge
+          chargeStatus
+          nudge
+          clocktime
+      }
     }
   `,
 );

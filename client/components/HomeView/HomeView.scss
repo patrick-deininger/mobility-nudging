@@ -35,7 +35,6 @@
   }
 
   .timeContainer {
-
     display: flex;
     justify-content: center;
     margin-top: 98px;
@@ -45,6 +44,9 @@
   .timeSegment {
     display: flex;
     align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     width: 200px;
     height: 200px;
   }
@@ -61,5 +63,4 @@
   .confirmationButton {
     margin-bottom: 10px;
   }
-
 }
