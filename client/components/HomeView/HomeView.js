@@ -8,15 +8,17 @@ import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'se
 import { Link } from 'found';
 import styles from './HomeView.scss';
 import classNames from 'classnames';
-//import Slider from 'react-rangeslider';
-//import 'react-rangeslider/lib/index.css'
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
+import Slider from 'react-rangeslider';
+import 'react-rangeslider/lib/index.css'
+//import Slider, { Range } from 'rc-slider';
+//import 'rc-slider/assets/index.css';
 
 //import Tooltip from 'rc-tooltip';
 //import ReactSlider from 'react-slider';
-//import Horizontal from 'components/Slider/Slider';
-//import SliderUI from 'material-ui/Slider';
+import HorizontalSlider from 'components/Slider/Slider';
+import SliderUI from 'material-ui/Slider';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 
 const REACT_VERSION = React.version
@@ -26,7 +28,7 @@ class HomeView extends React.Component {
   state = {
     endTime: '19:28',
     active: 'flexibility',
-    value: 10,
+    sliderValue: 90,
   }
 
   onClickFlexibility = () => {
@@ -42,6 +44,9 @@ class HomeView extends React.Component {
   }
 
 
+  handleSliderChange = (event, value) => {
+     this.setState({sliderValue: value});
+   };
   // handleOnSliderChange = (value) => {
   //   this.setState({
   //     value: value
@@ -88,7 +93,7 @@ class HomeView extends React.Component {
             <div className={styles.timeContainer}>
 
 
-              <div circular className={styles.timeSegment}>
+              <div className={styles.timeSegment}>
 
                 <Statistic className={styles.timeLabel}>
                   <Statistic.Label>Geladen um</Statistic.Label>
@@ -98,11 +103,27 @@ class HomeView extends React.Component {
               </div>
             </div>
 
-            <Neighbour/>
 
-          <div>
-            <Slider />
-          </div>
+
+            <div className={styles.sliderContainer}>
+              <MuiThemeProvider>
+                <SliderUI
+                  styles={{marginBottom: '10px !important'}}
+                  className={styles.slider}
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={this.state.sliderValue}
+                  onChange={this.handleSliderChange}/>
+              </MuiThemeProvider>
+
+              <div className={styles.chargingLabel}>
+                Ladeziel {this.state.sliderValue} %
+              </div>
+            </div>
+
+
+
 
 
 

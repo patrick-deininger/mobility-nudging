@@ -19,8 +19,8 @@
     flex: 1;
     width: 20px;
     justify-content: center;
-
   }
+
   .slider{
     height: 50px;
     weight: 500px;
@@ -62,5 +62,18 @@
 
   .confirmationButton {
     margin-bottom: 10px;
+  }
+
+  .sliderContainer{
+    margin-bottom: 24px;
+
+    .slider{
+      marginBottom: 10px !important;
+    }
+  }
+
+  .chargingLabel{
+      text-align: center;
+
   }
 }
