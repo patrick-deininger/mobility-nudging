@@ -194,7 +194,7 @@ class HomeView extends React.Component {
                }
                content={
                  <div>
-                   Schnelles Aufladen bis zum defnierten Ladezustand. Es wird keine Flexibilität bereitgestellt.
+                   Schnelles Aufladen bis zum definierten Ladezustand. Es wird keine Flexibilität bereitgestellt.
                  </div>}
                />
           </Button.Group>
