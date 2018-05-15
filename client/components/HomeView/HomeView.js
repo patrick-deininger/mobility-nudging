@@ -22,27 +22,34 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 
 const REACT_VERSION = React.version
+const flexibilityEndTime = '19:28';
+const IndividualFlexibilityEndTime = 'tbd';
+const noFlexibilityEndTime = '18:15';
 
 class HomeView extends React.Component {
 
   state = {
-    endTime: '19:28',
+    endTime: flexibilityEndTime,
     active: 'flexibility',
-    sliderValue: 90,
+    sliderValue: 85,
   }
 
   onClickFlexibility = () => {
-    const endTime = '19:28';
     const newStatus = 'flexibility';
-    this.setState({...this.state, endTime: '19:28', active: newStatus});
+    this.setState({...this.state, endTime: flexibilityEndTime, active: newStatus});
   }
 
   onClickNoFlexibility = () => {
     const endTime = '18:15';
     const newStatus = 'noFlexibility';
-    this.setState({...this.state, endTime: '18:15', active: newStatus});
+    this.setState({...this.state, endTime: noFlexibilityEndTime, active: newStatus});
   }
 
+    onClickIndividualFlexibility = () => {
+      const endTime = '18:47';
+      const newStatus = 'individualFlexibility';
+      this.setState({...this.state, endTime: IndividualFlexibilityEndTime, active: newStatus});
+    }
 
   handleSliderChange = (event, value) => {
      this.setState({sliderValue: value});
@@ -108,7 +115,7 @@ class HomeView extends React.Component {
             <div className={styles.sliderContainer}>
               <MuiThemeProvider>
                 <SliderUI
-                  styles={{marginBottom: '10px !important'}}
+
                   className={styles.slider}
                   min={0}
                   max={100}
@@ -124,21 +131,24 @@ class HomeView extends React.Component {
 
 
 
-
-
-
-
-
-
-
         <Form className={styles.form}>
-          <Button.Group widths="2" basic className={styles.buttonGroup}>
+          <Button.Group widths="3" basic className={styles.buttonGroup}>
             <Button
               id="flexibility"
               onClick={this.onClickFlexibility}
               active={this.state.active == "flexibility"}
               >
-              Flexibilität bereitstellen
+              <p>Flexibilität bereitstellen bis</p>
+              {flexibilityEndTime}
+            </Button>
+
+            <Button
+              id="individualFlexibility"
+              onClick={this.onClickIndividualFlexibility}
+              active={this.state.active == "individualFlexibility"}
+              >
+              Individueller Ladezeitpunkt
+
             </Button>
 
             <Button
@@ -146,7 +156,8 @@ class HomeView extends React.Component {
               onClick={this.onClickNoFlexibility}
               active={this.state.active == "noFlexibility"}
               >
-              Keine Flexibilität bereitstellen
+              <p>Schnellstmögliches Laden bis</p>
+              {noFlexibilityEndTime}
             </Button>
 
           </Button.Group>

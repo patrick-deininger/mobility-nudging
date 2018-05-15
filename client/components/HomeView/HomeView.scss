@@ -67,13 +67,15 @@
   .sliderContainer{
     margin-bottom: 24px;
 
-    .slider{
-      marginBottom: 10px !important;
-    }
+
   }
 
   .chargingLabel{
       text-align: center;
 
   }
+}
+.slider div{
+
+  margin-bottom: 10px !important;
 }
