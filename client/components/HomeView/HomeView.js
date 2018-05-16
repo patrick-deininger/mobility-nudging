@@ -30,9 +30,27 @@ class HomeView extends React.Component {
     sliderValue: 85,
     currentChargingLevel: 55,
     batteryIcon: 'battery full',
+    blockNumber: parseInt(this.props.location.pathname.split("/run/")[1]),
   }
 
   componentWillMount(){
+    this.chooseConfig()
+
+  }
+
+  chooseConfig = () => {
+    const blockConfigs = this.props.viewer.blockConfigs
+    if (blockConfigs.length > this.state.blockNumber-1){
+
+      const chargeStatus = parseInt(blockConfigs[this.state.blockNumber-1].chargeStatus * 100)
+      console.log(chargeStatus)
+      this.setState({currentChargingLevel: chargeStatus})
+    }
+    else {
+      this.props.router.push('/')
+    }
+
+
     let batteryStatus = 'battery full'
     if (this.state.currentChargingLevel <= 20){
       batteryStatus = 'battery empty'
@@ -76,6 +94,10 @@ class HomeView extends React.Component {
 
   render() {
     console.log(this.props.viewer)
+
+
+    const nextScreen = "/run/".concat((this.state.blockNumber+1).toString())
+
 
     return (
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
@@ -194,12 +216,12 @@ class HomeView extends React.Component {
                }
                content={
                  <div>
-                   Schnelles Aufladen bis zum definierten Ladezustand. Es wird keine Flexibilität bereitgestellt.
+                  Schnelles Aufladen bis zum definierten Ladezustand. Es wird keine Flexibilität bereitgestellt.
                  </div>}
                />
           </Button.Group>
 
-          <Button fluid color="green" className={styles.conformationButton}>
+          <Button as={Link} to={nextScreen} fluid color="green" className={styles.conformationButton}>
             Bestätigen
           </Button>
         </Form>

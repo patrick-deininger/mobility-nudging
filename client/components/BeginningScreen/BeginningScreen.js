@@ -24,7 +24,7 @@ class BeginningScreen extends React.Component {
             <p>Erläuterung:</p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             <p></p>
-            <Button as={Link} to='/run' fluid color="green" className={styles.conformationButton} >
+            <Button as={Link} to='/run/1' fluid color="green" className={styles.conformationButton} >
               Start
             </Button>
           </Segment>

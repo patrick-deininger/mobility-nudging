@@ -39,6 +39,6 @@ export default makeRouteConfig(
       <Route path='login' />
       <Route path='signup' />
     </Route>
-    <Route path='run' Component={HomeView} query={HomeViewQuery} />
+    <Route path='run/:number' Component={HomeView} query={HomeViewQuery} />
   </Route>
 );
