@@ -3,13 +3,12 @@ import { graphql, createFragmentContainer } from 'react-relay';
 import Page from 'components/Page/Page';
 import Neighbour from 'components/Nudges/Neighbour/Neighbour'
 import RankingScreen from 'components/Nudges/RankingScreen/RankingScreen';
+import Timer from 'components/Timer/Timer';
 import { withAuth } from 'modules/auth/utils';
 import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'semantic-ui-react';
 import { Link } from 'found';
 import styles from './HomeView.scss';
 import classNames from 'classnames';
-
-
 
 class HomeView extends React.Component {
 
@@ -64,12 +63,9 @@ class HomeView extends React.Component {
               </Segment>
             </div>
 
+        <Timer />
 
-        <Neighbour className={styles.neighbour}>
-
-        </Neighbour>
-
-        <div> </div>
+        <Neighbour className={styles.neighbour} />;
 
         <Form className={styles.form}>
           <Button.Group widths="2" basic className={styles.buttonGroup}>
