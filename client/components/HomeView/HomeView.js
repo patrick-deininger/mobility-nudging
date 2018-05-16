@@ -47,7 +47,7 @@ class HomeView extends React.Component {
       this.setState({currentChargingLevel: chargeStatus})
     }
     else {
-      this.props.router.push('/')
+      this.props.router.push('/done')
     }
 
 
@@ -94,9 +94,14 @@ class HomeView extends React.Component {
 
   render() {
     console.log(this.props.viewer)
-
-
-    const nextScreen = "/run/".concat((this.state.blockNumber+1).toString())
+    var nextScreen = ""
+    if (this.state.blockNumber > this.props.viewer.blockConfigs.length){
+        console.log("CHANGE")
+        nextScreen = "/done"
+    }
+    else {
+        nextScreen = "/run/".concat((this.state.blockNumber+1).toString())
+    }
 
 
     return (
@@ -166,7 +171,7 @@ class HomeView extends React.Component {
               </div>
             </div>
 
-
+            <Neighbour/>
 
         <Form className={styles.form}>
           <Button.Group widths="3" basic className={styles.buttonGroup}>

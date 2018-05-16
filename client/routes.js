@@ -1,6 +1,7 @@
 import LandingRedirectView from 'components/LandingRedirectView/LandingRedirectView';
 import Auth from 'modules/auth/Auth';
 import HomeView from 'components/HomeView/HomeView';
+import FinishedScreen from 'components/FinishedScreen/FinishedScreen';
 
 
 import { Route, makeRouteConfig } from 'found';
@@ -24,6 +25,14 @@ const HomeViewQuery = graphql`
   }
 `;
 
+const FinishedScreenQuery = graphql`
+  query routes_FinishedScreen_Query {
+    viewer {
+      ...FinishedScreen_viewer
+    }
+  }
+`;
+
 const AuthQuery = graphql`
   query routes_Auth_Query {
     viewer {
@@ -40,5 +49,6 @@ export default makeRouteConfig(
       <Route path='signup' />
     </Route>
     <Route path='run/:number' Component={HomeView} query={HomeViewQuery} />
+    <Route path='done' Component={FinishedScreen} query={FinishedScreenQuery} />
   </Route>
 );
