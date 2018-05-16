@@ -67,8 +67,8 @@ class Block(models.Model):
     started_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(default=timezone.now)
 
-    class Meta:
-        unique_together = ('user', 'block_config')
+    # class Meta:
+    #     unique_together = ('user', 'block_config')
 
 
 class SessionConfig(models.Model):

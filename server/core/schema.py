@@ -1,5 +1,6 @@
 import graphene
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from graphql import GraphQLError
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType, ObjectType
@@ -9,10 +10,17 @@ from .models import EventHistory as EventHistory, Session as SessionModal, Sessi
 from .utils import Utils
 from .email import Email, EmailBuilder
 
+
 class BlockConfig(DjangoObjectType):
     class Meta:
         model = BlockConfigModal
         filter_fields = ['clocktime', 'charge_status', 'charge_price', 'flexibility_hours', 'flexiblity_clock', 'nudge']
+        interfaces = (graphene.Node, )
+
+class Block(DjangoObjectType):
+    class Meta:
+        model = BlockModal
+        filter_fields = ['user', 'block_config', 'started_at', 'finished_at']
         interfaces = (graphene.Node, )
 
 
@@ -106,13 +114,26 @@ class CoreQueries:
     block_config = graphene.Field(BlockConfig, id=graphene.ID())
     block_configs = graphene.List(BlockConfig)
 
+    block = graphene.Node.Field(Block)
+    blocks = graphene.List(Block)
+
     def resolve_block_config(self, info, **args):
         if 'id' in args:
             return BlockConfigModal.objects.get(pk=args['id'])
 
+
     def resolve_block_configs(self, info, **args):
         block_configs = BlockConfigModal.objects.all()
         return block_configs
+
+    def resolve_block(self, info, **args):
+        if 'id' in args:
+            return BlockModal.objects.get(pk=args['id'])
+
+    def resolve_blocks(self, info, **args):
+        blocks = BlockModal.objects.all()
+        return blocks
+
 
     def resolve_book(self, info, **args):
         if 'id' in args:
@@ -165,6 +186,32 @@ class CreateBook(graphene.Mutation):
             )
         book.save()
         return CreateBook(book=book)
+
+class CreateBlock(graphene.Mutation):
+    class Arguments:
+        user = graphene.ID(required=True)
+        block_config = graphene.ID(required=True)
+        # started_at = graphene.types.datetime.DateTime(timezone.now)
+        # finished_at = graphene.types.datetime.DateTime(timezone.now)
+
+    block = graphene.Field(Block)
+
+    def mutate(self, info, **args):
+
+        get_node = graphene.Node.get_node_from_global_id
+        user = get_node(info, args['user'])
+        block_config = get_node(info, args['block_config'])
+        # started_at = timezone.now
+        # finished_at = timezone.now
+        block = BlockModal(
+            user = user,
+            block_config = block_config,
+            # started_at = started_at,
+            # finished_at = finished_at
+        )
+        block.save()
+        return CreateBlock(block=block)
+
 
 class CreateGroupInvite(graphene.Mutation):
     class Arguments:
@@ -397,6 +444,8 @@ class CreateGroup(graphene.Mutation):
         return CreateGroup(group=group)
 
 class CoreMutations:
+    create_block = CreateBlock.Field()
+
     create_book = CreateBook.Field()
     create_bookshelf_entry = CreateBookshelfEntry.Field()
     create_membership = CreateMembership.Field()

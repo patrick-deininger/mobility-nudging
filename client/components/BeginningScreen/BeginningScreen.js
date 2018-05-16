@@ -39,6 +39,16 @@ export default createFragmentContainer(
   graphql`
     fragment BeginningScreen_viewer on Viewer {
       ...Page_viewer
+      user{
+        id
+      }
+      blockConfigs {
+          id
+          nudge
+          chargeStatus
+          nudge
+          clocktime
+      }
     }
   `,
 );

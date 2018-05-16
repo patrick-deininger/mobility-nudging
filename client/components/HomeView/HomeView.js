@@ -28,7 +28,7 @@ class HomeView extends React.Component {
     endTime: flexibilityEndTime,
     active: 'flexibility',
     sliderValue: 85,
-    currentChargingLevel: 50,
+    currentChargingLevel: 55,
     batteryIcon: 'battery full',
   }
 
