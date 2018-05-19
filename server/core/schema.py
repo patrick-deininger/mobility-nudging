@@ -6,7 +6,7 @@ from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType, ObjectType
 from core.user_helper.jwt_util import get_token_user_id
 from core.user_helper.jwt_schema import TokensInterface
-from .models import EventHistory as EventHistory, Session as SessionModal, SessionConfig as SessionConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal, Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
+from .models import EventHistory as EventHistory, Session as SessionModal, SessionConfig as SessionConfigModal, SessionBlockConfig as SessionBlockConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal, Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
 from .utils import Utils
 from .email import Email, EmailBuilder
 
@@ -21,6 +21,25 @@ class Block(DjangoObjectType):
     class Meta:
         model = BlockModal
         filter_fields = ['user', 'block_config', 'started_at', 'finished_at']
+        interfaces = (graphene.Node, )
+
+
+class SessionConfig(DjangoObjectType):
+    class Meta:
+        model = SessionConfigModal
+        filter_fields = []
+        interfaces = (graphene.Node, )
+
+class Session(DjangoObjectType):
+    class Meta:
+        model = SessionModal
+        filter_fields = []
+        interfaces = (graphene.Node, )
+
+class SessionBlockConfig(DjangoObjectType):
+    class Meta:
+        model = SessionBlockConfigModal
+        filter_fields = ['session_config', 'block_config']
         interfaces = (graphene.Node, )
 
 
@@ -117,6 +136,14 @@ class CoreQueries:
     block = graphene.Node.Field(Block)
     blocks = graphene.List(Block)
 
+    session_config = graphene.Field(SessionConfig)
+    session_configs = graphene.List(SessionConfig)
+
+    session = graphene.Node.Field(Session)
+
+    session_block_config = graphene.Node.Field(SessionBlockConfig)
+    session_block_configs = graphene.List(SessionBlockConfig)
+
     def resolve_block_config(self, info, **args):
         if 'id' in args:
             return BlockConfigModal.objects.get(pk=args['id'])
@@ -133,6 +160,31 @@ class CoreQueries:
     def resolve_blocks(self, info, **args):
         blocks = BlockModal.objects.all()
         return blocks
+
+    def resolve_session_config(self, info, **args):
+        if 'id' in args:
+            return SessionConfigModal.objects.get(pk=args['id'])
+
+    def resolve_session_configs(self, info, **args):
+        session_configs = SessionConfigModal.objects.all()
+        return session_configs
+
+    def resolve_session(self, info, **args):
+        if 'id' in args:
+            return SessionModal.objects.get(pk=args['id'])
+
+    def resolve_session_block_config(self, info, **args):
+        if 'id' in args:
+            return SessionBlockConfigModal.objects.get(pk=args['id'])
+
+        session_block_config = SessionBlockConfigModal.objects.get(session_config = args['session_config'], block_config = args['block_config'])
+        return session_block_config
+
+    def resolve_session_block_configs(self, info, **args):
+        session_block_configs = SessionBlockConfigModal.objects.get(session_config = args['session_config'])
+        return session_block_configs
+
+
 
 
     def resolve_book(self, info, **args):
@@ -211,6 +263,27 @@ class CreateBlock(graphene.Mutation):
         )
         block.save()
         return CreateBlock(block=block)
+
+
+class CreateSession(graphene.Mutation):
+    class Arguments:
+        user = graphene.ID(required=True)
+        session_config = graphene.ID(required=True)
+
+    session = graphene.Field(Block)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        user = get_node(info, args['user'])
+        session_config = get_node(info, args['session_config'])
+
+        session = SessionModal(
+            user = user,
+            session_config = session_config,
+        )
+
+        session.save()
+        return CreateSession(session=session)
 
 
 class CreateGroupInvite(graphene.Mutation):
@@ -445,6 +518,7 @@ class CreateGroup(graphene.Mutation):
 
 class CoreMutations:
     create_block = CreateBlock.Field()
+    create_session = CreateSession.Field()
 
     create_book = CreateBook.Field()
     create_bookshelf_entry = CreateBookshelfEntry.Field()

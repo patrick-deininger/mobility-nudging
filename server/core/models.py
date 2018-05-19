@@ -67,27 +67,26 @@ class Block(models.Model):
     started_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(default=timezone.now)
 
-    # class Meta:
-    #     unique_together = ('user', 'block_config')
-
 
 class SessionConfig(models.Model):
-    block_first = models.CharField(max_length=31, blank=True)
-    block_second = models.CharField(max_length=31, blank=True)
-    block_third = models.CharField(max_length=31, blank=True)
-    block_fourth = models.CharField(max_length=31, blank=True)
-    block_fifth = models.CharField(max_length=31, blank=True)
-
+    name = models.CharField(max_length=31, blank=True)
 
 class Session(models.Model):
-    experiment = models.ForeignKey(Experiment)
+    #experiment = models.ForeignKey(Experiment)
     user = models.ForeignKey(CustomUser)
     session_config = models.ForeignKey(SessionConfig, default="1")
     started_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(default=timezone.now)
 
+    # class Meta:
+    #     unique_together = ('user')
+
+class SessionBlockConfig(models.Model):
+    session_config = models.ForeignKey(SessionConfig)
+    block_config = models.ForeignKey(BlockConfig)
+
     class Meta:
-        unique_together = ('user', 'experiment', 'session_config')
+        unique_together = ('session_config', 'block_config')
 
 
 class EventHistory(models.Model):
