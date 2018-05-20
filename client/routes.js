@@ -6,6 +6,7 @@ import Cockpit from 'components/admin/Cockpit/Cockpit';
 import AddSessionConfig from 'components/admin/AddSessionConfig/AddSessionConfig';
 import AddNudgeConfig from 'components/admin/AddNudgeConfig/AddNudgeConfig';
 import AddBlockConfig from 'components/admin/AddBlockConfig/AddBlockConfig';
+import AddSessionBlockConfig from 'components/admin/AddSessionBlockConfig/AddSessionBlockConfig';
 
 
 import { Route, makeRouteConfig } from 'found';
@@ -69,6 +70,14 @@ const AddBlockConfigQuery = graphql`
   }
 `;
 
+const AddSessionBlockConfigQuery = graphql`
+  query routes_AddBlockConfig_Query {
+    viewer {
+      ...AddSessionBlockConfig_viewer
+    }
+  }
+`;
+
 const AuthQuery = graphql`
   query routes_Auth_Query {
     viewer {
@@ -90,5 +99,6 @@ export default makeRouteConfig(
     <Route path='add-session-config' Component={AddSessionConfig} query={AddSessionConfigQuery} />
     <Route path='add-nudge-config' Component={AddNudgeConfig} query={AddNudgeConfigQuery} />
     <Route path='add-block-config' Component={AddBlockConfig} query={AddBlockConfigQuery} />
+    <Route path='add-session-block-config' Component={AddSessionBlockConfig} query={AddSessionBlockConfigQuery} />
   </Route>
 );
