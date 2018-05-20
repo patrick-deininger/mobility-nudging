@@ -5,27 +5,14 @@
     width: 100%;
     table-layout: fixed;
   }
-  .title{
+  .name{
     width: 40%;
   }
-  .author{
+  .number{
     width: 40%;
   }
-  .rating{
-    width: 20%;
-    text-align: right!important;
+  .standard{
+    width:10%;
   }
-  .finished{
-    width: 20%;
-  }
-  .popup_button{
-    margin-top: 10px;
-  }
-  .check{
-    text-align: right;
-  }
-}
-.ratingModal{
-  text-align: center!important;
-  margin: 0 auto!important;
+
 }

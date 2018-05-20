@@ -21,19 +21,20 @@ class Cockpit extends React.Component {
             <div className={styles.reading}>
               <Header floated='left' as='h2'>Session Konfiguration</Header>
               <Button floated='right' basic color='green' as={Link} to='/add-session-config' className={styles.upperText} floated='right'>Neu</Button>
-              <ConfigList viewer={this.props.viewer}/>
+              <ConfigList viewer={this.props.viewer} show="sessionConfig"/>
             </div>
 
 
             <div className={styles.read}>
               <Header floated='left' as='h2'>Block Configuration</Header>
+              <ConfigList viewer={this.props.viewer} show="blockConfig"/>
 
             </div>
 
 
             <div className={styles.to_read}>
               <Header floated='left' as='h2'>Nudge Configuration</Header>
-
+              <ConfigList viewer={this.props.viewer} show="nudgeConfig"/>
             </div>
           </Segment>
       </section>
