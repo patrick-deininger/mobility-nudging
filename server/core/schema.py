@@ -162,7 +162,7 @@ class CoreQueries:
     session_block_configs = graphene.List(SessionBlockConfig, session_config=graphene.ID())
 
     nudge = graphene.Field(Nudge, id=graphene.ID(), name=graphene.String())
-    nudges = graphene.List(Nudge)
+    nudge_configs = graphene.List(Nudge)
 
     def resolve_block_config(self, info, **args):
         if 'id' in args:
@@ -216,9 +216,9 @@ class CoreQueries:
         nudge = NudgeModal.objects.get(name=args['name'])
         return nudge
 
-    def resolve_nudges(self, info, **args):
-        nudges = NudgeModal.objects.all()
-        return nudges
+    def resolve_nudge_configs(self, info, **args):
+        nudge_configs = NudgeModal.objects.all()
+        return nudge_configs
 
 
 
