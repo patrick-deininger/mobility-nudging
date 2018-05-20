@@ -1,7 +1,7 @@
 import React from 'react';
 import Page from 'components/Page/Page';
 import { withAuth } from 'modules/auth//utils';
-import { Input, Button, Segment, Header, Dropdown } from 'semantic-ui-react';
+import { Input, Button, Segment, Header, Dropdown, Grid, Label } from 'semantic-ui-react';
 import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 
 import styles from './AddSessionBlockConfig.scss';
@@ -23,19 +23,23 @@ import styles from './AddSessionBlockConfig.scss';
 class AddSessionBlockConfig extends React.Component {
   state = {
     input: {
-      SessionConfigName: "",
-      BlockConfigName: "",
+      SessionConfigId: "",
+      BlockConfigId: "",
     },
     sessionConfigOptions: [],
     blockConfigOptions: [],
+    selectedBlockConfigNames: [],
+    selectedBlockConfigIds: [],
     errors: [],
 
   }
 
   componentWillMount(){
     this.populateSessionConfigOptions()
-    //this.populateBlockConfigOptions()
+  }
 
+  componentDidMount(){
+    this.populateBlockConfigOptions()
   }
 
   populateSessionConfigOptions = () => {
@@ -58,6 +62,45 @@ class AddSessionBlockConfig extends React.Component {
     this.setState({ ...this.state, blockConfigOptions });
   }
 
+  handleBlockConfigDropdownChange = (e, { value }) => {
+    console.log(e)
+    console.log(value)
+    const input = this.state.input;
+    input['BlockConfigId'] = value;
+    this.setState({ ...this.state, input });
+  }
+
+  handleSessionConfigDropdownChange = (e, { value }) => {
+    const input = this.state.input;
+    input['SessionConfigId'] = value;
+    this.setState({ ...this.state, input });
+  }
+
+  addBlockConfig = () => {
+      var selectedBlockConfigNames = this.state.selectedBlockConfigNames;
+      var selectedBlockConfigIds = this.state.selectedBlockConfigIds;
+      var blockConfigs = this.props.viewer.blockConfigs
+      var id = this.state.input.BlockConfigId
+      var l = blockConfigs.length
+      var newSelectedName = ""
+
+      //only add unique values
+      if (!selectedBlockConfigIds.includes(id)){
+
+        for (var x = 0; x < l; x++){
+          if (id == blockConfigs[x].id){
+              newSelectedName = blockConfigs[x].nudge.name
+              break;
+          }
+        }
+
+        selectedBlockConfigIds[selectedBlockConfigIds.length] = id;
+        selectedBlockConfigNames[selectedBlockConfigNames.length] = newSelectedName;
+        this.setState({ ...this.state, selectedBlockConfigNames });
+        this.setState({ ...this.state, selectedBlockConfigIds });
+      }
+  }
+
   setErrors = (errors) => {
     this.setState({ ...this.state, errors });
   }
@@ -65,24 +108,29 @@ class AddSessionBlockConfig extends React.Component {
 
   onSubmitHandler = (ev) => {
     console.log("onSubmit")
-    // const SessionConfigVariables = {
-    //   name: this.state.input.name,
-    //   numberOfSessions: parseInt(this.state.input.number_of_sessions),
-    // };
+
+    var l = this.state.selectedBlockConfigIds.length
+    for(var i = 0; i < l; i++){
+      const SessionBlockConfigVariables = {
+        SessionConfigId: this.state.input.SessionConfigId,
+        numberOfSessions: this.state.selectedBlockConfigIds[i],
+      };
+
+      commitMutation(this.props.relay.environment, {
+            mutation: CreateSessionBlockConfigMutation,
+            variables: SessionBlockConfigVariables,
+            onCompleted: (resp) => {
+              console.log("Created new SessionBlockConfig")
+              this.props.router.push('/cockpit');
+            },
+            onError: (err) => {
+              console.error(err)
+            },
+          }
+        );
+    }
 
 
-    // commitMutation(this.props.relay.environment, {
-    //       mutation: CreateSessionConfigMutation,
-    //       variables: SessionConfigVariables,
-    //       onCompleted: (resp) => {
-    //         console.log("Created new SessionBlockConfig")
-    //         this.props.router.push('/cockpit');
-    //       },
-    //       onError: (err) => {
-    //         console.error(err)
-    //       },
-    //     }
-      // );
   }
 
 
@@ -102,27 +150,45 @@ class AddSessionBlockConfig extends React.Component {
 
           <div className={styles.form}>
 
-          <Dropdown
-             id="sessionConfigs"
-             className={styles.nameField}
-             options={this.state.sessionConfigOptions}
-             search
-             selection
-             fluid
-             placeholder='Session Config'
-             onChange={this.handleDropdownChange}
-           />
 
-           <Dropdown
-              id="blockConfigs"
-              className={styles.nameField}
-              options={this.state.blockConfigOptions}
-              search
-              selection
-              fluid
-              placeholder='Block Config'
-              onChange={this.handleDropdownChange}
-            />
+
+
+
+           <Grid>
+            <Grid.Row columns={1} className={styles.row}>
+             <Grid.Column width={13} className={styles.column}>
+              <Dropdown
+                 id="sessionConfigs"
+                 className={styles.nameField}
+                 options={this.state.sessionConfigOptions}
+                 search
+                 selection
+                 fluid
+                 placeholder='Session Config'
+                 onChange={this.handleSessionConfigDropdownChange}
+               />
+             </Grid.Column>
+            </Grid.Row>
+             <Grid.Row columns={2} className={styles.row}>
+               <Grid.Column width={13} className={styles.column}>
+                 <Dropdown
+                    id="blockConfigs"
+                    className={styles.nameField}
+                    options={this.state.blockConfigOptions}
+                    search
+                    selection
+                    fluid
+                    placeholder='Block Config'
+                    onChange={this.handleBlockConfigDropdownChange}
+                  />
+               </Grid.Column>
+               <Grid.Column width={1} className={styles.column}>
+                 <Button icon='plus' floated='left' onClick={this.addBlockConfig}/>
+               </Grid.Column>
+             </Grid.Row>
+           </Grid>
+
+          {this.state.selectedBlockConfigNames.map(e => {if (e != "") { return( <Label>{e}</Label>)}})}
 
 
            <Button

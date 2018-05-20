@@ -14,7 +14,6 @@ class ConfigList extends React.Component {
   }
 
   countNumberOfSessions = (id) => {
-    console.log(id)
     const sessions = this.props.viewer.sessions;
 
     var l = sessions.length
