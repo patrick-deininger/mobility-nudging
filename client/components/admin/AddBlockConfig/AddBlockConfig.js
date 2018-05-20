@@ -6,20 +6,40 @@ import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 
 import styles from './AddBlockConfig.scss';
 
-// const CreateBlockConfigMutation = graphql`
-//   mutation AddBlockConfigMutation (
-//     $name: String!
-//     $heading: String!
-//     $text: String!
-//     $image: String!
-//   ) {
-//     createBlockConfig(name: $name, heading: $heading, text: $text, image: $image) {
-//       blockConfig {
-//         id
-//       }
-//     }
-//   }
-// `;
+const CreateBlockConfigMutation = graphql`
+  mutation AddBlockConfigMutation (
+
+    $chargeStatus: Float!
+    $chargeDistance: Float!
+    $timeToFullCharge: Float!
+    $flexibilityTimeRequest: Float!
+    $flexibilityChargeLevelRequest: Float!
+    $flexibilityTimeProvision: Float!
+    $flexibilityChargeLevelProvision: Float!
+    $fullChargePrice: Float!
+    $nudgeId: ID!
+
+  )
+  {
+    createBlockConfig (
+
+      chargeStatus: $chargeStatus
+      chargeDistance: $chargeDistance
+      timeToFullCharge: $timeToFullCharge
+      flexibilityTimeRequest: $flexibilityTimeRequest
+      flexibilityChargeLevelRequest: $flexibilityChargeLevelRequest
+      flexibilityTimeProvision: $flexibilityTimeProvision
+      flexibilityChargeLevelProvision: $flexibilityChargeLevelProvision
+      fullChargePrice: $fullChargePrice
+      nudgeId: $nudgeId
+    )
+      {
+        blockConfig {
+          id
+        }
+      }
+  }
+`;
 
 
 class AddBlockConfig extends React.Component {
@@ -72,7 +92,7 @@ class AddBlockConfig extends React.Component {
   onSubmitHandler = (ev) => {
     console.log("onSubmit")
     const BlockConfigVariables = {
-      clocktime: this.state.input.clocktime,
+      //clocktime: this.state.input.clocktime,
       chargeStatus: this.state.input.charge_status,
       chargeDistance: this.state.input.charge_distance,
       timeToFullCharge: this.state.input.time_to_full_charge,
@@ -81,23 +101,23 @@ class AddBlockConfig extends React.Component {
       flexibilityTimeProvision: this.state.input.flexibility_time_provision,
       flexibilityChargeLevelProvision: this.state.input.flexibility_charge_level_provision,
       fullChargePrice: this.state.input.full_charge_price,
-      nudge_name: this.state.input.nudge_name,
+      nudgeId: this.state.input.nudge_id,
     };
 
 
     console.log(BlockConfigVariables)
-    // commitMutation(this.props.relay.environment, {
-    //       mutation: CreateNudgeConfigMutation,
-    //       variables: NudgeConfigVariables,
-    //       onCompleted: (resp) => {
-    //         console.log("Created new NudgeConfig")
-    //         this.props.router.push('/cockpit');
-    //       },
-    //       onError: (err) => {
-    //         console.error(err)
-    //       },
-    //     }
-    //   );
+    commitMutation(this.props.relay.environment, {
+          mutation: CreateBlockConfigMutation,
+          variables: BlockConfigVariables,
+          onCompleted: (resp) => {
+            console.log("Created new BlockConfig")
+            this.props.router.push('/cockpit');
+          },
+          onError: (err) => {
+            console.error(err)
+          },
+        }
+      );
   }
 
 

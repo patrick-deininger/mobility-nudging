@@ -370,6 +370,55 @@ class CreateNudgeConfig(graphene.Mutation):
         return CreateNudgeConfig(nudgeConfig=nudgeConfig)
 
 
+class CreateBlockConfig(graphene.Mutation):
+    class Arguments:
+        #clocktime =
+        charge_status = graphene.Float(required=True)
+        charge_distance = graphene.Float(required=True)
+        time_to_full_charge = graphene.Float(required=True)
+        flexibility_time_request = graphene.Float(required=True)
+        flexibility_charge_level_request = graphene.Float(required=True)
+        flexibility_time_provision = graphene.Float(required=True)
+        flexibility_charge_level_provision = graphene.Float(required=True)
+        full_charge_price = graphene.Float(required=True)
+        nudge_id = graphene.ID(required=True)
+
+    blockConfig = graphene.Field(BlockConfig)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        #clocktime = args['clocktime']
+        charge_status = args['charge_status']
+        charge_distance = args['charge_distance']
+        time_to_full_charge = args['time_to_full_charge']
+        flexibility_time_request = args['flexibility_time_request']
+        flexibility_charge_level_request = args['flexibility_charge_level_request']
+        flexibility_time_provision = args['flexibility_time_provision']
+        flexibility_charge_level_provision = args['flexibility_charge_level_provision']
+        full_charge_price = args['full_charge_price']
+        nudge = get_node(info, args['nudge_id'])
+
+        blockConfig = BlockConfigModal(
+            #clocktime = clocktime,
+            charge_status = charge_status,
+            charge_distance = charge_distance,
+            time_to_full_charge = time_to_full_charge,
+            flexibility_time_request = flexibility_time_request,
+            flexibility_charge_level_request = flexibility_charge_level_request,
+            flexibility_time_provision = flexibility_time_provision,
+            flexibility_charge_level_provision = flexibility_charge_level_provision,
+            full_charge_price = full_charge_price,
+            nudge = nudge,
+
+        )
+
+        blockConfig.save()
+        return CreateBlockConfig(blockConfig=blockConfig)
+
+
+
+
+
 class CreateGroupInvite(graphene.Mutation):
     class Arguments:
         group_id = graphene.ID(required=True)
@@ -605,6 +654,7 @@ class CoreMutations:
     create_session = CreateSession.Field()
     create_session_config = CreateSessionConfig.Field()
     create_nudge_config = CreateNudgeConfig.Field()
+    create_block_config = CreateBlockConfig.Field()
 
     create_book = CreateBook.Field()
     create_bookshelf_entry = CreateBookshelfEntry.Field()
