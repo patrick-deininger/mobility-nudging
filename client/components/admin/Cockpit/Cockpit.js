@@ -27,7 +27,7 @@ class Cockpit extends React.Component {
 
             <div className={styles.read}>
               <Header floated='left' as='h2'>Block Configuration</Header>
-
+              <Button floated='right' basic color='green' as={Link} to='/add-block-config' className={styles.upperText} floated='right'>Neu</Button>
               <ConfigList viewer={this.props.viewer} show="blockConfig"/>
 
             </div>
