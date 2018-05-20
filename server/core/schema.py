@@ -420,6 +420,26 @@ class CreateBlockConfig(graphene.Mutation):
         return CreateBlockConfig(blockConfig=blockConfig)
 
 
+class CreateSessionBlockConfig(graphene.Mutation):
+    class Arguments:
+        session_config_id = graphene.ID(required=True)
+        block_config_id = graphene.ID(required=True)
+
+    sessionBlockConfig = graphene.Field(SessionBlockConfig)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        session_config_id = get_node(info, args['session_config_id'])
+        block_config_id = get_node(info, args['block_config_id'])
+
+
+        sessionBlockConfig = SessionBlockConfigModal(
+            session_config = session_config_id,
+            block_config = block_config_id,
+        )
+
+        sessionBlockConfig.save()
+        return CreateSessionBlockConfig(sessionBlockConfig=sessionBlockConfig)
 
 
 
@@ -659,6 +679,7 @@ class CoreMutations:
     create_session_config = CreateSessionConfig.Field()
     create_nudge_config = CreateNudgeConfig.Field()
     create_block_config = CreateBlockConfig.Field()
+    create_session_block_config = CreateSessionBlockConfig.Field()
 
     create_book = CreateBook.Field()
     create_bookshelf_entry = CreateBookshelfEntry.Field()

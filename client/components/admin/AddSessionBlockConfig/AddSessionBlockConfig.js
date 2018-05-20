@@ -6,18 +6,18 @@ import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 
 import styles from './AddSessionBlockConfig.scss';
 
-// const CreateSessionConfigMutation = graphql`
-//   mutation AddSessionConfigMutation (
-//     $name: String!
-//     $numberOfSessions: Int!
-//   ) {
-//     createSessionConfig(name: $name, numberOfSessions: $numberOfSessions) {
-//       sessionConfig {
-//         id
-//       }
-//     }
-//   }
-// `;
+const CreateSessionBlockConfigMutation = graphql`
+  mutation AddSessionBlockConfigMutation (
+    $sessionConfigId: ID!
+    $blockConfigId: ID!
+  ) {
+    createSessionBlockConfig(sessionConfigId: $sessionConfigId, blockConfigId: $blockConfigId) {
+      sessionBlockConfig {
+        id
+      }
+    }
+  }
+`;
 
 
 class AddSessionBlockConfig extends React.Component {
@@ -74,6 +74,8 @@ class AddSessionBlockConfig extends React.Component {
     const input = this.state.input;
     input['SessionConfigId'] = value;
     this.setState({ ...this.state, input });
+    console.log("HIER")
+    console.log(value)
   }
 
   addBlockConfig = () => {
@@ -112,9 +114,10 @@ class AddSessionBlockConfig extends React.Component {
     var l = this.state.selectedBlockConfigIds.length
     for(var i = 0; i < l; i++){
       const SessionBlockConfigVariables = {
-        SessionConfigId: this.state.input.SessionConfigId,
-        numberOfSessions: this.state.selectedBlockConfigIds[i],
+        sessionConfigId: this.state.input.SessionConfigId,
+        blockConfigId: this.state.selectedBlockConfigIds[i],
       };
+      console.log(SessionBlockConfigVariables)
 
       commitMutation(this.props.relay.environment, {
             mutation: CreateSessionBlockConfigMutation,
