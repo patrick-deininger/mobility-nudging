@@ -8,6 +8,7 @@ import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'se
 import { Link } from 'found';
 import styles from './HomeView.scss';
 import classNames from 'classnames';
+import createBlockMutation from '../../modules/core/mutations/CreateBlock';
 import Slider from 'react-rangeslider';
 import 'react-rangeslider/lib/index.css'
 //import Slider, { Range } from 'rc-slider';
@@ -31,14 +32,21 @@ class HomeView extends React.Component {
     currentChargingLevel: 55,
     batteryIcon: 'battery full',
     blockNumber: parseInt(this.props.location.pathname.split("/run/")[1]),
+    errors: [],
   }
 
   componentWillMount(){
+    this.createBlock()
     this.chooseConfig()
 
   }
 
+  setErrors = (errors) => {
+  this.setState({ ...this.state, errors });
+  }
+
   chooseConfig = () => {
+    console.log(this.props.viewer)
     const blockConfigs = this.props.viewer.blockConfigs
     if (blockConfigs.length > this.state.blockNumber-1){
 
@@ -90,6 +98,22 @@ class HomeView extends React.Component {
   handleSliderChange = (event, value) => {
      this.setState({sliderValue: value});
    };
+
+
+   createBlock = () => {
+     const blockVariables = {
+       user: this.props.viewer.user.id,
+       blockConfig: this.props.viewer.blockConfigs[this.state.blockNumber-1].id
+
+     }
+     console.log(blockVariables)
+     createBlockMutation(this.props.relay.environment, blockVariables, this.onCompletedCreateBlock, this.setErrors)
+
+   }
+
+   onCompletedCreateBlock = () => {
+     console.log("Block created")
+   }
 
 
   render() {
@@ -250,8 +274,7 @@ export default createFragmentContainer(
           id
           nudge
           chargeStatus
-          nudge
-          clocktime
+
       }
     }
   `,

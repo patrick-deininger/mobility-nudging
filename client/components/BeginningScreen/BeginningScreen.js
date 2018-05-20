@@ -12,6 +12,14 @@ import classNames from 'classnames';
 
 class BeginningScreen extends React.Component {
 
+  state = {
+    errors: []
+  }
+
+  setErrors = (errors) => {
+    this.setState({ ...this.state, errors });
+  }
+
   handleButtonClick = () => {
     //this.props.router.push('/run/1')
 
@@ -20,14 +28,12 @@ class BeginningScreen extends React.Component {
       sessionConfig: this.props.viewer.sessionConfigs[0].id
     };
 
-    console.log(sessionVariables)
-
     createSessionMutation(this.props.relay.environment, sessionVariables, this.onCompletedCreateSession, this.setErrors)
 
   }
 
   onCompletedCreateSession = () => {
-    console.log("Done")
+    console.log("Session created")
   }
 
   render() {
