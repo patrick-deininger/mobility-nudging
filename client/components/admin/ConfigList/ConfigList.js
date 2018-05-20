@@ -14,8 +14,6 @@ class ConfigList extends React.Component {
   }
 
   render() {
-    console.log("ConfigList")
-    console.log(this.props.viewer.sessionConfigs)
 
     if (this.props.show == "sessionConfig"){
       const sessionConfigs = this.props.viewer.sessionConfigs;
@@ -45,22 +43,22 @@ class ConfigList extends React.Component {
 
     if (this.props.show == "blockConfig"){
       const blockConfigs = this.props.viewer.blockConfigs;
-
+      console.log(blockConfigs)
       return (
         <div className={styles.root}>
           <Table singleLine>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell className={styles.standard}>clocktime</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>charge_status</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>charge_distance</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>time_to_full_charge</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>flexibility_time_request</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>flexibility_charge_level_request</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>flexibility_time_provision</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>flexibility_charge_level_provision</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>full_charge_price</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>nudge</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standard}>Uhrzeit</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standard}>Ladezustand</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standard}>Reichweite</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standard}>Ladezeit</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standard}>Flexibilitätsdauer</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standard}>Flexibilitätsladeziel</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standard}>Provision für F.-Dauer</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standard}>Provision für F.-Ladeziel</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standard}>Aufladepreis (voll)</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standard}>Nudge</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -128,6 +126,7 @@ export default createFragmentContainer(
       id
       clocktime
       chargeStatus
+      chargeDistance
       timeToFullCharge
       flexibilityTimeRequest
       flexibilityChargeLevelRequest
