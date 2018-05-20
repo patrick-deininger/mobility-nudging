@@ -27,6 +27,7 @@ class Cockpit extends React.Component {
 
             <div className={styles.read}>
               <Header floated='left' as='h2'>Block Configuration</Header>
+
               <ConfigList viewer={this.props.viewer} show="blockConfig"/>
 
             </div>
@@ -34,6 +35,7 @@ class Cockpit extends React.Component {
 
             <div className={styles.to_read}>
               <Header floated='left' as='h2'>Nudge Configuration</Header>
+              <Button floated='right' basic color='green' as={Link} to='/add-nudge-config' className={styles.upperText} floated='right'>Neu</Button>
               <ConfigList viewer={this.props.viewer} show="nudgeConfig"/>
             </div>
           </Segment>
