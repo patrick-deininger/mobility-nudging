@@ -50,14 +50,25 @@ class Experiment(models.Model):
     finished_at = models.DateTimeField(default=timezone.now)
     number_of_participants = models.PositiveSmallIntegerField(null=True)
 
+class Nudge(models.Model):
+    name = models.CharField(max_length=30)
+    heading = models.CharField(max_length=30)
+    text = models.CharField(max_length=200)
+    image = models.CharField(max_length=30)
+
 
 class BlockConfig(models.Model):
     clocktime = models.DateTimeField(default=timezone.now)
-    charge_status =  models.DecimalField(max_digits=50, decimal_places=5)
-    charge_price = models.DecimalField(max_digits=50, decimal_places=5)
-    flexibility_hours = models.DecimalField(max_digits=50, decimal_places=5)
-    flexiblity_clock =  models.DateTimeField(default=timezone.now)
-    nudge = models.CharField(max_length=63)
+    charge_status =  models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    charge_distance = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    time_to_full_charge = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    flexibility_time_request = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    flexibility_charge_level_request = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    flexibility_time_provision = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    flexibility_charge_level_provision = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    full_charge_price = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+
+    nudge = models.ForeignKey(Nudge)
 
 
 class Block(models.Model):

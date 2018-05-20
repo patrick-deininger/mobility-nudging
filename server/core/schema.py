@@ -6,7 +6,7 @@ from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType, ObjectType
 from core.user_helper.jwt_util import get_token_user_id
 from core.user_helper.jwt_schema import TokensInterface
-from .models import EventHistory as EventHistory, Session as SessionModal, SessionConfig as SessionConfigModal, SessionBlockConfig as SessionBlockConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal, Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
+from .models import EventHistory as EventHistory, Nudge as NudgeModal, Session as SessionModal, SessionConfig as SessionConfigModal, SessionBlockConfig as SessionBlockConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal, Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
 from .utils import Utils
 from .email import Email, EmailBuilder
 
@@ -14,7 +14,18 @@ from .email import Email, EmailBuilder
 class BlockConfig(DjangoObjectType):
     class Meta:
         model = BlockConfigModal
-        filter_fields = ['clocktime', 'charge_status', 'charge_price', 'flexibility_hours', 'flexiblity_clock', 'nudge']
+        filter_fields = [
+            'clocktime',
+            'charge_status',
+            'charge_distance',
+            'time_to_full_charge',
+            'flexibility_time_request',
+            'flexibility_charge_level_request',
+            'flexibility_time_provision',
+            'flexibility_charge_level_provision',
+            'full_charge_price',
+            'nudge'
+             ]
         interfaces = (graphene.Node, )
 
 class Block(DjangoObjectType):
@@ -34,6 +45,12 @@ class Session(DjangoObjectType):
     class Meta:
         model = SessionModal
         filter_fields = []
+        interfaces = (graphene.Node, )
+
+class Nudge(DjangoObjectType):
+    class Meta:
+        model = NudgeModal
+        filter_fields = ['name']
         interfaces = (graphene.Node, )
 
 class SessionBlockConfig(DjangoObjectType):
@@ -144,6 +161,9 @@ class CoreQueries:
     session_block_config = graphene.Node.Field(SessionBlockConfig, id=graphene.ID(), session_config=graphene.ID(), block_config=graphene.ID())
     session_block_configs = graphene.List(SessionBlockConfig, session_config=graphene.ID())
 
+    nudge = graphene.Field(Nudge, id=graphene.ID(), name=graphene.String())
+    nudges = graphene.List(Nudge)
+
     def resolve_block_config(self, info, **args):
         if 'id' in args:
             return BlockConfigModal.objects.get(pk=args['id'])
@@ -189,7 +209,16 @@ class CoreQueries:
         session_block_configs = SessionBlockConfigModal.objects.filter(session_config = args['session_config'])
         return session_block_configs
 
+    def resolve_nudge(self, info, **args):
+        if 'id' in args:
+            return NudgeModal.objects.get(pk=args['id'])
 
+        nudge = NudgeModal.objects.get(name=args['name'])
+        return nudge
+
+    def resolve_nudges(self, info, **args):
+        nudges = NudgeModal.objects.all()
+        return nudges
 
 
 
