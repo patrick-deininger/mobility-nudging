@@ -277,7 +277,7 @@ class CreateSession(graphene.Mutation):
         user = graphene.ID(required=True)
         session_config = graphene.ID(required=True)
 
-    session = graphene.Field(Block)
+    session = graphene.Field(Session)
 
     def mutate(self, info, **args):
         get_node = graphene.Node.get_node_from_global_id
