@@ -1,7 +1,7 @@
 import React from 'react';
 import Page from 'components/Page/Page';
 import { withAuth } from 'modules/auth//utils';
-import { Input, Button, Segment, Header, Grid } from 'semantic-ui-react';
+import { Input, Button, Segment, Header, Grid, Dropdown } from 'semantic-ui-react';
 import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 
 import styles from './AddBlockConfig.scss';
@@ -34,11 +34,21 @@ class AddBlockConfig extends React.Component {
         flexibility_time_provision: "",
         flexibility_charge_level_provision: "",
         full_charge_price: "",
-        nudge_name: ""
+        nudge_id: ""
     },
-    nudge_options: [],
+    nudgeOptions: [],
     errors: [],
 
+  }
+
+  componentWillMount(){
+    const nudgeOptions = this.props.viewer.nudgeConfigs.map((x) => (
+    {
+      key: x.id,
+      value: x.id,
+      text: x.name,
+    }));
+    this.setState({ ...this.state, nudgeOptions });
   }
 
   setErrors = (errors) => {
@@ -49,6 +59,12 @@ class AddBlockConfig extends React.Component {
     const input = this.state.input;
     const inputName = e.target.id;
     input[inputName] = e.target.value;
+    this.setState({ ...this.state, input });
+  }
+
+  handleDropdownChange = (e, { value }) => {
+    const input = this.state.input;
+    input['nudge_id'] = value;
     this.setState({ ...this.state, input });
   }
 
@@ -101,7 +117,6 @@ class AddBlockConfig extends React.Component {
 
           <div className={styles.form}>
 
-
           <Grid className={styles.nameFields}>
             <Grid.Row columns={2} className={styles.row}>
               <Grid.Column className={styles.column}>
@@ -132,7 +147,6 @@ class AddBlockConfig extends React.Component {
               </Grid.Column>
             </Grid.Row>
 
-
             <Grid.Row columns={2} className={styles.row}>
               <Grid.Column className={styles.column}>
                 <Input
@@ -161,7 +175,6 @@ class AddBlockConfig extends React.Component {
                 />
               </Grid.Column>
             </Grid.Row>
-
 
           <Grid.Row columns={2} className={styles.row}>
             <Grid.Column className={styles.column}>
@@ -236,17 +249,16 @@ class AddBlockConfig extends React.Component {
               />
             </Grid.Column>
             <Grid.Column className={styles.column}>
-              <Input
-                id='nudge_name'
-                className={styles.inputField}
-                value={input.nudge_name}
-                type='text'
-                size='large'
-                fluid
-                required
-                placeholder='Nudge Name'
-                onChange={this.handleFieldChange}
-              />
+              <Dropdown
+                 id="nudge_name"
+                 className={styles.nameField}
+                 options={this.state.nudgeOptions}
+                 search
+                 selection
+                 fluid
+                 placeholder='Nudge Name'
+                 onChange={this.handleDropdownChange}
+               />
             </Grid.Column>
           </Grid.Row>
         </Grid>
