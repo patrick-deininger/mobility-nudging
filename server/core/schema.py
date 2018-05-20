@@ -27,7 +27,7 @@ class Block(DjangoObjectType):
 class SessionConfig(DjangoObjectType):
     class Meta:
         model = SessionConfigModal
-        filter_fields = []
+        filter_fields = ['name']
         interfaces = (graphene.Node, )
 
 class Session(DjangoObjectType):
@@ -133,16 +133,16 @@ class CoreQueries:
     block_config = graphene.Field(BlockConfig, id=graphene.ID())
     block_configs = graphene.List(BlockConfig)
 
-    block = graphene.Node.Field(Block)
+    block = graphene.Node.Field(Block, id=graphene.ID())
     blocks = graphene.List(Block)
 
-    session_config = graphene.Field(SessionConfig)
+    session_config = graphene.Field(SessionConfig, id=graphene.ID(), name=graphene.String())
     session_configs = graphene.List(SessionConfig)
 
-    session = graphene.Node.Field(Session)
+    session = graphene.Node.Field(Session, id=graphene.ID())
 
-    session_block_config = graphene.Node.Field(SessionBlockConfig)
-    session_block_configs = graphene.List(SessionBlockConfig)
+    session_block_config = graphene.Node.Field(SessionBlockConfig, id=graphene.ID(), session_config=graphene.ID(), block_config=graphene.ID())
+    session_block_configs = graphene.List(SessionBlockConfig, session_config=graphene.ID())
 
     def resolve_block_config(self, info, **args):
         if 'id' in args:
@@ -165,6 +165,9 @@ class CoreQueries:
         if 'id' in args:
             return SessionConfigModal.objects.get(pk=args['id'])
 
+        session_config = SessionConfigModal.objects.get(name=args['name'])
+        return session_config
+
     def resolve_session_configs(self, info, **args):
         session_configs = SessionConfigModal.objects.all()
         return session_configs
@@ -173,16 +176,20 @@ class CoreQueries:
         if 'id' in args:
             return SessionModal.objects.get(pk=args['id'])
 
+
     def resolve_session_block_config(self, info, **args):
         if 'id' in args:
             return SessionBlockConfigModal.objects.get(pk=args['id'])
 
+    # TODO: Doesn't work
         session_block_config = SessionBlockConfigModal.objects.get(session_config = args['session_config'], block_config = args['block_config'])
         return session_block_config
 
     def resolve_session_block_configs(self, info, **args):
-        session_block_configs = SessionBlockConfigModal.objects.get(session_config = args['session_config'])
+        session_block_configs = SessionBlockConfigModal.objects.filter(session_config = args['session_config'])
         return session_block_configs
+
+
 
 
 
