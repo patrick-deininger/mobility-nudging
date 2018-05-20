@@ -2,6 +2,7 @@ import LandingRedirectView from 'components/LandingRedirectView/LandingRedirectV
 import Auth from 'modules/auth/Auth';
 import HomeView from 'components/HomeView/HomeView';
 import FinishedScreen from 'components/FinishedScreen/FinishedScreen';
+import Cockpit from 'components/admin/Cockpit/Cockpit';
 
 
 import { Route, makeRouteConfig } from 'found';
@@ -33,6 +34,14 @@ const FinishedScreenQuery = graphql`
   }
 `;
 
+const CockpitQuery = graphql`
+  query routes_Cockpit_Query {
+    viewer {
+      ...Cockpit_viewer
+    }
+  }
+`;
+
 const AuthQuery = graphql`
   query routes_Auth_Query {
     viewer {
@@ -50,5 +59,6 @@ export default makeRouteConfig(
     </Route>
     <Route path='run/:number' Component={HomeView} query={HomeViewQuery} />
     <Route path='done' Component={FinishedScreen} query={FinishedScreenQuery} />
+    <Route path='cockpit' Component={Cockpit} query={CockpitQuery} />
   </Route>
 );
