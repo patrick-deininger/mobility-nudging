@@ -13,10 +13,26 @@ class ConfigList extends React.Component {
     this.setState({ ...this.state, errors });
   }
 
+  countNumberOfSessions = (id) => {
+    console.log(id)
+    const sessions = this.props.viewer.sessions;
+
+    var l = sessions.length
+    var sessionCount = 0
+    for (var x = 0; x < l; x++){
+      if (sessions[x].sessionConfig.id == id){
+        sessionCount += 1
+      }
+    }
+
+    return(sessionCount)
+  }
+
   render() {
 
     if (this.props.show == "sessionConfig"){
       const sessionConfigs = this.props.viewer.sessionConfigs;
+
 
       return (
         <div className={styles.root}>
@@ -24,7 +40,10 @@ class ConfigList extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className={styles.name}>Name</Table.HeaderCell>
-                <Table.HeaderCell className={styles.number}>Anzahl</Table.HeaderCell>
+                <Table.HeaderCell className={styles.number}>Geplante Durchläufe</Table.HeaderCell>
+                  <Table.HeaderCell className={styles.number}>Begonnene Durchläufe</Table.HeaderCell>
+                <Table.HeaderCell className={styles.number}>Anzahl Blöcke</Table.HeaderCell>
+                  <Table.HeaderCell className={styles.number}>Blöcke</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -32,6 +51,7 @@ class ConfigList extends React.Component {
                 <Table.Row key={e.id}>
                   <Table.Cell>{e.name}</Table.Cell>
                   <Table.Cell>{e.numberOfSessions}</Table.Cell>
+                  <Table.Cell>{this.countNumberOfSessions(e.id)}</Table.Cell>
                 </Table.Row>)
               }
               )}
@@ -43,7 +63,6 @@ class ConfigList extends React.Component {
 
     if (this.props.show == "blockConfig"){
       const blockConfigs = this.props.viewer.blockConfigs;
-      console.log(blockConfigs)
       return (
         <div className={styles.root}>
           <Table singleLine>
@@ -144,6 +163,12 @@ export default createFragmentContainer(
       heading
       text
       image
+    }
+    sessions{
+      id
+      sessionConfig{
+        id
+      }
     }
 
   }`

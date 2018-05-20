@@ -66,8 +66,6 @@ export default createFragmentContainer(
       blockConfigs {
           id
 
-
-
       }
       sessionConfigs{
         id

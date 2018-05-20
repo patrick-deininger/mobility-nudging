@@ -21,6 +21,7 @@ class Cockpit extends React.Component {
             <div className={styles.reading}>
               <Header floated='left' as='h2'>Session Konfiguration</Header>
               <Button floated='right' basic color='green' as={Link} to='/add-session-config' className={styles.upperText} floated='right'>Neu</Button>
+              <Button floated='right' basic as={Link} to='/add-session-block-config' className={styles.upperText} floated='right'>Blockzuordnung</Button>
               <ConfigList viewer={this.props.viewer} show="sessionConfig"/>
             </div>
 
