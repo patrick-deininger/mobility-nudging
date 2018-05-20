@@ -36,6 +36,7 @@ class AddBlockConfig extends React.Component {
         full_charge_price: "",
         nudge_name: ""
     },
+    nudge_options: [],
     errors: [],
 
   }
@@ -276,7 +277,7 @@ export default createRefetchContainer(
   graphql`
     fragment AddBlockConfig_viewer on Viewer {
       ...Page_viewer
-      nudges{
+      nudgeConfigs{
         id
         name
       }
