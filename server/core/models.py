@@ -81,6 +81,7 @@ class Block(models.Model):
 
 class SessionConfig(models.Model):
     name = models.CharField(max_length=31, blank=True)
+    number_of_sessions = models.PositiveSmallIntegerField(max_length=10, blank=True)
 
 class Session(models.Model):
     #experiment = models.ForeignKey(Experiment)

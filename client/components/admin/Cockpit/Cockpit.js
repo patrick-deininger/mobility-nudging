@@ -5,6 +5,7 @@ import { withAuth } from 'modules/auth/utils';
 import { Button, Segment, Header } from 'semantic-ui-react';
 import { Link } from 'found';
 import styles from './Cockpit.scss';
+import ConfigList from 'components/admin/ConfigList/ConfigList'
 import classNames from 'classnames';
 
 class Cockpit extends React.Component {
@@ -14,12 +15,13 @@ class Cockpit extends React.Component {
         <section className={styles.container}>
           <Segment className={styles.segment} padded='very'>
             <div className={styles.head}>
-              <Header floated='left' as='h1'>Configurations</Header>
+              <Header floated='left' as='h1'>Konfigurationen</Header>
             </div>
 
             <div className={styles.reading}>
-              <Header floated='left' as='h2'>Session Configuration</Header>
-
+              <Header floated='left' as='h2'>Session Konfiguration</Header>
+              <Button floated='right' basic color='green' as={Link} to='/add-session-config' className={styles.upperText} floated='right'>Neu</Button>
+              <ConfigList viewer={this.props.viewer}/>
             </div>
 
 
@@ -45,6 +47,7 @@ export default createFragmentContainer(
   graphql`
     fragment Cockpit_viewer on Viewer {
       ...Page_viewer
+      ...ConfigList_viewer
 
     }
   `,

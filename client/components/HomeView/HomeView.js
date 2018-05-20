@@ -272,7 +272,7 @@ export default createFragmentContainer(
       }
       blockConfigs {
           id
-          nudge
+
           chargeStatus
 
       }

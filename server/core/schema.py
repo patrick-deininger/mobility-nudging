@@ -38,7 +38,7 @@ class Block(DjangoObjectType):
 class SessionConfig(DjangoObjectType):
     class Meta:
         model = SessionConfigModal
-        filter_fields = ['name']
+        filter_fields = ['name', 'number_of_sessions']
         interfaces = (graphene.Node, )
 
 class Session(DjangoObjectType):
@@ -322,6 +322,26 @@ class CreateSession(graphene.Mutation):
         return CreateSession(session=session)
 
 
+class CreateSessionConfig(graphene.Mutation):
+    class Arguments:
+        name = graphene.String(required=True)
+        number_of_sessions = graphene.Int(required=True)
+
+    sessionConfig = graphene.Field(SessionConfig)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        name = args['name']
+        number_of_sessions = args['number_of_sessions']
+
+        sessionConfig = SessionConfigModal(
+            name = name,
+            number_of_sessions = number_of_sessions,
+        )
+
+        sessionConfig.save()
+        return CreateSessionConfig(sessionConfig=sessionConfig)
+
 class CreateGroupInvite(graphene.Mutation):
     class Arguments:
         group_id = graphene.ID(required=True)
@@ -555,6 +575,7 @@ class CreateGroup(graphene.Mutation):
 class CoreMutations:
     create_block = CreateBlock.Field()
     create_session = CreateSession.Field()
+    create_session_config = CreateSessionConfig.Field()
 
     create_book = CreateBook.Field()
     create_bookshelf_entry = CreateBookshelfEntry.Field()

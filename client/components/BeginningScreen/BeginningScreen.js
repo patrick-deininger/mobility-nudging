@@ -65,9 +65,8 @@ export default createFragmentContainer(
       }
       blockConfigs {
           id
-          nudge
-          chargeStatus
-          nudge
+
+
 
       }
       sessionConfigs{

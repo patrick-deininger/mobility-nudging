@@ -1,0 +1,31 @@
+@import "./global.scss";
+
+.root {
+  .table{
+    width: 100%;
+    table-layout: fixed;
+  }
+  .title{
+    width: 40%;
+  }
+  .author{
+    width: 40%;
+  }
+  .rating{
+    width: 20%;
+    text-align: right!important;
+  }
+  .finished{
+    width: 20%;
+  }
+  .popup_button{
+    margin-top: 10px;
+  }
+  .check{
+    text-align: right;
+  }
+}
+.ratingModal{
+  text-align: center!important;
+  margin: 0 auto!important;
+}
