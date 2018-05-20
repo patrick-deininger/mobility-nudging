@@ -14,7 +14,7 @@ const CreateNudgeConfigMutation = graphql`
     $image: String!
   ) {
     createNudgeConfig(name: $name, heading: $heading, text: $text, image: $image) {
-      nudge {
+      nudgeConfig {
         id
       }
     }
@@ -54,7 +54,6 @@ class AddNudgeConfig extends React.Component {
       text: this.state.input.text,
       image: this.state.input.image,
     };
-
 
     commitMutation(this.props.relay.environment, {
           mutation: CreateNudgeConfigMutation,

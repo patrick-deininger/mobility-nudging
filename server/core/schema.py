@@ -342,6 +342,34 @@ class CreateSessionConfig(graphene.Mutation):
         sessionConfig.save()
         return CreateSessionConfig(sessionConfig=sessionConfig)
 
+
+class CreateNudgeConfig(graphene.Mutation):
+    class Arguments:
+        name = graphene.String(required=True)
+        heading = graphene.String(required=True)
+        text = graphene.String(required=True)
+        image = graphene.String(required=True)
+
+    nudgeConfig = graphene.Field(Nudge)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        name = args['name']
+        heading = args['heading']
+        text = args['text']
+        image = args['image']
+
+        nudgeConfig = NudgeModal(
+            name = name,
+            heading = heading,
+            text = text,
+            image = image
+        )
+
+        nudgeConfig.save()
+        return CreateNudgeConfig(nudgeConfig=nudgeConfig)
+
+
 class CreateGroupInvite(graphene.Mutation):
     class Arguments:
         group_id = graphene.ID(required=True)
@@ -576,6 +604,7 @@ class CoreMutations:
     create_block = CreateBlock.Field()
     create_session = CreateSession.Field()
     create_session_config = CreateSessionConfig.Field()
+    create_nudge_config = CreateNudgeConfig.Field()
 
     create_book = CreateBook.Field()
     create_bookshelf_entry = CreateBookshelfEntry.Field()
