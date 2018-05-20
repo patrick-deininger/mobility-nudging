@@ -71,7 +71,7 @@ const AddBlockConfigQuery = graphql`
 `;
 
 const AddSessionBlockConfigQuery = graphql`
-  query routes_AddBlockConfig_Query {
+  query routes_AddSessionBlockConfig_Query {
     viewer {
       ...AddSessionBlockConfig_viewer
     }

@@ -91,7 +91,7 @@ class Session(models.Model):
     finished_at = models.DateTimeField(default=timezone.now)
 
     # class Meta:
-    #     unique_together = ('user')
+    # unique_together = ('user')
 
 class SessionBlockConfig(models.Model):
     session_config = models.ForeignKey(SessionConfig)

@@ -62,8 +62,6 @@ class AddBlockConfig extends React.Component {
   }
 
   componentWillMount(){
-    console.log(this.props.viewer.nudgeConfigs)
-    console.log(this.props.viewer)
     const nudgeOptions = this.props.viewer.nudgeConfigs.map((x) => (
     {
       key: x.id,
@@ -71,7 +69,6 @@ class AddBlockConfig extends React.Component {
       text: x.name,
     }));
     this.setState({ ...this.state, nudgeOptions });
-    console.log(nudgeOptions)
   }
 
   setErrors = (errors) => {
@@ -85,7 +82,11 @@ class AddBlockConfig extends React.Component {
     this.setState({ ...this.state, input });
   }
 
-
+  handleDropdownChange = (e, { value }) => {
+    const input = this.state.input;
+    input['nudge_id'] = value;
+    this.setState({ ...this.state, input });
+  }
 
 
   onSubmitHandler = (ev) => {
