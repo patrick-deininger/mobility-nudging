@@ -3,6 +3,7 @@ import Page from 'components/Page/Page';
 import { withAuth } from 'modules/auth//utils';
 import { Input, Button, Segment, Header } from 'semantic-ui-react';
 import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
+import Template from 'components/Nudges/Template/Template'
 
 import styles from './AddNudgeConfig.scss';
 
@@ -73,7 +74,7 @@ class AddNudgeConfig extends React.Component {
 
 
   render() {
-
+    console.log(this.state.input)
     const { input, erros } = this.state;
 
 
@@ -145,10 +146,20 @@ class AddNudgeConfig extends React.Component {
               Hinzufügen
             </Button>
 
+
+
           </div>
+
+          <div className={styles.template}>
+            <Template
+              heading={this.state.input.heading}
+              text={this.state.input.text}
+              imagesrc={this.state.input.image}/>
+          </div>
+
         </Segment>
-            </div>
-          </Page>
+      </div>
+    </Page>
         )
 
       }

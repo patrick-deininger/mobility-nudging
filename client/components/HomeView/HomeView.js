@@ -2,6 +2,7 @@ import React from 'react';
 import { graphql, createFragmentContainer } from 'react-relay';
 import Page from 'components/Page/Page';
 import Neighbour from 'components/Nudges/Neighbour/Neighbour'
+import Template from 'components/Nudges/Template/Template'
 import RankingScreen from 'components/Nudges/RankingScreen/RankingScreen';
 import { withAuth } from 'modules/auth/utils';
 import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'semantic-ui-react';
@@ -28,9 +29,16 @@ class HomeView extends React.Component {
   state = {
     endTime: flexibilityEndTime,
     active: 'flexibility',
-    flexibilityChargeLevelRequest: 85,
-    chargeStatus: 55,
+    parameters: {
+      flexibilityChargeLevelRequest: 85,
+      chargeStatus: 55,
+    },
     batteryIcon: 'battery full',
+    nudge: {
+      heading: "",
+      text: "",
+      imagesrc: "",
+    },
     blockNumber: parseInt(this.props.location.pathname.split("/run/")[1]),
     errors: [],
   }
@@ -50,11 +58,24 @@ class HomeView extends React.Component {
     const blockConfigs = this.props.viewer.blockConfigs
     if (blockConfigs.length > this.state.blockNumber-1){
 
+      const parameters = this.state.parameters
       const chargeStatus = parseInt(blockConfigs[this.state.blockNumber-1].chargeStatus * 100)
       const flexibilityChargeLevelRequest = parseInt(blockConfigs[this.state.blockNumber-1].flexibilityChargeLevelRequest * 100)
+      parameters['chargeStatus'] = chargeStatus
+      parameters['flexibilityChargeLevelRequest'] = flexibilityChargeLevelRequest
 
-      this.setState({chargeStatus: chargeStatus})
-      this.setState({flexibilityChargeLevelRequest: flexibilityChargeLevelRequest})
+      this.setState({paramters: parameters})
+
+      const nudge = this.state.nudge
+      console.log(this.props.viewer.blockConfigs)
+      const heading = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudge.heading
+      const text = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudge.text
+      const imagesrc = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudge.image
+      nudge['heading'] = heading
+      nudge['text'] = text
+      nudge['imagesrc'] = imagesrc
+
+      this.setState({nudge: nudge})
     }
     else {
       this.props.router.push('/done')
@@ -62,19 +83,19 @@ class HomeView extends React.Component {
 
 
     let batteryStatus = 'battery full'
-    if (this.state.chargeStatus <= 20){
+    if (this.state.parameters.chargeStatus <= 20){
       batteryStatus = 'battery empty'
     }
-    else if(this.state.chargeStatus <= 40){
+    else if(this.state.parameters.chargeStatus <= 40){
       batteryStatus = 'battery low'
     }
-    else if(this.state.chargeStatus <= 60){
+    else if(this.state.parameters.chargeStatus <= 60){
       batteryStatus = 'battery medium'
     }
-    else if(this.state.chargeStatus <= 80){
+    else if(this.state.parameters.chargeStatus <= 80){
       batteryStatus = 'battery high'
     }
-    else if(this.state.chargeStatus <= 100){
+    else if(this.state.parameters.chargeStatus <= 100){
       batteryStatus = 'battery full'
     }
     this.setState({batteryIcon: batteryStatus});
@@ -143,7 +164,7 @@ class HomeView extends React.Component {
             <div className={styles.chargeStatus}>
               <Segment floated='left'>
                   <Icon name={this.state.batteryIcon} size='large' />
-                 {this.state.chargeStatus}%
+                 {this.state.parameters.chargeStatus}%
               </Segment>
             </div>
           </div>
@@ -170,7 +191,7 @@ class HomeView extends React.Component {
               <div className={styles.chargingLevelSegment}>
                 <Statistic size='small'>
                   <Statistic.Label>Ladeziel</Statistic.Label>
-                  <Statistic.Value>{this.state.flexibilityChargeLevelRequest}%</Statistic.Value>
+                  <Statistic.Value>{this.state.parameters.flexibilityChargeLevelRequest}%</Statistic.Value>
                 </Statistic>
               </div>
 
@@ -185,16 +206,21 @@ class HomeView extends React.Component {
                   min={0}
                   max={100}
                   step={1}
-                  value={this.state.flexibilityChargeLevelRequest}
+                  value={this.state.parameters.flexibilityChargeLevelRequest}
                   onChange={this.handleSliderChange}/>
               </MuiThemeProvider>
 
               <div className={styles.chargingLabel}>
-                Ladeziel {this.state.flexibilityChargeLevelRequest}%
+                Ladeziel {this.state.parameters.flexibilityChargeLevelRequest}%
               </div>
             </div>
 
             <Neighbour/>
+            <Template
+              heading={this.state.nudge.heading}
+              text={this.state.nudge.text}
+              imagesrc={this.state.nudge.imagesrc}
+            />
 
         <Form className={styles.form}>
           <Button.Group widths="3" basic className={styles.buttonGroup}>
@@ -283,6 +309,9 @@ export default createFragmentContainer(
         nudge{
           id
           name
+          heading
+          text
+          image
         }
       }
     }
