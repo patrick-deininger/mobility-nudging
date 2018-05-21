@@ -44,8 +44,6 @@ class ConfigList extends React.Component {
 
     if (this.props.show == "sessionConfig"){
       const sessionConfigs = this.props.viewer.sessionConfigs;
-      console.log("HIER")
-      console.log(this.props.viewer.sessionBlockConfigs)
 
       return (
         <div className={styles.root}>
@@ -53,20 +51,20 @@ class ConfigList extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className={styles.standardSessionConfig}>Name</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardSessionConfig}>Geplante Durchläufe</Table.HeaderCell>
-                  <Table.HeaderCell className={styles.standardSessionConfig}>Begonnene Durchläufe</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardSessionConfig}>Anzahl Blöcke</Table.HeaderCell>
-                  <Table.HeaderCell className={styles.standardSessionConfig}>Blöcke</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Geplante Durchläufe</Table.HeaderCell>
+                  <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Begonnene Durchläufe</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Anzahl Blöcke</Table.HeaderCell>
+                  <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Blöcke</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {sessionConfigs.map(e => { return(
                 <Table.Row key={e.id}>
                   <Table.Cell>{e.name}</Table.Cell>
-                  <Table.Cell>{e.numberOfSessions}</Table.Cell>
-                  <Table.Cell>{this.countNumberOfSessions(e.id)}</Table.Cell>
-                  <Table.Cell>{this.countNumberOfBlocks(e.id)}</Table.Cell>
-                  <Table.Cell>tbd</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.numberOfSessions}</Table.Cell>
+                  <Table.Cell textAlign='right'>{this.countNumberOfSessions(e.id)}</Table.Cell>
+                  <Table.Cell textAlign='right'>{this.countNumberOfBlocks(e.id)}</Table.Cell>
+                  <Table.Cell textAlign='right'>tbd</Table.Cell>
                 </Table.Row>)
               }
               )}
@@ -84,30 +82,30 @@ class ConfigList extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className={styles.standardBlockConfig}>Uhrzeit</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardBlockConfig}>Ladezustand</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardBlockConfig}>Reichweite</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardBlockConfig}>Ladezeit</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardBlockConfig}>Flexibilitätsdauer</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardBlockConfig}>Flexibilitätsladeziel</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardBlockConfig}>Provision für F.-Dauer</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardBlockConfig}>Provision für F.-Ladeziel</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardBlockConfig}>Aufladepreis (voll)</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardBlockConfig}>Nudge</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Ladezustand</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Reichweite</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Ladezeit</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Flexibilitätsdauer</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Flexibilitätsladeziel</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Provision für F.-Dauer</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Provision für F.-Ladeziel</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Aufladepreis (voll)</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Nudge</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {blockConfigs.map(e => { return(
                 <Table.Row key={e.id}>
                   <Table.Cell>{e.clocktime}</Table.Cell>
-                  <Table.Cell>{e.chargeStatus}</Table.Cell>
-                  <Table.Cell>{e.chargeDistance}</Table.Cell>
-                  <Table.Cell>{e.timeToFullCharge}</Table.Cell>
-                  <Table.Cell>{e.flexibilityTimeRequest}</Table.Cell>
-                  <Table.Cell>{e.flexibilityChargeLevelRequest}</Table.Cell>
-                  <Table.Cell>{e.flexibilityTimeProvision}</Table.Cell>
-                  <Table.Cell>{e.flexibilityChargeLevelProvision}</Table.Cell>
-                  <Table.Cell>{e.fullChargePrice}</Table.Cell>
-                  <Table.Cell>{e.nudge.name}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.chargeStatus}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.chargeDistance}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.timeToFullCharge}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.flexibilityTimeRequest}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.flexibilityChargeLevelRequest}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.flexibilityTimeProvision}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.flexibilityChargeLevelProvision}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.fullChargePrice}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.nudge.name}</Table.Cell>
                 </Table.Row>)
               }
               )}
@@ -125,15 +123,19 @@ class ConfigList extends React.Component {
           <Table singleLine>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell className={styles.name}>Name</Table.HeaderCell>
-                <Table.HeaderCell className={styles.number}>Anzahl</Table.HeaderCell>
+                <Table.HeaderCell className={styles.nudgeStandard}>Name</Table.HeaderCell>
+                <Table.HeaderCell  className={styles.nudgeStandard}>Heading</Table.HeaderCell>
+                <Table.HeaderCell className={styles.nudgeText}>Text</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.nudgeStandard}>Image</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {nudgeConfigs.map(e => { return(
                 <Table.Row key={e.id}>
                   <Table.Cell>{e.name}</Table.Cell>
-                  <Table.Cell>{e.name}</Table.Cell>
+                  <Table.Cell>{e.heading}</Table.Cell>
+                  <Table.Cell>{e.text}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.image}</Table.Cell>
                 </Table.Row>)
               }
               )}
