@@ -48,7 +48,7 @@ class AddNudgeConfig extends React.Component {
 
 
   onSubmitHandler = (ev) => {
-    console.log("onSubmit")
+
     const NudgeConfigVariables = {
       name: this.state.input.name,
       heading: this.state.input.heading,
@@ -74,7 +74,7 @@ class AddNudgeConfig extends React.Component {
 
 
   render() {
-    console.log(this.state.input)
+
     const { input, erros } = this.state;
 
 
