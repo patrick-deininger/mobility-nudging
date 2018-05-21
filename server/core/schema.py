@@ -210,7 +210,7 @@ class CoreQueries:
         return session_block_config
 
     def resolve_session_block_configs(self, info, **args):
-        session_block_configs = SessionBlockConfigModal.objects.filter(session_config = args['session_config'])
+        session_block_configs = SessionBlockConfigModal.objects.all()
         return session_block_configs
 
     def resolve_nudge(self, info, **args):

@@ -19,7 +19,7 @@ class Cockpit extends React.Component {
             </div>
 
             <div className={styles.reading}>
-              <Header floated='left' as='h2'>Session Konfiguration</Header>
+              <Header floated='left' as='h2'>Sessions</Header>
               <Button floated='right' basic color='green' as={Link} to='/add-session-config' className={styles.upperText} floated='right'>Neu</Button>
               <Button floated='right' basic as={Link} to='/add-session-block-config' className={styles.upperText} floated='right'>Blockzuordnung</Button>
               <ConfigList viewer={this.props.viewer} show="sessionConfig"/>
@@ -27,7 +27,7 @@ class Cockpit extends React.Component {
 
 
             <div className={styles.read}>
-              <Header floated='left' as='h2'>Block Configuration</Header>
+              <Header floated='left' as='h2'>Blöcke</Header>
               <Button floated='right' basic color='green' as={Link} to='/add-block-config' className={styles.upperText} floated='right'>Neu</Button>
               <ConfigList viewer={this.props.viewer} show="blockConfig"/>
 
@@ -35,7 +35,7 @@ class Cockpit extends React.Component {
 
 
             <div className={styles.to_read}>
-              <Header floated='left' as='h2'>Nudge Configuration</Header>
+              <Header floated='left' as='h2'>Nudges</Header>
               <Button floated='right' basic color='green' as={Link} to='/add-nudge-config' className={styles.upperText} floated='right'>Neu</Button>
               <ConfigList viewer={this.props.viewer} show="nudgeConfig"/>
             </div>

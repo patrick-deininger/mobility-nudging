@@ -88,7 +88,6 @@ class AddBlockConfig extends React.Component {
     this.setState({ ...this.state, input });
   }
 
-
   onSubmitHandler = (ev) => {
     console.log("onSubmit")
     const BlockConfigVariables = {

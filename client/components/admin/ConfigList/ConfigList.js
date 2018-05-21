@@ -27,22 +27,36 @@ class ConfigList extends React.Component {
     return(sessionCount)
   }
 
+  countNumberOfBlocks = (id) => {
+    const sessionBlockConfigs = this.props.viewer.sessionBlockConfigs;
+
+    var l = sessionBlockConfigs.length
+    var blockCount = 0
+    for (var x = 0; x < l; x++){
+      if (sessionBlockConfigs[x].sessionConfig.id == id){
+        blockCount += 1
+      }
+    }
+    return(blockCount)
+  }
+
   render() {
 
     if (this.props.show == "sessionConfig"){
       const sessionConfigs = this.props.viewer.sessionConfigs;
-
+      console.log("HIER")
+      console.log(this.props.viewer.sessionBlockConfigs)
 
       return (
         <div className={styles.root}>
           <Table singleLine>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell className={styles.name}>Name</Table.HeaderCell>
-                <Table.HeaderCell className={styles.number}>Geplante Durchläufe</Table.HeaderCell>
-                  <Table.HeaderCell className={styles.number}>Begonnene Durchläufe</Table.HeaderCell>
-                <Table.HeaderCell className={styles.number}>Anzahl Blöcke</Table.HeaderCell>
-                  <Table.HeaderCell className={styles.number}>Blöcke</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardSessionConfig}>Name</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardSessionConfig}>Geplante Durchläufe</Table.HeaderCell>
+                  <Table.HeaderCell className={styles.standardSessionConfig}>Begonnene Durchläufe</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardSessionConfig}>Anzahl Blöcke</Table.HeaderCell>
+                  <Table.HeaderCell className={styles.standardSessionConfig}>Blöcke</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -51,6 +65,8 @@ class ConfigList extends React.Component {
                   <Table.Cell>{e.name}</Table.Cell>
                   <Table.Cell>{e.numberOfSessions}</Table.Cell>
                   <Table.Cell>{this.countNumberOfSessions(e.id)}</Table.Cell>
+                  <Table.Cell>{this.countNumberOfBlocks(e.id)}</Table.Cell>
+                  <Table.Cell>tbd</Table.Cell>
                 </Table.Row>)
               }
               )}
@@ -67,16 +83,16 @@ class ConfigList extends React.Component {
           <Table singleLine>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell className={styles.standard}>Uhrzeit</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>Ladezustand</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>Reichweite</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>Ladezeit</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>Flexibilitätsdauer</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>Flexibilitätsladeziel</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>Provision für F.-Dauer</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>Provision für F.-Ladeziel</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>Aufladepreis (voll)</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standard}>Nudge</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Uhrzeit</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Ladezustand</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Reichweite</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Ladezeit</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Flexibilitätsdauer</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Flexibilitätsladeziel</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Provision für F.-Dauer</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Provision für F.-Ladeziel</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Aufladepreis (voll)</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Nudge</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -164,6 +180,12 @@ export default createFragmentContainer(
       image
     }
     sessions{
+      id
+      sessionConfig{
+        id
+      }
+    }
+    sessionBlockConfigs{
       id
       sessionConfig{
         id
