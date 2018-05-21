@@ -44,9 +44,7 @@ class HomeView extends React.Component {
   }
 
   componentWillMount(){
-    this.createBlock()
     this.initialize()
-
   }
 
   setErrors = (errors) => {
@@ -56,7 +54,8 @@ class HomeView extends React.Component {
   initialize = () => {
 
     const blockConfigs = this.props.viewer.blockConfigs
-    if (blockConfigs.length > this.state.blockNumber-1){
+
+    if (blockConfigs.length >= this.state.blockNumber){
 
       const parameters = this.state.parameters
       const chargeStatus = parseInt(blockConfigs[this.state.blockNumber-1].chargeStatus * 100)
@@ -67,7 +66,7 @@ class HomeView extends React.Component {
       this.setState({paramters: parameters})
 
       const nudge = this.state.nudge
-      console.log(this.props.viewer.blockConfigs)
+
       const heading = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudge.heading
       const text = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudge.text
       const imagesrc = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudge.image
@@ -76,6 +75,8 @@ class HomeView extends React.Component {
       nudge['imagesrc'] = imagesrc
 
       this.setState({nudge: nudge})
+
+      this.createBlock()
     }
     else {
       this.props.router.push('/done')
@@ -112,18 +113,30 @@ class HomeView extends React.Component {
     this.setState({...this.state, endTime: noFlexibilityEndTime, active: newStatus});
   }
 
-    onClickIndividualFlexibility = () => {
+  onClickIndividualFlexibility = () => {
       const endTime = '18:47';
       const newStatus = 'individualFlexibility';
       this.setState({...this.state, endTime: IndividualFlexibilityEndTime, active: newStatus});
-    }
+  }
 
   handleSliderChange = (event, value) => {
      this.setState({flexibilityChargeLevelRequest: value});
-   };
+  };
+
+  onClickConfirmation = () => {
+    var nextScreen = ""
+    if (this.state.blockNumber+1 > this.props.viewer.blockConfigs.length){
+        nextScreen = "/done"
+    }
+    else {
+        const blockNumber = this.state.blockNumber + 1
+        nextScreen = "/run/".concat((blockNumber).toString())
+    }
+    this.props.router.push(nextScreen)
+  }
 
 
-   createBlock = () => {
+  createBlock = () => {
      const blockVariables = {
        user: this.props.viewer.user.id,
        blockConfig: this.props.viewer.blockConfigs[this.state.blockNumber-1].id
@@ -138,14 +151,6 @@ class HomeView extends React.Component {
 
 
   render() {
-    var nextScreen = ""
-    if (this.state.blockNumber > this.props.viewer.blockConfigs.length){
-        console.log("CHANGE")
-        nextScreen = "/done"
-    }
-    else {
-        nextScreen = "/run/".concat((this.state.blockNumber+1).toString())
-    }
 
 
     return (
@@ -275,7 +280,7 @@ class HomeView extends React.Component {
                />
           </Button.Group>
 
-          <Button as={Link} to={nextScreen} fluid color="green" className={styles.conformationButton}>
+          <Button onClick={this.onClickConfirmation} fluid color="green" className={styles.conformationButton}>
             Bestätigen
           </Button>
         </Form>
