@@ -28,8 +28,8 @@ class HomeView extends React.Component {
   state = {
     endTime: flexibilityEndTime,
     active: 'flexibility',
-    sliderValue: 85,
-    currentChargingLevel: 55,
+    flexibilityChargeLevelRequest: 85,
+    chargeStatus: 55,
     batteryIcon: 'battery full',
     blockNumber: parseInt(this.props.location.pathname.split("/run/")[1]),
     errors: [],
@@ -37,7 +37,7 @@ class HomeView extends React.Component {
 
   componentWillMount(){
     this.createBlock()
-    this.chooseConfig()
+    this.initialize()
 
   }
 
@@ -45,14 +45,16 @@ class HomeView extends React.Component {
   this.setState({ ...this.state, errors });
   }
 
-  chooseConfig = () => {
-    console.log(this.props.viewer)
+  initialize = () => {
+
     const blockConfigs = this.props.viewer.blockConfigs
     if (blockConfigs.length > this.state.blockNumber-1){
 
       const chargeStatus = parseInt(blockConfigs[this.state.blockNumber-1].chargeStatus * 100)
-      console.log(chargeStatus)
-      this.setState({currentChargingLevel: chargeStatus})
+      const flexibilityChargeLevelRequest = parseInt(blockConfigs[this.state.blockNumber-1].flexibilityChargeLevelRequest * 100)
+
+      this.setState({chargeStatus: chargeStatus})
+      this.setState({flexibilityChargeLevelRequest: flexibilityChargeLevelRequest})
     }
     else {
       this.props.router.push('/done')
@@ -60,19 +62,19 @@ class HomeView extends React.Component {
 
 
     let batteryStatus = 'battery full'
-    if (this.state.currentChargingLevel <= 20){
+    if (this.state.chargeStatus <= 20){
       batteryStatus = 'battery empty'
     }
-    else if(this.state.currentChargingLevel <= 40){
+    else if(this.state.chargeStatus <= 40){
       batteryStatus = 'battery low'
     }
-    else if(this.state.currentChargingLevel <= 60){
+    else if(this.state.chargeStatus <= 60){
       batteryStatus = 'battery medium'
     }
-    else if(this.state.currentChargingLevel <= 80){
+    else if(this.state.chargeStatus <= 80){
       batteryStatus = 'battery high'
     }
-    else if(this.state.currentChargingLevel <= 100){
+    else if(this.state.chargeStatus <= 100){
       batteryStatus = 'battery full'
     }
     this.setState({batteryIcon: batteryStatus});
@@ -96,7 +98,7 @@ class HomeView extends React.Component {
     }
 
   handleSliderChange = (event, value) => {
-     this.setState({sliderValue: value});
+     this.setState({flexibilityChargeLevelRequest: value});
    };
 
 
@@ -106,18 +108,15 @@ class HomeView extends React.Component {
        blockConfig: this.props.viewer.blockConfigs[this.state.blockNumber-1].id
 
      }
-     console.log(blockVariables)
      createBlockMutation(this.props.relay.environment, blockVariables, this.onCompletedCreateBlock, this.setErrors)
 
    }
-
    onCompletedCreateBlock = () => {
      console.log("Block created")
    }
 
 
   render() {
-    console.log(this.props.viewer)
     var nextScreen = ""
     if (this.state.blockNumber > this.props.viewer.blockConfigs.length){
         console.log("CHANGE")
@@ -141,10 +140,10 @@ class HomeView extends React.Component {
               </Segment>
             </div>
 
-            <div className={styles.currentChargingLevel}>
+            <div className={styles.chargeStatus}>
               <Segment floated='left'>
                   <Icon name={this.state.batteryIcon} size='large' />
-                 {this.state.currentChargingLevel}%
+                 {this.state.chargeStatus}%
               </Segment>
             </div>
           </div>
@@ -171,7 +170,7 @@ class HomeView extends React.Component {
               <div className={styles.chargingLevelSegment}>
                 <Statistic size='small'>
                   <Statistic.Label>Ladeziel</Statistic.Label>
-                  <Statistic.Value>{this.state.sliderValue}%</Statistic.Value>
+                  <Statistic.Value>{this.state.flexibilityChargeLevelRequest}%</Statistic.Value>
                 </Statistic>
               </div>
 
@@ -186,12 +185,12 @@ class HomeView extends React.Component {
                   min={0}
                   max={100}
                   step={1}
-                  value={this.state.sliderValue}
+                  value={this.state.flexibilityChargeLevelRequest}
                   onChange={this.handleSliderChange}/>
               </MuiThemeProvider>
 
               <div className={styles.chargingLabel}>
-                Ladeziel {this.state.sliderValue}%
+                Ladeziel {this.state.flexibilityChargeLevelRequest}%
               </div>
             </div>
 
@@ -271,10 +270,20 @@ export default createFragmentContainer(
         id
       }
       blockConfigs {
+        id
+        clocktime
+        chargeStatus
+        chargeDistance
+        timeToFullCharge
+        flexibilityTimeRequest
+        flexibilityChargeLevelRequest
+        flexibilityTimeProvision
+        flexibilityChargeLevelProvision
+        fullChargePrice
+        nudge{
           id
-
-          chargeStatus
-
+          name
+        }
       }
     }
   `,
