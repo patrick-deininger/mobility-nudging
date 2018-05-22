@@ -24,19 +24,15 @@ class BeginningScreen extends React.Component {
   }
 
   setErrors = (errors) => {
-    console.log(errors)
     this.setState({ ...this.state, errors });
   }
 
   handleButtonClick = () => {
-    //this.props.router.push('/run/1')
     const sessionVariables = {
       user: this.props.viewer.user.id,
       sessionConfig: this.state.sessionConfigId
     };
-    console.log(sessionVariables)
     createSessionMutation(this.props.relay.environment, sessionVariables, this.onCompletedCreateSession, this.setErrors)
-
   }
 
   onCompletedCreateSession = (error, data) => {
