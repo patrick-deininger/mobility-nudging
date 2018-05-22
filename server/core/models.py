@@ -71,14 +71,6 @@ class BlockConfig(models.Model):
     nudge = models.ForeignKey(Nudge)
 
 
-class Block(models.Model):
-    user = models.ForeignKey(CustomUser)
-    #session = models.ForeignKey(Session)
-    block_config = models.ForeignKey(BlockConfig, default="1")
-    started_at = models.DateTimeField(default=timezone.now)
-    finished_at = models.DateTimeField(default=timezone.now)
-    block_status = models.CharField(max_length=31, blank=True)
-
 
 class SessionConfig(models.Model):
     name = models.CharField(max_length=31, blank=True)
@@ -95,6 +87,19 @@ class Session(models.Model):
 
     class Meta:
         unique_together = ('user', 'session_config')
+
+
+class Block(models.Model):
+    user = models.ForeignKey(CustomUser)
+    session = models.ForeignKey(Session)
+    block_config = models.ForeignKey(BlockConfig, default="1")
+    started_at = models.DateTimeField(default=timezone.now)
+    finished_at = models.DateTimeField(default=timezone.now)
+    block_status = models.CharField(max_length=31, blank=True)
+
+    class Meta:
+        unique_together = ('session', 'block_config')
+
 
 class SessionBlockConfig(models.Model):
     session_config = models.ForeignKey(SessionConfig)
