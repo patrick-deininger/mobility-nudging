@@ -6,7 +6,22 @@ from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType, ObjectType
 from core.user_helper.jwt_util import get_token_user_id
 from core.user_helper.jwt_schema import TokensInterface
-from .models import EventHistory as EventHistory, Nudge as NudgeModal, Session as SessionModal, SessionConfig as SessionConfigModal, SessionBlockConfig as SessionBlockConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal, Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
+from .models import EventHistory as EventHistory,
+    Nudge as NudgeModal,
+    FeedbackConfig as FeedbackConfigModal,
+    ContextConfig as ContextConfigModal,
+    Session as SessionModal,
+    SessionConfig as SessionConfigModal,
+    SessionBlockConfig as SessionBlockConfigModal,
+    Block as BlockModal,
+    BlockConfig as BlockConfigModal,
+    Experiment as ExperimentModal,
+    Book as BookModal,
+    BookshelfEntry as BookshelfEntryModal,
+    BookRecommendationForFriend as BookRecommendationForFriendModal,
+    Membership as MembershipModal,
+    Group as GroupModal,
+    GroupInvite as GroupInviteModal
 from .utils import Utils
 from .email import Email, EmailBuilder
 
@@ -51,6 +66,18 @@ class Session(DjangoObjectType):
 class Nudge(DjangoObjectType):
     class Meta:
         model = NudgeModal
+        filter_fields = ['name', 'nudge_type']
+        interfaces = (graphene.Node, )
+
+class FeedbackConfig(DjangoObjectType):
+    class Meta:
+        model = FeedbackConfigModal
+        filter_fields = ['name']
+        interfaces = (graphene.Node, )
+
+class ContextConfig(DjangoObjectType):
+    class Meta:
+        model = ContextConfigModal
         filter_fields = ['name']
         interfaces = (graphene.Node, )
 
@@ -166,6 +193,10 @@ class CoreQueries:
     nudge = graphene.Field(Nudge, id=graphene.ID(), name=graphene.String())
     nudge_configs = graphene.List(Nudge)
 
+    feedback_configs = graphene.List(FeedbackConfig)
+
+    context_configs = graphene.List(ContextConfig)
+
     def resolve_block_config(self, info, **args):
         if 'id' in args:
             return BlockConfigModal.objects.get(pk=args['id'])
@@ -224,6 +255,14 @@ class CoreQueries:
     def resolve_nudge_configs(self, info, **args):
         nudge_configs = NudgeModal.objects.all()
         return nudge_configs
+
+    def resolve_feedback_configs(self, info, **args):
+        feedback_configs = FeedbackConfigModal.objects.all()
+        return feedback_configs
+
+    def resolve_context_configs(self, info, **args):
+        context_configs = ContextConfigModal.objects.all()
+        return context_configs
 
 
 
@@ -388,6 +427,7 @@ class CreateSessionConfig(graphene.Mutation):
 class CreateNudgeConfig(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
+        description = graphene.String(required=True)
         heading = graphene.String(required=True)
         text = graphene.String(required=True)
         image = graphene.String(required=True)
@@ -397,12 +437,14 @@ class CreateNudgeConfig(graphene.Mutation):
     def mutate(self, info, **args):
         get_node = graphene.Node.get_node_from_global_id
         name = args['name']
+        description = args['description']
         heading = args['heading']
         text = args['text']
         image = args['image']
 
         nudgeConfig = NudgeModal(
             name = name,
+            description = description,
             heading = heading,
             text = text,
             image = image
@@ -410,6 +452,59 @@ class CreateNudgeConfig(graphene.Mutation):
 
         nudgeConfig.save()
         return CreateNudgeConfig(nudgeConfig=nudgeConfig)
+
+
+class CreateFeedbackConfig(graphene.Mutation):
+    class Arguments:
+        name = graphene.String(required=True)
+        description = graphene.String(required=True)
+        heading = graphene.String(required=True)
+        text = graphene.String(required=True)
+
+    feedbackConfig = graphene.Field(FeedbackConfig)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        name = args['name']
+        description = args['description']
+        heading = args['heading']
+        text = args['text']
+
+        feedbackConfig = FeedbackConfigModal(
+            name = name,
+            description = description,
+            heading = heading,
+            text = text,
+        )
+
+        feedbackConfig.save()
+        return CreateFeedbackConfig(feedbackConfig=feedbackConfig)
+
+class CreateContextConfig(graphene.Mutation):
+    class Arguments:
+        name = graphene.String(required=True)
+        description = graphene.String(required=True)
+        heading = graphene.String(required=True)
+        text = graphene.String(required=True)
+
+    contextConfig = graphene.Field(ContextConfig)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        name = args['name']
+        description = args['description']
+        heading = args['heading']
+        text = args['text']
+
+        contextConfig = ContextConfigModal(
+            name = name,
+            description = description,
+            heading = heading,
+            text = text,
+        )
+
+        contextConfig.save()
+        return CreateContextConfig(contextConfig=contextConfig)
 
 
 class CreateBlockConfig(graphene.Mutation):

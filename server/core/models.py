@@ -52,9 +52,23 @@ class Experiment(models.Model):
 
 class Nudge(models.Model):
     name = models.CharField(max_length=30)
+    description = models.CharField(max_length=180)
     heading = models.CharField(max_length=30)
     text = models.CharField(max_length=200)
     image = models.CharField(max_length=30)
+    nudge_type =  models.CharField(max_length=30)
+
+class FeedbackConfig(models.Model):
+    name = models.CharField(max_length=30)
+    description = models.CharField(max_length=180)
+    heading = models.CharField(max_length=30)
+    text = models.CharField(max_length=200)
+
+class ContextConfig(models.Model):
+    name = models.CharField(max_length=30)
+    description = models.CharField(max_length=180)
+    heading = models.CharField(max_length=30)
+    text = models.CharField(max_length=200)
 
 
 class BlockConfig(models.Model):
