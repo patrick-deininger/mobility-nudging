@@ -81,6 +81,7 @@ class ConfigList extends React.Component {
           <Table singleLine>
             <Table.Header>
               <Table.Row>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Name</Table.HeaderCell>
                 <Table.HeaderCell className={styles.standardBlockConfig}>Uhrzeit</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Ladezustand</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Reichweite</Table.HeaderCell>
@@ -96,6 +97,7 @@ class ConfigList extends React.Component {
             <Table.Body>
               {blockConfigs.map(e => { return(
                 <Table.Row key={e.id}>
+                  <Table.Cell>{e.name}</Table.Cell>
                   <Table.Cell>{e.clocktime}</Table.Cell>
                   <Table.Cell textAlign='right'>{e.chargeStatus}</Table.Cell>
                   <Table.Cell textAlign='right'>{e.chargeDistance}</Table.Cell>
@@ -160,6 +162,7 @@ export default createFragmentContainer(
     }
     blockConfigs{
       id
+      name
       clocktime
       chargeStatus
       chargeDistance

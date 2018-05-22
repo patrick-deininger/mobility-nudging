@@ -8,7 +8,7 @@ import styles from './AddBlockConfig.scss';
 
 const CreateBlockConfigMutation = graphql`
   mutation AddBlockConfigMutation (
-
+    $name: String!
     $chargeStatus: Float!
     $chargeDistance: Float!
     $timeToFullCharge: Float!
@@ -22,7 +22,7 @@ const CreateBlockConfigMutation = graphql`
   )
   {
     createBlockConfig (
-
+      name: $name
       chargeStatus: $chargeStatus
       chargeDistance: $chargeDistance
       timeToFullCharge: $timeToFullCharge
@@ -45,6 +45,7 @@ const CreateBlockConfigMutation = graphql`
 class AddBlockConfig extends React.Component {
   state = {
     input: {
+        name: "",
         clocktime: "",
         charge_status: "",
         charge_distance: "",
@@ -89,8 +90,8 @@ class AddBlockConfig extends React.Component {
   }
 
   onSubmitHandler = (ev) => {
-    console.log("onSubmit")
     const BlockConfigVariables = {
+      name: this.state.input.name,
       //clocktime: this.state.input.clocktime,
       chargeStatus: this.state.input.charge_status,
       chargeDistance: this.state.input.charge_distance,
@@ -103,8 +104,6 @@ class AddBlockConfig extends React.Component {
       nudgeId: this.state.input.nudge_id,
     };
 
-
-    console.log(BlockConfigVariables)
     commitMutation(this.props.relay.environment, {
           mutation: CreateBlockConfigMutation,
           variables: BlockConfigVariables,
@@ -120,8 +119,6 @@ class AddBlockConfig extends React.Component {
   }
 
 
-
-
   render() {
 
     const { input, erros } = this.state;
@@ -135,6 +132,18 @@ class AddBlockConfig extends React.Component {
             <Header as='h1'>Neue Block Konfiguration</Header>
 
           <div className={styles.form}>
+
+            <Input
+              id='name'
+              className={styles.inputField}
+              value={input.name}
+              type='text'
+              size='large'
+              fluid
+              required
+              placeholder='Name'
+              onChange={this.handleFieldChange}
+            />
 
           <Grid className={styles.nameFields}>
             <Grid.Row columns={2} className={styles.row}>

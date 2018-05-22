@@ -58,6 +58,7 @@ class Nudge(models.Model):
 
 
 class BlockConfig(models.Model):
+    name = models.CharField(max_length=31)
     clocktime = models.DateTimeField(default=timezone.now)
     charge_status =  models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     charge_distance = models.DecimalField(max_digits=30, decimal_places=5, blank=True)

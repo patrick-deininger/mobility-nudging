@@ -15,6 +15,7 @@ class BlockConfig(DjangoObjectType):
     class Meta:
         model = BlockConfigModal
         filter_fields = [
+            'name',
             'clocktime',
             'charge_status',
             'charge_distance',
@@ -414,6 +415,7 @@ class CreateNudgeConfig(graphene.Mutation):
 class CreateBlockConfig(graphene.Mutation):
     class Arguments:
         #clocktime =
+        name = graphene.String(required=True)
         charge_status = graphene.Float(required=True)
         charge_distance = graphene.Float(required=True)
         time_to_full_charge = graphene.Float(required=True)
@@ -429,6 +431,7 @@ class CreateBlockConfig(graphene.Mutation):
     def mutate(self, info, **args):
         get_node = graphene.Node.get_node_from_global_id
         #clocktime = args['clocktime']
+        name = args['name']
         charge_status = args['charge_status']
         charge_distance = args['charge_distance']
         time_to_full_charge = args['time_to_full_charge']
@@ -441,6 +444,7 @@ class CreateBlockConfig(graphene.Mutation):
 
         blockConfig = BlockConfigModal(
             #clocktime = clocktime,
+            name = name,
             charge_status = charge_status,
             charge_distance = charge_distance,
             time_to_full_charge = time_to_full_charge,

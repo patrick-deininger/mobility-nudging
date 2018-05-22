@@ -57,14 +57,12 @@ class AddSessionBlockConfig extends React.Component {
     {
       key: x.id,
       value: x.id,
-      text: x.nudge.name,
+      text: x.name,
     }));
     this.setState({ ...this.state, blockConfigOptions });
   }
 
   handleBlockConfigDropdownChange = (e, { value }) => {
-    console.log(e)
-    console.log(value)
     const input = this.state.input;
     input['BlockConfigId'] = value;
     this.setState({ ...this.state, input });
@@ -74,8 +72,6 @@ class AddSessionBlockConfig extends React.Component {
     const input = this.state.input;
     input['SessionConfigId'] = value;
     this.setState({ ...this.state, input });
-    console.log("HIER")
-    console.log(value)
   }
 
   addBlockConfig = () => {
@@ -91,7 +87,7 @@ class AddSessionBlockConfig extends React.Component {
 
         for (var x = 0; x < l; x++){
           if (id == blockConfigs[x].id){
-              newSelectedName = blockConfigs[x].nudge.name
+              newSelectedName = blockConfigs[x].name
               break;
           }
         }
@@ -117,7 +113,6 @@ class AddSessionBlockConfig extends React.Component {
         sessionConfigId: this.state.input.SessionConfigId,
         blockConfigId: this.state.selectedBlockConfigIds[i],
       };
-      console.log(SessionBlockConfigVariables)
 
       commitMutation(this.props.relay.environment, {
             mutation: CreateSessionBlockConfigMutation,
@@ -132,12 +127,7 @@ class AddSessionBlockConfig extends React.Component {
           }
         );
     }
-
-
   }
-
-
-
 
   render() {
 
@@ -152,10 +142,6 @@ class AddSessionBlockConfig extends React.Component {
             <Header as='h1'>Neue Session Block Konfiguration</Header>
 
           <div className={styles.form}>
-
-
-
-
 
            <Grid>
             <Grid.Row columns={1} className={styles.row}>
@@ -224,9 +210,7 @@ export default createRefetchContainer(
       }
       blockConfigs{
         id
-        nudge{
-          name
-        }
+        name
       }
 
     }
