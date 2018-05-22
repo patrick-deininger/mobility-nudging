@@ -73,6 +73,7 @@ class ContextConfig(models.Model):
 
 class BlockConfig(models.Model):
     name = models.CharField(max_length=31)
+    description = models.CharField(max_length=180)
     clocktime = models.DateTimeField(default=timezone.now)
     charge_status =  models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     charge_distance = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
@@ -89,6 +90,7 @@ class BlockConfig(models.Model):
 
 class SessionConfig(models.Model):
     name = models.CharField(max_length=31, blank=True)
+    description = models.CharField(max_length=180)
     number_of_sessions = models.PositiveSmallIntegerField(blank=True)
     session_config_status = models.CharField(max_length=31, default="active")
 

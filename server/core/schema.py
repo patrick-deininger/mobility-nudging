@@ -406,6 +406,7 @@ class FinishSession(graphene.Mutation):
 class CreateSessionConfig(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
+        description = graphene.String(required=True)
         number_of_sessions = graphene.Int(required=True)
 
     sessionConfig = graphene.Field(SessionConfig)
@@ -413,10 +414,12 @@ class CreateSessionConfig(graphene.Mutation):
     def mutate(self, info, **args):
         get_node = graphene.Node.get_node_from_global_id
         name = args['name']
+        description = args['description']
         number_of_sessions = args['number_of_sessions']
 
         sessionConfig = SessionConfigModal(
             name = name,
+            description = description,
             number_of_sessions = number_of_sessions,
         )
 
@@ -511,6 +514,7 @@ class CreateBlockConfig(graphene.Mutation):
     class Arguments:
         #clocktime =
         name = graphene.String(required=True)
+        description = graphene.String(required=True)
         charge_status = graphene.Float(required=True)
         charge_distance = graphene.Float(required=True)
         time_to_full_charge = graphene.Float(required=True)
@@ -527,6 +531,7 @@ class CreateBlockConfig(graphene.Mutation):
         get_node = graphene.Node.get_node_from_global_id
         #clocktime = args['clocktime']
         name = args['name']
+        description = args['description']
         charge_status = args['charge_status']
         charge_distance = args['charge_distance']
         time_to_full_charge = args['time_to_full_charge']
@@ -540,6 +545,7 @@ class CreateBlockConfig(graphene.Mutation):
         blockConfig = BlockConfigModal(
             #clocktime = clocktime,
             name = name,
+            description = description,
             charge_status = charge_status,
             charge_distance = charge_distance,
             time_to_full_charge = time_to_full_charge,
