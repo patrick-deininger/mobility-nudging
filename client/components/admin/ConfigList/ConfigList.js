@@ -56,11 +56,22 @@ class ConfigList extends React.Component {
     return(blockCount)
   }
 
+  relevantSessionBlockConfigs = (sessionBlockConfigs, currentSessionConfigId) => {
+    var relevantSessionBlockConfigs = []
+    var l = sessionBlockConfigs.length
+
+    for (var i = 0; i < l; i++){
+      if(sessionBlockConfigs[i].sessionConfig.id == currentSessionConfigId){
+        relevantSessionBlockConfigs.push(sessionBlockConfigs[i])
+      }
+    }
+    return(relevantSessionBlockConfigs)
+  }
+
   render() {
 
     if (this.props.show == "sessionConfig"){
       const sessionConfigs = this.props.viewer.sessionConfigs;
-      console.log(this.props.viewer.sessions)
 
       return (
         <div className={styles.root}>
@@ -69,10 +80,11 @@ class ConfigList extends React.Component {
               <Table.Row>
                 <Table.HeaderCell className={styles.standardSessionConfig}>Name</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Geplante Durchläufe</Table.HeaderCell>
-                  <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Begonnene Durchläufe</Table.HeaderCell>
-                            <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Beendete Durchläufe</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Begonnene Durchläufe</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Beendete Durchläufe</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Anzahl Blöcke</Table.HeaderCell>
-                  <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Blöcke</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Status</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Blöcke</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -83,7 +95,20 @@ class ConfigList extends React.Component {
                   <Table.Cell textAlign='right'>{this.countNumberOfSessionsRunning(e.id)}</Table.Cell>
                   <Table.Cell textAlign='right'>{this.countNumberOfSessionsFinished(e.id)}</Table.Cell>
                   <Table.Cell textAlign='right'>{this.countNumberOfBlocks(e.id)}</Table.Cell>
-                  <Table.Cell textAlign='right'>tbd</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.sessionConfigStatus}</Table.Cell>
+                  <Table.Cell textAlign='right'>
+                    <Popup
+                    trigger={
+                      <Button icon='block layout'/>
+                     }
+                     content={
+                       <div className={styles.to_read}>
+                         <ConfigList viewer={this.props.viewer} show="SessionBlockConfig" currentSessionConfigId={e.id}/>
+                       </div>
+                     }
+                     />
+
+                  </Table.Cell>
                 </Table.Row>)
               }
               )}
@@ -167,6 +192,36 @@ class ConfigList extends React.Component {
     }
 
 
+    if (this.props.show == "SessionBlockConfig"){
+      const sessionBlockConfigs = this.props.viewer.sessionBlockConfigs
+      const currentSessionConfigId = this.props.currentSessionConfigId
+      const relevantSessionBlockConfigs = this.relevantSessionBlockConfigs(sessionBlockConfigs, currentSessionConfigId);
+
+
+      return (
+        <div>
+          <Table singleLine>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell className={styles.sessionBlockStandard}>Name</Table.HeaderCell>
+                <Table.HeaderCell  className={styles.sessionBlockStandard}>Nudge</Table.HeaderCell>
+
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {relevantSessionBlockConfigs.map(e => { return(
+                <Table.Row key={e.id}>
+                  <Table.Cell>{e.blockConfig.name}</Table.Cell>
+                  <Table.Cell>{e.blockConfig.nudge.name}</Table.Cell>
+                </Table.Row>)
+              }
+              )}
+            </Table.Body>
+          </Table>
+        </div>
+      );
+    }
+
   }
 }
 
@@ -178,6 +233,7 @@ export default createFragmentContainer(
       id
       name
       numberOfSessions
+      sessionConfigStatus
     }
     blockConfigs{
       id
@@ -214,6 +270,14 @@ export default createFragmentContainer(
       id
       sessionConfig{
         id
+      }
+      blockConfig{
+        id
+        name
+        nudge{
+          id
+          name
+        }
       }
     }
 
