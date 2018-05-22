@@ -50,6 +50,12 @@
 
   }
 
+  .timer {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+  }
+
   .buttonGroup {
     margin-bottom: 10px;
   }

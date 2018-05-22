@@ -9,6 +9,7 @@ import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'se
 import { Link } from 'found';
 import styles from './HomeView.scss';
 import classNames from 'classnames';
+import TimePicker1 from 'rc-time-picker'
 
 class HomeView extends React.Component {
 
@@ -35,7 +36,6 @@ class HomeView extends React.Component {
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
 
-
           <Segment padded='very'>
 
             <div className={styles.currentTime}>
@@ -55,15 +55,12 @@ class HomeView extends React.Component {
 
 
             <div className={styles.timeContainer}>
-              <Segment circular className={styles.timeSegment}>
-                <Statistic className={styles.timeLabel}>
-                  <Statistic.Label>Geladen um</Statistic.Label>
-                  <Statistic.Value>{this.state.endTime}</Statistic.Value>
-                </Statistic>
-              </Segment>
+                  <div className={styles.timer}>
+                      <TimePicker1 />
+                  </div>
             </div>
 
-        <Timer />
+
 
         <Neighbour className={styles.neighbour} />;
 
