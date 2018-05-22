@@ -137,7 +137,9 @@ class HomeView extends React.Component {
   }
 
   handleSliderChange = (event, value) => {
-     this.setState({flexibilityChargeLevelRequest: value});
+    const parameters = this.state.parameters
+    parameters['flexibilityChargeLevelRequest'] = value
+    this.setState({parameters: parameters});
   };
 
   onClickConfirmation = () => {
