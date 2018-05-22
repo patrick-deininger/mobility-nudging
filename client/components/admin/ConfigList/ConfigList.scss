@@ -1,0 +1,34 @@
+@import "./global.scss";
+
+.root {
+  .table{
+    width: 100%;
+    table-layout: fixed;
+  }
+  .name{
+    width: 40%;
+  }
+  .number{
+    width: 40%;
+  }
+  .standardBlockConfig{
+    width:10%;
+  }
+
+  .standardSessionConfig{
+    width: 16%;
+  }
+
+  .nudgeStandard{
+    width: 10%;
+  }
+
+  .sessionBlockStandard{
+    width: 10%;
+  }
+
+
+  .nudgeText{
+    width: 70%;
+  }
+}

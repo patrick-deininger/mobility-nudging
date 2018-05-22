@@ -1,0 +1,23 @@
+@import "./global.scss";
+
+.container {
+  width: 1500px;
+  margin: 0 auto;
+
+  .head:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .reading{
+
+  }
+  .read{
+    margin-top: 60px;
+  }
+  .to_read{
+    margin-top: 60px;
+  }
+
+}

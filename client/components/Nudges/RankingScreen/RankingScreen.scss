@@ -1,0 +1,26 @@
+@import "./global.scss";
+
+.root {
+  .heading{
+    text-align: center;
+    color: rgba(0, 0, 0, 0.4);
+  }
+  .table{
+    width: 100%;
+    table-layout: fixed;
+  }
+  .name{
+    width: 40%;
+  }
+  .score{
+    width: 40%;
+  }
+  .rank{
+    width: 20%;
+    text-align: right!important;
+  }
+  .user{
+    color: rgba(0, 158, 224, 1);
+  }
+
+}

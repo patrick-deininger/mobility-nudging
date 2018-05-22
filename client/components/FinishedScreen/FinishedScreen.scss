@@ -1,0 +1,20 @@
+@import "./global.scss";
+
+.container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  width: $contentWidth;
+  margin: 0 auto;
+
+  .head:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .confirmationButton {
+    margin-bottom: 10px;
+  }
+
+}

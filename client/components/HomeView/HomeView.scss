@@ -1,6 +1,9 @@
 @import "./global.scss";
 
 .container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
   width: $contentWidth;
   margin: 0 auto;
 
@@ -10,6 +13,90 @@
     clear: both;
   }
 
+  .ranking{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 20px;
+    justify-content: center;
+  }
+
+  .slider{
+    height: 50px;
+    weight: 500px;
+  }
+
+  .form {
+    width: 500px;
+  }
+
+  .currentKPIsContainer{
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .currentTime {
+    margin-bottom: 10px;
+  }
+
+  .chargingStatus {
+    margin-bottom: 10px;
+  }
+
+  .objectivesContainer{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 98px;
+    margin-bottom: 32px;
+  }
+
+  .timeSegment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    width: 150px;
+    height: 150px;
+    margin-right: 48px;
+    background-color: #BCE7D1;
+  }
+
+  .chargingLevelSegment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    width: 150px;
+    height: 150px;
+    background-color: #BCE7D1;
+  }
+
+  .buttonGroup {
+    margin-bottom: 10px;
+  }
+
+  .confirmationButton {
+    margin-bottom: 10px;
+  }
+
+  .sliderContainer{
+    margin-bottom: 24px;
 
 
+  }
+
+  .chargingLabel{
+      text-align: center;
+
+  }
+}
+.slider div{
+
+  margin-bottom: 10px !important;
 }

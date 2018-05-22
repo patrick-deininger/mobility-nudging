@@ -1,13 +1,65 @@
 import graphene
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from graphql import GraphQLError
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType, ObjectType
 from core.user_helper.jwt_util import get_token_user_id
 from core.user_helper.jwt_schema import TokensInterface
-from .models import Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
+from .models import EventHistory as EventHistory, Nudge as NudgeModal, Session as SessionModal, SessionConfig as SessionConfigModal, SessionBlockConfig as SessionBlockConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal, Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
 from .utils import Utils
 from .email import Email, EmailBuilder
+
+
+class BlockConfig(DjangoObjectType):
+    class Meta:
+        model = BlockConfigModal
+        filter_fields = [
+            'name',
+            'clocktime',
+            'charge_status',
+            'charge_distance',
+            'time_to_full_charge',
+            'flexibility_time_request',
+            'flexibility_charge_level_request',
+            'flexibility_time_provision',
+            'flexibility_charge_level_provision',
+            'full_charge_price',
+            'nudge'
+             ]
+        interfaces = (graphene.Node, )
+
+class Block(DjangoObjectType):
+    class Meta:
+        model = BlockModal
+        filter_fields = ['user', 'block_config', 'started_at', 'finished_at']
+        interfaces = (graphene.Node, )
+
+
+class SessionConfig(DjangoObjectType):
+    class Meta:
+        model = SessionConfigModal
+        filter_fields = ['name', 'number_of_sessions']
+        interfaces = (graphene.Node, )
+
+class Session(DjangoObjectType):
+    class Meta:
+        model = SessionModal
+        filter_fields = ['session_config', 'user']
+        interfaces = (graphene.Node, )
+
+class Nudge(DjangoObjectType):
+    class Meta:
+        model = NudgeModal
+        filter_fields = ['name']
+        interfaces = (graphene.Node, )
+
+class SessionBlockConfig(DjangoObjectType):
+    class Meta:
+        model = SessionBlockConfigModal
+        filter_fields = ['session_config', 'block_config']
+        interfaces = (graphene.Node, )
+
 
 class Book(DjangoObjectType):
     class Meta:
@@ -96,6 +148,86 @@ class CoreQueries:
     group = graphene.Field(Group, id=graphene.ID(), name_url=graphene.String())
     all_groups = DjangoFilterConnectionField(Group)
 
+    block_config = graphene.Field(BlockConfig, id=graphene.ID())
+    block_configs = graphene.List(BlockConfig)
+
+    block = graphene.Field(Block, session=graphene.ID(), block_config=graphene.ID())
+    blocks = graphene.List(Block)
+
+    session_config = graphene.Field(SessionConfig, id=graphene.ID(), name=graphene.String())
+    session_configs = graphene.List(SessionConfig)
+
+    session = graphene.Field(Session, session_config=graphene.ID(), user=graphene.ID())
+    sessions = graphene.List(Session)
+
+    session_block_config = graphene.Node.Field(SessionBlockConfig, id=graphene.ID(), session_config=graphene.ID(), block_config=graphene.ID())
+    session_block_configs = graphene.List(SessionBlockConfig, session_config=graphene.ID())
+
+    nudge = graphene.Field(Nudge, id=graphene.ID(), name=graphene.String())
+    nudge_configs = graphene.List(Nudge)
+
+    def resolve_block_config(self, info, **args):
+        if 'id' in args:
+            return BlockConfigModal.objects.get(pk=args['id'])
+
+
+    def resolve_block_configs(self, info, **args):
+        block_configs = BlockConfigModal.objects.all()
+        return block_configs
+
+    def resolve_block(self, info, **args):
+        block = BlockModal.objects.get(session=args['session'], block_config=args['block_config'])
+        return block
+
+    def resolve_blocks(self, info, **args):
+        blocks = BlockModal.objects.all()
+        return blocks
+
+    def resolve_session_config(self, info, **args):
+        if 'id' in args:
+            return SessionConfigModal.objects.get(pk=args['id'])
+
+        session_config = SessionConfigModal.objects.get(name=args['name'])
+        return session_config
+
+    def resolve_session_configs(self, info, **args):
+        session_configs = SessionConfigModal.objects.all()
+        return session_configs
+
+    def resolve_session(self, info, **args):
+        session = SessionModal.objects.get(session_config=args['session_config'], user=args['user'])
+        return session
+
+    def resolve_sessions(self, info, **args):
+        sessions = SessionModal.objects.all()
+        return sessions
+
+    def resolve_session_block_config(self, info, **args):
+        if 'id' in args:
+            return SessionBlockConfigModal.objects.get(pk=args['id'])
+
+    # TODO: Doesn't work
+        session_block_config = SessionBlockConfigModal.objects.get(session_config = args['session_config'], block_config = args['block_config'])
+        return session_block_config
+
+    def resolve_session_block_configs(self, info, **args):
+        session_block_configs = SessionBlockConfigModal.objects.all()
+        return session_block_configs
+
+    def resolve_nudge(self, info, **args):
+        if 'id' in args:
+            return NudgeModal.objects.get(pk=args['id'])
+
+        nudge = NudgeModal.objects.get(name=args['name'])
+        return nudge
+
+    def resolve_nudge_configs(self, info, **args):
+        nudge_configs = NudgeModal.objects.all()
+        return nudge_configs
+
+
+
+
     def resolve_book(self, info, **args):
         if 'id' in args:
             return BookModal.objects.get(pk=args['id'])
@@ -147,6 +279,210 @@ class CreateBook(graphene.Mutation):
             )
         book.save()
         return CreateBook(book=book)
+
+class CreateBlock(graphene.Mutation):
+    class Arguments:
+        user = graphene.ID(required=True)
+        block_config = graphene.ID(required=True)
+        session = graphene.ID(required=True)
+        # started_at = graphene.types.datetime.DateTime(timezone.now)
+        # finished_at = graphene.types.datetime.DateTime(timezone.now)
+
+    block = graphene.Field(Block)
+
+    def mutate(self, info, **args):
+
+        get_node = graphene.Node.get_node_from_global_id
+        user = get_node(info, args['user'])
+        block_config = get_node(info, args['block_config'])
+        session = get_node(info, args['session'])
+        # started_at = timezone.now
+        # finished_at = timezone.now
+        block = BlockModal(
+            user = user,
+            session = session,
+            block_config = block_config,
+            block_status = 'running',
+            # started_at = started_at,
+            # finished_at = finished_at
+        )
+        block.save()
+        return CreateBlock(block=block)
+
+class FinishBlock(graphene.Mutation):
+    class Arguments:
+        block_id = graphene.ID(required=True)
+
+    block = graphene.Field(Block)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        block = get_node(info, args['block_id'])
+        #block.finished_at = timezone.now
+        block.block_status = "finished"
+        block.save()
+
+        return FinishBlock(block=block)
+
+
+class CreateSession(graphene.Mutation):
+    class Arguments:
+        user = graphene.ID(required=True)
+        session_config = graphene.ID(required=True)
+
+    session = graphene.Field(Session)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        user = get_node(info, args['user'])
+        session_config = get_node(info, args['session_config'])
+
+        session = SessionModal(
+            user = user,
+            session_config = session_config,
+            session_status = 'running',
+        )
+
+        session.save()
+        return CreateSession(session=session)
+
+
+
+class FinishSession(graphene.Mutation):
+    class Arguments:
+        session_id = graphene.ID(required=True)
+
+    session = graphene.Field(Session)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        session = get_node(info, args['session_id'])
+        #session.finished_at = timezone.now
+        session.session_status = "finished"
+        session.save()
+
+        return FinishSession(session=session)
+
+
+class CreateSessionConfig(graphene.Mutation):
+    class Arguments:
+        name = graphene.String(required=True)
+        number_of_sessions = graphene.Int(required=True)
+
+    sessionConfig = graphene.Field(SessionConfig)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        name = args['name']
+        number_of_sessions = args['number_of_sessions']
+
+        sessionConfig = SessionConfigModal(
+            name = name,
+            number_of_sessions = number_of_sessions,
+        )
+
+        sessionConfig.save()
+        return CreateSessionConfig(sessionConfig=sessionConfig)
+
+
+class CreateNudgeConfig(graphene.Mutation):
+    class Arguments:
+        name = graphene.String(required=True)
+        heading = graphene.String(required=True)
+        text = graphene.String(required=True)
+        image = graphene.String(required=True)
+
+    nudgeConfig = graphene.Field(Nudge)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        name = args['name']
+        heading = args['heading']
+        text = args['text']
+        image = args['image']
+
+        nudgeConfig = NudgeModal(
+            name = name,
+            heading = heading,
+            text = text,
+            image = image
+        )
+
+        nudgeConfig.save()
+        return CreateNudgeConfig(nudgeConfig=nudgeConfig)
+
+
+class CreateBlockConfig(graphene.Mutation):
+    class Arguments:
+        #clocktime =
+        name = graphene.String(required=True)
+        charge_status = graphene.Float(required=True)
+        charge_distance = graphene.Float(required=True)
+        time_to_full_charge = graphene.Float(required=True)
+        flexibility_time_request = graphene.Float(required=True)
+        flexibility_charge_level_request = graphene.Float(required=True)
+        flexibility_time_provision = graphene.Float(required=True)
+        flexibility_charge_level_provision = graphene.Float(required=True)
+        full_charge_price = graphene.Float(required=True)
+        nudge_id = graphene.ID(required=True)
+
+    blockConfig = graphene.Field(BlockConfig)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        #clocktime = args['clocktime']
+        name = args['name']
+        charge_status = args['charge_status']
+        charge_distance = args['charge_distance']
+        time_to_full_charge = args['time_to_full_charge']
+        flexibility_time_request = args['flexibility_time_request']
+        flexibility_charge_level_request = args['flexibility_charge_level_request']
+        flexibility_time_provision = args['flexibility_time_provision']
+        flexibility_charge_level_provision = args['flexibility_charge_level_provision']
+        full_charge_price = args['full_charge_price']
+        nudge = get_node(info, args['nudge_id'])
+
+        blockConfig = BlockConfigModal(
+            #clocktime = clocktime,
+            name = name,
+            charge_status = charge_status,
+            charge_distance = charge_distance,
+            time_to_full_charge = time_to_full_charge,
+            flexibility_time_request = flexibility_time_request,
+            flexibility_charge_level_request = flexibility_charge_level_request,
+            flexibility_time_provision = flexibility_time_provision,
+            flexibility_charge_level_provision = flexibility_charge_level_provision,
+            full_charge_price = full_charge_price,
+            nudge = nudge,
+
+        )
+
+        blockConfig.save()
+        return CreateBlockConfig(blockConfig=blockConfig)
+
+
+class CreateSessionBlockConfig(graphene.Mutation):
+    class Arguments:
+        session_config_id = graphene.ID(required=True)
+        block_config_id = graphene.ID(required=True)
+
+    sessionBlockConfig = graphene.Field(SessionBlockConfig)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        session_config_id = get_node(info, args['session_config_id'])
+        block_config_id = get_node(info, args['block_config_id'])
+
+
+        sessionBlockConfig = SessionBlockConfigModal(
+            session_config = session_config_id,
+            block_config = block_config_id,
+        )
+
+        sessionBlockConfig.save()
+        return CreateSessionBlockConfig(sessionBlockConfig=sessionBlockConfig)
+
+
 
 class CreateGroupInvite(graphene.Mutation):
     class Arguments:
@@ -379,6 +715,15 @@ class CreateGroup(graphene.Mutation):
         return CreateGroup(group=group)
 
 class CoreMutations:
+    create_block = CreateBlock.Field()
+    create_session = CreateSession.Field()
+    create_session_config = CreateSessionConfig.Field()
+    create_nudge_config = CreateNudgeConfig.Field()
+    create_block_config = CreateBlockConfig.Field()
+    create_session_block_config = CreateSessionBlockConfig.Field()
+    finish_session = FinishSession.Field()
+    finish_block = FinishBlock.Field()
+
     create_book = CreateBook.Field()
     create_bookshelf_entry = CreateBookshelfEntry.Field()
     create_membership = CreateMembership.Field()

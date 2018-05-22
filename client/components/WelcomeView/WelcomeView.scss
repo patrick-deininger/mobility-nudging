@@ -11,6 +11,14 @@
     font-style: italic;
   }
 
+  .main_container {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    width: $contentWidth;
+    margin: 0 auto;
+  }
+
   .header {
     height: 100px;
     line-height: 100px;
