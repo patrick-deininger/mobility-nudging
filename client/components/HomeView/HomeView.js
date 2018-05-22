@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql, createFragmentContainer } from 'react-relay';
+import { graphql, createRefetchContainer } from 'react-relay';
 import Page from 'components/Page/Page';
 import Neighbour from 'components/Nudges/Neighbour/Neighbour'
 import Template from 'components/Nudges/Template/Template'
@@ -41,6 +41,8 @@ class HomeView extends React.Component {
     },
     blockNumber: parseInt(this.props.location.pathname.split("/run/")[1].split("/")[0]),
     sessionId: this.props.location.pathname.split("/run/")[1].split("/")[1],
+    blockConfig: this.props.viewer.blockConfigs[parseInt(this.props.location.pathname.split("/run/")[1].split("/")[0])-1].id,
+    blockId: "",
     errors: [],
   }
 
@@ -140,19 +142,40 @@ class HomeView extends React.Component {
   createBlock = () => {
      const blockVariables = {
        user: this.props.viewer.user.id,
-       blockConfig: this.props.viewer.blockConfigs[this.state.blockNumber-1].id,
+       blockConfig: this.state.blockConfig,
        session: this.state.sessionId
-
      }
      createBlockMutation(this.props.relay.environment, blockVariables, this.onCompletedCreateBlock, this.setErrors)
 
    }
-   onCompletedCreateBlock = () => {
+   onCompletedCreateBlock = (error, data) => {
+     console.log(this.state.sessionId)
+     console.log(this.state.blockConfig)
+
+     const refetchVariables = fragmentVariables => ({
+       //TODO
+       session: 1,
+       blockConfig: 1,
+     });
+     this.props.relay.refetch(refetchVariables, null, this.onCompletedRefetch);
+
      console.log("Block created")
+
+   }
+
+   onCompletedRefetch = () => {
+     const blockId = this.props.viewer.block.id
+     this.setState({blockId: blockId});
+     console.log("CompletedRefetch")
+     console.log(this.props.viewer.block.id)
+
    }
 
 
+
   render() {
+    console.log("RENDER")
+    console.log(this.state.blockId)
     return (
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
@@ -292,33 +315,54 @@ class HomeView extends React.Component {
   }
 }
 
-export default createFragmentContainer(
+export default createRefetchContainer(
   withAuth(HomeView),
-  graphql`
-    fragment HomeView_viewer on Viewer {
-      ...Page_viewer
-      user{
-        id
-      }
-      blockConfigs {
-        id
-        clocktime
-        chargeStatus
-        chargeDistance
-        timeToFullCharge
-        flexibilityTimeRequest
-        flexibilityChargeLevelRequest
-        flexibilityTimeProvision
-        flexibilityChargeLevelProvision
-        fullChargePrice
-        nudge{
+  {
+  viewer: graphql`
+      fragment HomeView_viewer on Viewer
+      @argumentDefinitions(
+        session: {type: "ID"},
+        blockConfig: {type: "ID"},
+      ){
+        ...Page_viewer
+        block(session: $session, blockConfig: $blockConfig){
           id
-          name
-          heading
-          text
-          image
         }
+        user{
+          id
+        }
+        blockConfigs {
+          id
+          clocktime
+          chargeStatus
+          chargeDistance
+          timeToFullCharge
+          flexibilityTimeRequest
+          flexibilityChargeLevelRequest
+          flexibilityTimeProvision
+          flexibilityChargeLevelProvision
+          fullChargePrice
+          nudge{
+            id
+            name
+            heading
+            text
+            image
+          }
+        }
+
+      }
+
+      `,
+  },
+
+
+  graphql`
+    query HomeViewRefetchQuery($session: ID!, $blockConfig: ID!){
+      viewer {
+        ...HomeView_viewer @arguments(session: $session, blockConfig: $blockConfig)
+
       }
     }
-  `,
+    `,
 );
