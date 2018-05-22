@@ -39,7 +39,8 @@ class HomeView extends React.Component {
       text: "",
       imagesrc: "",
     },
-    blockNumber: parseInt(this.props.location.pathname.split("/run/")[1]),
+    blockNumber: parseInt(this.props.location.pathname.split("/run/")[1].split("/")[0]),
+    sessionId: this.props.location.pathname.split("/run/")[1].split("/")[1],
     errors: [],
   }
 
@@ -130,7 +131,7 @@ class HomeView extends React.Component {
     }
     else {
         const blockNumber = this.state.blockNumber + 1
-        nextScreen = "/run/".concat((blockNumber).toString())
+        nextScreen = "/run/".concat((blockNumber).toString()).concat("/").concat(this.state.sessionId)
     }
     this.props.router.push(nextScreen)
   }
@@ -151,8 +152,6 @@ class HomeView extends React.Component {
 
 
   render() {
-
-
     return (
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
