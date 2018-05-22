@@ -336,8 +336,8 @@ class FinishSession(graphene.Mutation):
     def mutate(self, info, **args):
         get_node = graphene.Node.get_node_from_global_id
         session = get_node(info, args['session_id'])
-        session.finished_at = timezone.now
-        session.status = "finished"
+        #session.finished_at = timezone.now
+        session.session_status = "finished"
         session.save()
 
         return FinishSession(session=session)

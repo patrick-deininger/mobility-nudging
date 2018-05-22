@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql, createFragmentContainer } from 'react-relay';
+import { graphql, createFragmentContainer, commitMutation } from 'react-relay';
 import Page from 'components/Page/Page';
 
 import { withAuth } from 'modules/auth/utils';
@@ -9,17 +9,58 @@ import styles from './FinishedScreen.scss';
 import classNames from 'classnames';
 
 
+const FinishSessionMutation = graphql`
+  mutation FinishedScreenMutation (
+    $sessionId: ID!
+  ) {
+    finishSession(sessionId: $sessionId) {
+      session {
+        id
+      }
+    }
+  }
+`;
+
+
 class FinishedScreen extends React.Component {
+  state = {
+    sessionId: this.props.location.pathname.split("/done/")[1]
+  }
+
+  onButtonClick = () => {
+
+    const FinishSessionVariables = {
+      //sessionId: this.props.viewer.sessions[0].id
+      sessionId: this.state.sessionId,
+    };
+
+    console.log(FinishSessionVariables)
+
+    commitMutation(this.props.relay.environment, {
+          mutation: FinishSessionMutation,
+          variables: FinishSessionVariables,
+          onCompleted: (resp) => {
+            console.log("Finished Session")
+            console.log(resp)
+            //this.props.router.push('/');
+          },
+          onError: (err) => {
+            console.error(err)
+          },
+        }
+      );
+
+  }
+
 
   render() {
-
     return (
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
           <Segment padded='very'>
             Done
-            <Button as={Link} to='/' fluid color="green" className={styles.conformationButton} >
-              Zurück
+            <Button onClick={this.onButtonClick} fluid color="green" className={styles.conformationButton} >
+              Experiment abschließen
             </Button>
           </Segment>
       </section>
@@ -33,6 +74,9 @@ export default createFragmentContainer(
   graphql`
     fragment FinishedScreen_viewer on Viewer {
       ...Page_viewer
+      sessions{
+        id
+      }
     }
   `,
 );
