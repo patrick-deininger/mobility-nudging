@@ -13,18 +13,34 @@ class ConfigList extends React.Component {
     this.setState({ ...this.state, errors });
   }
 
-  countNumberOfSessions = (id) => {
+  countNumberOfSessionsRunning = (id) => {
     const sessions = this.props.viewer.sessions;
 
     var l = sessions.length
-    var sessionCount = 0
+    var sessionRunningCount = 0
     for (var x = 0; x < l; x++){
       if (sessions[x].sessionConfig.id == id){
-        sessionCount += 1
+        if (sessions[x].sessionStatus == "running"){
+            sessionRunningCount += 1
+        }
       }
     }
+    return(sessionRunningCount)
+  }
 
-    return(sessionCount)
+  countNumberOfSessionsFinished = (id) => {
+    const sessions = this.props.viewer.sessions;
+
+    var l = sessions.length
+    var sessionFinishedCount = 0
+    for (var x = 0; x < l; x++){
+      if (sessions[x].sessionConfig.id == id){
+        if (sessions[x].sessionStatus == "finished"){
+            sessionFinishedCount += 1
+        }
+      }
+    }
+    return(sessionFinishedCount)
   }
 
   countNumberOfBlocks = (id) => {
@@ -44,6 +60,7 @@ class ConfigList extends React.Component {
 
     if (this.props.show == "sessionConfig"){
       const sessionConfigs = this.props.viewer.sessionConfigs;
+      console.log(this.props.viewer.sessions)
 
       return (
         <div className={styles.root}>
@@ -53,6 +70,7 @@ class ConfigList extends React.Component {
                 <Table.HeaderCell className={styles.standardSessionConfig}>Name</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Geplante Durchläufe</Table.HeaderCell>
                   <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Begonnene Durchläufe</Table.HeaderCell>
+                            <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Beendete Durchläufe</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Anzahl Blöcke</Table.HeaderCell>
                   <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Blöcke</Table.HeaderCell>
               </Table.Row>
@@ -62,7 +80,8 @@ class ConfigList extends React.Component {
                 <Table.Row key={e.id}>
                   <Table.Cell>{e.name}</Table.Cell>
                   <Table.Cell textAlign='right'>{e.numberOfSessions}</Table.Cell>
-                  <Table.Cell textAlign='right'>{this.countNumberOfSessions(e.id)}</Table.Cell>
+                  <Table.Cell textAlign='right'>{this.countNumberOfSessionsRunning(e.id)}</Table.Cell>
+                  <Table.Cell textAlign='right'>{this.countNumberOfSessionsFinished(e.id)}</Table.Cell>
                   <Table.Cell textAlign='right'>{this.countNumberOfBlocks(e.id)}</Table.Cell>
                   <Table.Cell textAlign='right'>tbd</Table.Cell>
                 </Table.Row>)
@@ -186,6 +205,7 @@ export default createFragmentContainer(
     }
     sessions{
       id
+      sessionStatus
       sessionConfig{
         id
       }
