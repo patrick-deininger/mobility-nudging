@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql, createRefetchContainer } from 'react-relay';
+import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 import Page from 'components/Page/Page';
 import Neighbour from 'components/Nudges/Neighbour/Neighbour'
 import Template from 'components/Nudges/Template/Template'
@@ -23,6 +23,20 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 const flexibilityEndTime = '19:28';
 const IndividualFlexibilityEndTime = 'tbd';
 const noFlexibilityEndTime = '18:15';
+
+
+const FinishBlockMutation = graphql`
+  mutation HomeViewMutation (
+    $blockId: ID!
+  ) {
+    finishBlock(blockId: $blockId) {
+      block {
+        id
+      }
+    }
+  }
+`;
+
 
 class HomeView extends React.Component {
 
@@ -127,15 +141,35 @@ class HomeView extends React.Component {
   };
 
   onClickConfirmation = () => {
-    var nextScreen = ""
-    if (this.state.blockNumber+1 > this.props.viewer.blockConfigs.length){
-        nextScreen = "/done".concat("/").concat(this.state.sessionId)
-    }
-    else {
-        const blockNumber = this.state.blockNumber + 1
-        nextScreen = "/run/".concat((blockNumber).toString()).concat("/").concat(this.state.sessionId)
-    }
-    this.props.router.push(nextScreen)
+
+    const FinishBlockVariables = {
+      blockId: this.state.blockId,
+    };
+
+    commitMutation(this.props.relay.environment, {
+          mutation: FinishBlockMutation,
+          variables: FinishBlockVariables,
+          onCompleted: (resp) => {
+            console.log("Finished Block")
+            this.nextScreen()
+          },
+          onError: (err) => {
+            console.error(err)
+          },
+        }
+      );
+  }
+
+ nextScreen = () => {
+      var nextScreen = ""
+      if (this.state.blockNumber+1 > this.props.viewer.blockConfigs.length){
+          nextScreen = "/done".concat("/").concat(this.state.sessionId)
+      }
+      else {
+          const blockNumber = this.state.blockNumber + 1
+          nextScreen = "/run/".concat((blockNumber).toString()).concat("/").concat(this.state.sessionId)
+      }
+      this.props.router.push(nextScreen)
   }
 
 
@@ -149,8 +183,6 @@ class HomeView extends React.Component {
 
    }
    onCompletedCreateBlock = (error, data) => {
-     console.log(this.state.sessionId)
-     console.log(this.state.blockConfig)
 
      const refetchVariables = fragmentVariables => ({
        //TODO
@@ -166,16 +198,12 @@ class HomeView extends React.Component {
    onCompletedRefetch = () => {
      const blockId = this.props.viewer.block.id
      this.setState({blockId: blockId});
-     console.log("CompletedRefetch")
-     console.log(this.props.viewer.block.id)
 
    }
 
 
-
   render() {
-    console.log("RENDER")
-    console.log(this.state.blockId)
+
     return (
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
