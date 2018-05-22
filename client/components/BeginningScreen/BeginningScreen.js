@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql, createFragmentContainer } from 'react-relay';
+import { graphql, createRefetchContainer } from 'react-relay';
 import Page from 'components/Page/Page';
 
 import { withAuth } from 'modules/auth/utils';
@@ -13,31 +13,54 @@ import classNames from 'classnames';
 class BeginningScreen extends React.Component {
 
   state = {
+    sessionConfigId: "",
+    nextScreen: "/done",
     errors: []
   }
 
+  componentWillMount(){
+    const sessionConfigId = this.props.viewer.sessionConfigs[0].id
+    this.setState({ ...this.state, sessionConfigId });
+  }
+
   setErrors = (errors) => {
+    console.log(errors)
     this.setState({ ...this.state, errors });
   }
 
   handleButtonClick = () => {
     //this.props.router.push('/run/1')
-
     const sessionVariables = {
       user: this.props.viewer.user.id,
-      sessionConfig: this.props.viewer.sessionConfigs[0].id
+      sessionConfig: this.state.sessionConfigId
     };
-
+    console.log(sessionVariables)
     createSessionMutation(this.props.relay.environment, sessionVariables, this.onCompletedCreateSession, this.setErrors)
 
   }
 
-  onCompletedCreateSession = () => {
+  onCompletedCreateSession = (error, data) => {
+
+    const refetchVariables = fragmentVariables => ({
+      //TODO
+      sessionConfig: 1,
+      user: 1,
+    });
+    this.props.relay.refetch(refetchVariables, null, this.onCompletedRefetch);
+
     console.log("Session created")
+
+  }
+
+  onCompletedRefetch = () => {
+    const nextScreen = "/run/1/".concat((this.props.viewer.session.id).toString())
+    this.setState({ ...this.state, nextScreen });
+    this.props.router.push(nextScreen)
+
+
   }
 
   render() {
-    console.log(this.props.viewer)
     return (
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
@@ -45,7 +68,7 @@ class BeginningScreen extends React.Component {
             <p>Erläuterung:</p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             <p></p>
-            <Button as={Link} to='/run/1' onClick={this.handleButtonClick} fluid color="green" className={styles.conformationButton} >
+            <Button onClick={this.handleButtonClick} fluid color="green" className={styles.conformationButton} >
               Start
             </Button>
           </Segment>
@@ -55,22 +78,57 @@ class BeginningScreen extends React.Component {
   }
 }
 
-export default createFragmentContainer(
+export default createRefetchContainer(
   withAuth(BeginningScreen),
-  graphql`
-    fragment BeginningScreen_viewer on Viewer {
-      ...Page_viewer
-      user{
-        id
-      }
-      blockConfigs {
+  {
+  viewer: graphql`
+      fragment BeginningScreen_viewer on Viewer
+      @argumentDefinitions(
+        sessionConfig: {type: "ID"},
+        user: {type: "ID"},
+      ){
+        ...Page_viewer
+        session(sessionConfig: $sessionConfig, user: $user){
           id
+        }
+        user{
+          id
+        }
+        sessionConfigs{
+          id
+          name
+        }
+      }
+
+      `,
+
+  },
+
+
+  graphql`
+    query BeginningScreenRefetchQuery($sessionConfig: ID!, $user: ID!){
+      viewer {
+        ...BeginningScreen_viewer @arguments(sessionConfig: $sessionConfig, user: $user)
 
       }
-      sessionConfigs{
-        id
-        name
-      }
     }
-  `,
+    `,
+
+
+
+  //
+  //
+  //
+  // graphql`
+  //   fragment BeginningScreen_viewer on Viewer {
+  //     ...Page_viewer
+  //     user{
+  //       id
+  //     }
+  //     sessionConfigs{
+  //       id
+  //       name
+  //     }
+  //   }
+  // `,
 );
