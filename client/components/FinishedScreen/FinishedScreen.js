@@ -30,19 +30,15 @@ class FinishedScreen extends React.Component {
   onButtonClick = () => {
 
     const FinishSessionVariables = {
-      //sessionId: this.props.viewer.sessions[0].id
       sessionId: this.state.sessionId,
     };
-
-    console.log(FinishSessionVariables)
 
     commitMutation(this.props.relay.environment, {
           mutation: FinishSessionMutation,
           variables: FinishSessionVariables,
           onCompleted: (resp) => {
             console.log("Finished Session")
-            console.log(resp)
-            //this.props.router.push('/');
+            this.props.router.push('/');
           },
           onError: (err) => {
             console.error(err)

@@ -140,7 +140,8 @@ class HomeView extends React.Component {
   createBlock = () => {
      const blockVariables = {
        user: this.props.viewer.user.id,
-       blockConfig: this.props.viewer.blockConfigs[this.state.blockNumber-1].id
+       blockConfig: this.props.viewer.blockConfigs[this.state.blockNumber-1].id,
+       session: this.state.sessionId
 
      }
      createBlockMutation(this.props.relay.environment, blockVariables, this.onCompletedCreateBlock, this.setErrors)
