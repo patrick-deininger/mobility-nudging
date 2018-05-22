@@ -22,6 +22,7 @@ const LandingRedirectViewQuery = graphql`
   }
 `;
 
+
 const HomeViewQuery = graphql`
   query routes_HomeView_Query {
     viewer {
@@ -93,7 +94,7 @@ export default makeRouteConfig(
       <Route path='login' />
       <Route path='signup' />
     </Route>
-    <Route path='run/:number' Component={HomeView} query={HomeViewQuery} />
+    <Route path='run/:number/:id' Component={HomeView} query={HomeViewQuery} />
     <Route path='done' Component={FinishedScreen} query={FinishedScreenQuery} />
     <Route path='cockpit' Component={Cockpit} query={CockpitQuery} />
     <Route path='add-session-config' Component={AddSessionConfig} query={AddSessionConfigQuery} />

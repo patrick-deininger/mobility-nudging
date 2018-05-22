@@ -10,7 +10,7 @@ class LandingRedirectView extends React.Component {
     const loggedIn = this.props.isAuthenticated;
 
     if (loggedIn) {
-      return <BeginningScreen viewer={this.props.viewer} />;
+      return <BeginningScreen viewer={this.props.viewer} router={this.props.router} />;
     }
 
     return <WelcomeView />;
