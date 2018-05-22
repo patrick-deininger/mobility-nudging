@@ -101,7 +101,6 @@ export default createRefetchContainer(
       }
 
       `,
-
   },
 
 
@@ -113,22 +112,4 @@ export default createRefetchContainer(
       }
     }
     `,
-
-
-
-  //
-  //
-  //
-  // graphql`
-  //   fragment BeginningScreen_viewer on Viewer {
-  //     ...Page_viewer
-  //     user{
-  //       id
-  //     }
-  //     sessionConfigs{
-  //       id
-  //       name
-  //     }
-  //   }
-  // `,
 );
