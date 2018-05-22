@@ -80,7 +80,7 @@ class HomeView extends React.Component {
       this.createBlock()
     }
     else {
-      this.props.router.push('/done')
+      this.props.router.push('/done'.concat('/').concat(this.state.sessionId))
     }
 
 
@@ -127,7 +127,7 @@ class HomeView extends React.Component {
   onClickConfirmation = () => {
     var nextScreen = ""
     if (this.state.blockNumber+1 > this.props.viewer.blockConfigs.length){
-        nextScreen = "/done"
+        nextScreen = "/done".concat("/").concat(this.state.sessionId)
     }
     else {
         const blockNumber = this.state.blockNumber + 1
