@@ -283,6 +283,7 @@ class CreateBlock(graphene.Mutation):
     class Arguments:
         user = graphene.ID(required=True)
         block_config = graphene.ID(required=True)
+        session = graphene.ID(required=True)
         # started_at = graphene.types.datetime.DateTime(timezone.now)
         # finished_at = graphene.types.datetime.DateTime(timezone.now)
 
@@ -293,10 +294,12 @@ class CreateBlock(graphene.Mutation):
         get_node = graphene.Node.get_node_from_global_id
         user = get_node(info, args['user'])
         block_config = get_node(info, args['block_config'])
+        session = get_node(info, args['session'])
         # started_at = timezone.now
         # finished_at = timezone.now
         block = BlockModal(
             user = user,
+            session = session,
             block_config = block_config,
             block_status = 'running',
             # started_at = started_at,
@@ -304,6 +307,21 @@ class CreateBlock(graphene.Mutation):
         )
         block.save()
         return CreateBlock(block=block)
+
+class FinishBlock(graphene.Mutation):
+    class Arguments:
+        block_id = graphene.ID(required=True)
+
+    block = graphene.Field(Block)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        block = get_node(info, args['block_id'])
+        #block.finished_at = timezone.now
+        block.block_status = "finished"
+        block.save()
+
+        return FinishBlock(block=block)
 
 
 class CreateSession(graphene.Mutation):
@@ -326,6 +344,8 @@ class CreateSession(graphene.Mutation):
 
         session.save()
         return CreateSession(session=session)
+
+
 
 class FinishSession(graphene.Mutation):
     class Arguments:
@@ -698,6 +718,7 @@ class CoreMutations:
     create_block_config = CreateBlockConfig.Field()
     create_session_block_config = CreateSessionBlockConfig.Field()
     finish_session = FinishSession.Field()
+    finish_block = FinishBlock.Field()
 
     create_book = CreateBook.Field()
     create_bookshelf_entry = CreateBookshelfEntry.Field()
