@@ -150,7 +150,7 @@ class CoreQueries:
     block_config = graphene.Field(BlockConfig, id=graphene.ID())
     block_configs = graphene.List(BlockConfig)
 
-    block = graphene.Node.Field(Block, id=graphene.ID())
+    block = graphene.Field(Block, session=graphene.ID(), block_config=graphene.ID())
     blocks = graphene.List(Block)
 
     session_config = graphene.Field(SessionConfig, id=graphene.ID(), name=graphene.String())
@@ -175,8 +175,8 @@ class CoreQueries:
         return block_configs
 
     def resolve_block(self, info, **args):
-        if 'id' in args:
-            return BlockModal.objects.get(pk=args['id'])
+        block = BlockModal.objects.get(session=args['session'], block_config=args['block_config'])
+        return block
 
     def resolve_blocks(self, info, **args):
         blocks = BlockModal.objects.all()
