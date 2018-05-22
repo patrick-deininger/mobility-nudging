@@ -814,6 +814,8 @@ class CoreMutations:
     create_session = CreateSession.Field()
     create_session_config = CreateSessionConfig.Field()
     create_nudge_config = CreateNudgeConfig.Field()
+    create_feedback_config = CreateFeedbackConfig.Field()
+    create_context_config = CreateContextConfig.Field()
     create_block_config = CreateBlockConfig.Field()
     create_session_block_config = CreateSessionBlockConfig.Field()
     finish_session = FinishSession.Field()
