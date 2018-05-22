@@ -77,11 +77,13 @@ class Block(models.Model):
     block_config = models.ForeignKey(BlockConfig, default="1")
     started_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(default=timezone.now)
+    block_status = models.CharField(max_length=31, blank=True)
 
 
 class SessionConfig(models.Model):
     name = models.CharField(max_length=31, blank=True)
-    number_of_sessions = models.PositiveSmallIntegerField(max_length=10, blank=True)
+    number_of_sessions = models.PositiveSmallIntegerField(blank=True)
+    session_config_status = models.CharField(max_length=31, default="active")
 
 class Session(models.Model):
     #experiment = models.ForeignKey(Experiment)
@@ -89,9 +91,10 @@ class Session(models.Model):
     session_config = models.ForeignKey(SessionConfig, default="1")
     started_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(default=timezone.now)
+    session_status = models.CharField(max_length=31, blank=True)
 
-    # class Meta:
-    # unique_together = ('user')
+    class Meta:
+        unique_together = ('user', 'session_config')
 
 class SessionBlockConfig(models.Model):
     session_config = models.ForeignKey(SessionConfig)

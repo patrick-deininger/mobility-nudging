@@ -44,7 +44,7 @@ class SessionConfig(DjangoObjectType):
 class Session(DjangoObjectType):
     class Meta:
         model = SessionModal
-        filter_fields = []
+        filter_fields = ['session_config', 'user']
         interfaces = (graphene.Node, )
 
 class Nudge(DjangoObjectType):
@@ -156,7 +156,7 @@ class CoreQueries:
     session_config = graphene.Field(SessionConfig, id=graphene.ID(), name=graphene.String())
     session_configs = graphene.List(SessionConfig)
 
-    session = graphene.Node.Field(Session, id=graphene.ID())
+    session = graphene.Field(Session, session_config=graphene.ID(), user=graphene.ID())
     sessions = graphene.List(Session)
 
     session_block_config = graphene.Node.Field(SessionBlockConfig, id=graphene.ID(), session_config=graphene.ID(), block_config=graphene.ID())
@@ -194,8 +194,8 @@ class CoreQueries:
         return session_configs
 
     def resolve_session(self, info, **args):
-        if 'id' in args:
-            return SessionModal.objects.get(pk=args['id'])
+        session = SessionModal.objects.get(session_config=args['session_config'], user=args['user'])
+        return session
 
     def resolve_sessions(self, info, **args):
         sessions = SessionModal.objects.all()
@@ -298,6 +298,7 @@ class CreateBlock(graphene.Mutation):
         block = BlockModal(
             user = user,
             block_config = block_config,
+            block_status = 'running',
             # started_at = started_at,
             # finished_at = finished_at
         )
@@ -320,10 +321,26 @@ class CreateSession(graphene.Mutation):
         session = SessionModal(
             user = user,
             session_config = session_config,
+            session_status = 'running',
         )
 
         session.save()
         return CreateSession(session=session)
+
+class FinishSession(graphene.Mutation):
+    class Arguments:
+        session_id = graphene.ID(required=True)
+
+    session = graphene.Field(Session)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        session = get_node(info, args['session_id'])
+        session.finished_at = timezone.now
+        session.status = "finished"
+        session.save()
+
+        return FinishSession(session=session)
 
 
 class CreateSessionConfig(graphene.Mutation):
@@ -680,6 +697,7 @@ class CoreMutations:
     create_nudge_config = CreateNudgeConfig.Field()
     create_block_config = CreateBlockConfig.Field()
     create_session_block_config = CreateSessionBlockConfig.Field()
+    finish_session = FinishSession.Field()
 
     create_book = CreateBook.Field()
     create_bookshelf_entry = CreateBookshelfEntry.Field()
