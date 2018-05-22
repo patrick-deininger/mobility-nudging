@@ -74,17 +74,28 @@ class ContextConfig(models.Model):
 class BlockConfig(models.Model):
     name = models.CharField(max_length=31)
     description = models.CharField(max_length=180)
+    context = models.ForeignKey(ContextConfig)
+    feedback = models.ForeignKey(FeedbackConfig)
+
     clocktime = models.DateTimeField(default=timezone.now)
     charge_status =  models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     charge_distance = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
-    time_to_full_charge = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
-    flexibility_time_request = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
-    flexibility_charge_level_request = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
-    flexibility_time_provision = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
-    flexibility_charge_level_provision = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
-    full_charge_price = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    representation_current_state = models.CharField(max_length=31, blank=True)
 
-    nudge = models.ForeignKey(Nudge)
+    flexibility_time_request = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    default_charge_level = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    time_to_full_charge = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    full_charge_price = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    minumum_charge_level = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    representation_target_state = models.CharField(max_length=31, blank=True)
+
+    flexibility_time_provision = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    saved_emissions = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    avoided_environmental_costs = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    avoided_energy_costs = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+
+    nudge_static = models.ForeignKey(Nudge)
+    nudge_dynamic = models.ForeignKey(Nudge)
 
 
 

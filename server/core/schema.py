@@ -31,17 +31,27 @@ class BlockConfig(DjangoObjectType):
         model = BlockConfigModal
         filter_fields = [
             'name',
+            'context',
+            'feedback',
+
             'clocktime',
             'charge_status',
             'charge_distance',
-            'time_to_full_charge',
+
             'flexibility_time_request',
-            'flexibility_charge_level_request',
-            'flexibility_time_provision',
-            'flexibility_charge_level_provision',
+            'default_charge_level',
+            'time_to_full_charge',
             'full_charge_price',
-            'nudge'
-             ]
+            'minumum_charge_level',
+
+            'flexibility_time_provision',
+            'saved_emissions',
+            'avoided_environmental_costs',
+            'avoided_energy_costs',
+
+            'nudge_static',
+            'nudge_dynamic'
+            ]
         interfaces = (graphene.Node, )
 
 class Block(DjangoObjectType):
@@ -49,7 +59,6 @@ class Block(DjangoObjectType):
         model = BlockModal
         filter_fields = ['user', 'block_config', 'started_at', 'finished_at']
         interfaces = (graphene.Node, )
-
 
 class SessionConfig(DjangoObjectType):
     class Meta:
@@ -86,6 +95,8 @@ class SessionBlockConfig(DjangoObjectType):
         model = SessionBlockConfigModal
         filter_fields = ['session_config', 'block_config']
         interfaces = (graphene.Node, )
+
+
 
 
 class Book(DjangoObjectType):
@@ -512,49 +523,87 @@ class CreateContextConfig(graphene.Mutation):
 
 class CreateBlockConfig(graphene.Mutation):
     class Arguments:
-        #clocktime =
+
         name = graphene.String(required=True)
         description = graphene.String(required=True)
+        context = graphene.ID(required=True)
+        feedback = graphene.ID(required=True)
+
+        #clocktime =
         charge_status = graphene.Float(required=True)
         charge_distance = graphene.Float(required=True)
-        time_to_full_charge = graphene.Float(required=True)
+        representation_current_state = graphene.String(required=True)
+
         flexibility_time_request = graphene.Float(required=True)
-        flexibility_charge_level_request = graphene.Float(required=True)
-        flexibility_time_provision = graphene.Float(required=True)
-        flexibility_charge_level_provision = graphene.Float(required=True)
+        default_charge_level = graphene.Float(required=True)
+        time_to_full_charge = graphene.Float(required=True)
         full_charge_price = graphene.Float(required=True)
-        nudge_id = graphene.ID(required=True)
+        minimum_charge_level = graphene.Float(required=True)
+        representation_target_state = graphene.String(required=True)
+
+        flexibility_time_provision = graphene.Float(required=True)
+        saved_emissions = graphene.Float(required=True)
+        avoided_environmental_costs = graphene.Float(required=True)
+        avoided_energy_costs = graphene.Float(required=True)
+
+        nudge_static = graphene.ID(required=True)
+        nudge_dynamic = graphene.ID(required=True)
 
     blockConfig = graphene.Field(BlockConfig)
 
     def mutate(self, info, **args):
         get_node = graphene.Node.get_node_from_global_id
-        #clocktime = args['clocktime']
+
         name = args['name']
         description = args['description']
+        context = get_node(info, args['context'])
+        feedback = get_node(info, args['feedback'])
+
+        #clocktime = args['clocktime']
         charge_status = args['charge_status']
         charge_distance = args['charge_distance']
-        time_to_full_charge = args['time_to_full_charge']
+        representation_current_state = args['representation_current_state']
+
         flexibility_time_request = args['flexibility_time_request']
-        flexibility_charge_level_request = args['flexibility_charge_level_request']
-        flexibility_time_provision = args['flexibility_time_provision']
-        flexibility_charge_level_provision = args['flexibility_charge_level_provision']
+        default_charge_level = args['default_charge_level']
+        time_to_full_charge = args['time_to_full_charge']
         full_charge_price = args['full_charge_price']
-        nudge = get_node(info, args['nudge_id'])
+        minimum_charge_level = args['minumum_charge_level']
+        representation_target_state = args['representation_target_state']
+
+        flexibility_time_provision = args['flexibility_time_provision']
+        saved_emissions = args['saved_emissions']
+        avoided_environmental_costs = args['avoided_environmental_costs']
+        avoided_energy_costs = args['avoided_energy_costs']
+
+        nudge_static = get_node(info, args['nudge_static'])
+        nudge_dynamic = get_node(info, args['nudge_dynamic'])
 
         blockConfig = BlockConfigModal(
-            #clocktime = clocktime,
             name = name,
             description = description,
+            context = context,
+            feedback = feedback,
+
+            #clocktime = clocktime,
             charge_status = charge_status,
             charge_distance = charge_distance,
-            time_to_full_charge = time_to_full_charge,
+            representation_current_state = representation_current_state,
+
             flexibility_time_request = flexibility_time_request,
-            flexibility_charge_level_request = flexibility_charge_level_request,
-            flexibility_time_provision = flexibility_time_provision,
-            flexibility_charge_level_provision = flexibility_charge_level_provision,
+            default_charge_level = default_charge_level,
+            time_to_full_charge = time_to_full_charge,
             full_charge_price = full_charge_price,
-            nudge = nudge,
+            minimum_charge_level = minimum_charge_level,
+            representation_target_state = representation_target_state,
+
+            flexibility_time_provision = flexibility_time_provision,
+            saved_emissions = saved_emissions,
+            avoided_environmental_costs = avoided_environmental_costs,
+            avoided_energy_costs = avoided_energy_costs,
+
+            nudge_static = nudge_static,
+            nudge_dynamic = nudge_dynamic,
 
         )
 
