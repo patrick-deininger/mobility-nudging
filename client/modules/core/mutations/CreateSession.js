@@ -8,12 +8,7 @@ const mutation = graphql`
   ) {
     createSession(user: $user, sessionConfig: $sessionConfig) {
       session {
-        user {
-          id
-        }
-        sessionConfig {
-          id
-        }
+        id
       }
     }
   }
