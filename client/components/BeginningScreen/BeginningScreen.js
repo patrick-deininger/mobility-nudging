@@ -49,7 +49,7 @@ class BeginningScreen extends React.Component {
   }
 
   onCompletedRefetch = () => {
-    const nextScreen = "/run/1/".concat((this.props.viewer.session.id).toString())
+    const nextScreen = `/run/1/${this.props.viewer.session.id}`
     this.setState({ ...this.state, nextScreen });
     this.props.router.push(nextScreen)
 

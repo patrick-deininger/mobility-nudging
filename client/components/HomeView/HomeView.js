@@ -108,7 +108,7 @@ class HomeView extends React.Component {
       this.createBlock()
     }
     else {
-      this.props.router.push('/done'.concat('/').concat(this.state.sessionId))
+      this.props.router.push(`/done/${this.state.sessionId}`)
     }
 
 
@@ -177,11 +177,11 @@ class HomeView extends React.Component {
  nextScreen = () => {
       var nextScreen = ""
       if (this.state.blockNumber+1 > this.props.viewer.blockConfigs.length){
-          nextScreen = "/done".concat("/").concat(this.state.sessionId)
+          nextScreen = `/done/${this.state.sessionId}`
       }
       else {
           const blockNumber = this.state.blockNumber + 1
-          nextScreen = "/run/".concat((blockNumber).toString()).concat("/").concat(this.state.sessionId)
+          nextScreen = `/run/${blockNumber}/${this.state.sessionId}`
       }
       this.props.router.push(nextScreen)
   }
