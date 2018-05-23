@@ -9,9 +9,10 @@ import styles from './AddSessionConfig.scss';
 const CreateSessionConfigMutation = graphql`
   mutation AddSessionConfigMutation (
     $name: String!
+    $description: String!
     $numberOfSessions: Int!
   ) {
-    createSessionConfig(name: $name, numberOfSessions: $numberOfSessions) {
+    createSessionConfig(name: $name, description: $description, numberOfSessions: $numberOfSessions) {
       sessionConfig {
         id
       }
@@ -24,6 +25,7 @@ class AddSessionConfig extends React.Component {
   state = {
     input: {
       name: "",
+      description: "",
       number_of_sessions: "",
     },
     errors: [],
@@ -46,6 +48,7 @@ class AddSessionConfig extends React.Component {
     console.log("onSubmit")
     const SessionConfigVariables = {
       name: this.state.input.name,
+      description: this.state.input.description,
       numberOfSessions: parseInt(this.state.input.number_of_sessions),
     };
 
@@ -91,6 +94,18 @@ class AddSessionConfig extends React.Component {
             fluid
             required
             placeholder='Session Name'
+            onChange={this.handleFieldChange}
+          />
+
+          <Input
+            id='description'
+            className={styles.inputField}
+            value={input.description}
+            type='text'
+            size='large'
+            fluid
+            required
+            placeholder='Beschreibung'
             onChange={this.handleFieldChange}
           />
 

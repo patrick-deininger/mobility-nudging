@@ -9,29 +9,54 @@ import styles from './AddBlockConfig.scss';
 const CreateBlockConfigMutation = graphql`
   mutation AddBlockConfigMutation (
     $name: String!
+    $description: String!
+    $context: ID!
+    $feedback: ID!
+
     $chargeStatus: Float!
     $chargeDistance: Float!
-    $timeToFullCharge: Float!
-    $flexibilityTimeRequest: Float!
-    $flexibilityChargeLevelRequest: Float!
-    $flexibilityTimeProvision: Float!
-    $flexibilityChargeLevelProvision: Float!
-    $fullChargePrice: Float!
-    $nudgeId: ID!
+    $representationCurrentState: String!
 
+    $flexibilityTimeRequest: Float!
+    $defaultChargeLevel: Float!
+    $timeToFullCharge: Float!
+    $fullChargePrice: Float!
+    $minimumChargeLevel: Float!
+    $representationTargetState: String!
+
+    $flexibilityTimeProvision: Float!
+    $savedEmissions: Float!
+    $avoidedEnvironmentalCosts: Float!
+    $avoidedEnergyCosts: Float!
+
+    $nudgeStatic: ID!
+    $nudgeDynamic: ID!
   )
   {
     createBlockConfig (
       name: $name
+      description: $description
+      context: $context
+      feedback: $feedback
+
       chargeStatus: $chargeStatus
       chargeDistance: $chargeDistance
-      timeToFullCharge: $timeToFullCharge
+      representationCurrentState: $representationCurrentState
+
       flexibilityTimeRequest: $flexibilityTimeRequest
-      flexibilityChargeLevelRequest: $flexibilityChargeLevelRequest
-      flexibilityTimeProvision: $flexibilityTimeProvision
-      flexibilityChargeLevelProvision: $flexibilityChargeLevelProvision
+      defaultChargeLevel: $defaultChargeLevel
+      timeToFullCharge: $timeToFullCharge
       fullChargePrice: $fullChargePrice
-      nudgeId: $nudgeId
+      minimumChargeLevel: $minimumChargeLevel
+      representationTargetState: $representationTargetState
+
+      flexibilityTimeProvision: $flexibilityTimeProvision
+      savedEmissions: $savedEmissions
+      avoidedEnvironmentalCosts: $avoidedEnvironmentalCosts
+      avoidedEnergyCosts: $avoidedEnergyCosts
+
+      nudgeStatic: $nudgeStatic
+      nudgeDynamic: $nudgeDynamic
     )
       {
         blockConfig {
@@ -46,24 +71,42 @@ class AddBlockConfig extends React.Component {
   state = {
     input: {
         name: "",
+        description: "",
+        context_id: "",
+        feedback_id: "",
+
         clocktime: "",
         charge_status: "",
         charge_distance: "",
-        time_to_full_charge: "",
+        representation_current_state: "",
+
         flexibility_time_request: "",
-        flexibility_charge_level_request: "",
-        flexibility_time_provision: "",
-        flexibility_charge_level_provision: "",
+        default_charge_level: "",
+        time_to_full_charge: "",
         full_charge_price: "",
-        nudge_id: ""
+        minimum_charge_level: "",
+        representation_target_state: "",
+
+        flexibility_time_provision: "",
+        saved_emissions: "",
+        avoided_environmental_costs: "",
+        avoided_energy_costs: "",
+
+        nudge_static_id: "",
+        nudge_dynamic_id: "",
     },
-    nudgeOptions: [],
+    contextOptions: [],
+    feedbackOptions: [],
+    representationCurrentStateOptions: [],
+    representationTargetStateOptions: [],
+    nudgeStaticOptions: [],
+    nudgeDynamicDOptions: [],
     errors: [],
 
   }
 
   componentWillMount(){
-    const nudgeOptions = this.props.viewer.nudgeConfigs.map((x) => (
+    const nudgeOptions = this.props.viewer.nudgeStaticConfigs.map((x) => (
     {
       key: x.id,
       value: x.id,
@@ -83,25 +126,70 @@ class AddBlockConfig extends React.Component {
     this.setState({ ...this.state, input });
   }
 
-  handleDropdownChange = (e, { value }) => {
+
+
+
+  handleDropdownChangeContext = (e, { value }) => {
     const input = this.state.input;
-    input['nudge_id'] = value;
+    input['context_id'] = value;
+    this.setState({ ...this.state, input });
+  }
+
+  handleDropdownChangeFeedback = (e, { value }) => {
+    const input = this.state.input;
+    input['feedback_id'] = value;
+    this.setState({ ...this.state, input });
+  }
+
+  handleDropdownChangeRepresentationCurrentStateOptions = (e, { value }) => {
+    const input = this.state.input;
+    input['representation_current_state_id'] = value;
+    this.setState({ ...this.state, input });
+  }
+
+  handleDropdownChangeRepresentationTargetStateOptions = (e, { value }) => {
+    const input = this.state.input;
+    input['representation_target_state_id'] = value;
+    this.setState({ ...this.state, input });
+  }
+
+  handleDropdownChangeNudgeStatic = (e, { value }) => {
+    const input = this.state.input;
+    input['nudge_static_id'] = value;
+    this.setState({ ...this.state, input });
+  }
+
+  handleDropdownChangeNudgeDynamic = (e, { value }) => {
+    const input = this.state.input;
+    input['nudge_dynamic_id'] = value;
     this.setState({ ...this.state, input });
   }
 
   onSubmitHandler = (ev) => {
     const BlockConfigVariables = {
       name: this.state.input.name,
+      description: this.state.input.description,
+      contextId: this.state.input.context_id,
+      FeedbackId: this.state.input.feedback_id,
+
       //clocktime: this.state.input.clocktime,
       chargeStatus: this.state.input.charge_status,
       chargeDistance: this.state.input.charge_distance,
-      timeToFullCharge: this.state.input.time_to_full_charge,
+      representationCurrentState: this.state.input.representation_current_state,
+
       flexibilityTimeRequest: this.state.input.flexibility_time_request,
-      flexibilityChargeLevelRequest: this.state.input.flexibility_charge_level_request,
+      defaultChargeLevel: this.state.input.default_charge_level,
+      timeToFullCharge: this.state.input.time_to_full_charge,
+      minimumChargeLevel: this.state.input.minumum_charge_level,
+      representationTargetState: this.state.input.representation_target_state,
+
       flexibilityTimeProvision: this.state.input.flexibility_time_provision,
-      flexibilityChargeLevelProvision: this.state.input.flexibility_charge_level_provision,
-      fullChargePrice: this.state.input.full_charge_price,
-      nudgeId: this.state.input.nudge_id,
+      savedEmissions: this.state.input.saved_emissions,
+      avoidedEnvironmentalCosts: this.state.input.avoided_environmental_costs,
+      avoidedEnergyCosts: this.state.input.avoided_energy_costs,
+
+      nudgeStatic: this.state.input.nudge_static_id,
+      nudgeDynamic: this.state.input.nudge_dynamic_id,
     };
 
     commitMutation(this.props.relay.environment, {
@@ -133,19 +221,67 @@ class AddBlockConfig extends React.Component {
 
           <div className={styles.form}>
 
-            <Input
-              id='name'
-              className={styles.inputField}
-              value={input.name}
-              type='text'
-              size='large'
-              fluid
-              required
-              placeholder='Name'
-              onChange={this.handleFieldChange}
-            />
+
 
           <Grid className={styles.nameFields}>
+            Allgemein
+            <Grid.Row columns={2} className={styles.row}>
+              <Grid.Column className={styles.column}>
+                <Input
+                  id='name'
+                  className={styles.inputField}
+                  value={input.name}
+                  type='text'
+                  size='large'
+                  fluid
+                  required
+                  placeholder='Name'
+                  onChange={this.handleFieldChange}
+                />
+              </Grid.Column>
+              <Grid.Column className={styles.column}>
+                <Input
+                  id='description'
+                  className={styles.inputField}
+                  value={input.description}
+                  type='text'
+                  size='large'
+                  fluid
+                  required
+                  placeholder='Beschreibung'
+                  onChange={this.handleFieldChange}
+                />
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row columns={2} className={styles.row}>
+              <Grid.Column className={styles.column}>
+                <Dropdown
+                   id="context"
+                   className={styles.nameField}
+                   options={this.state.contextOptions}
+                   search
+                   selection
+                   fluid
+                   placeholder='Kontext'
+                   onChange={this.handleDropdownChangeContext}
+                 />
+              </Grid.Column>
+              <Grid.Column className={styles.column}>
+                <Dropdown
+                   id="feedback"
+                   className={styles.nameField}
+                   options={this.state.feedbackOptions}
+                   search
+                   selection
+                   fluid
+                   placeholder='Feedback'
+                   onChange={this.handleDropdownChangeFeedback}
+                 />
+              </Grid.Column>
+            </Grid.Row>
+
+            Aktueller Zustand
             <Grid.Row columns={2} className={styles.row}>
               <Grid.Column className={styles.column}>
               <Input
@@ -169,7 +305,7 @@ class AddBlockConfig extends React.Component {
                   size='large'
                   fluid
                   required
-                  placeholder='Ladezustand'
+                  placeholder='Ladezustand (aktuell)'
                   onChange={this.handleFieldChange}
                 />
               </Grid.Column>
@@ -185,25 +321,25 @@ class AddBlockConfig extends React.Component {
                   size='large'
                   fluid
                   required
-                  placeholder='Reichweite'
+                  placeholder='Reichweite (aktuell)'
                   onChange={this.handleFieldChange}
                 />
               </Grid.Column>
               <Grid.Column className={styles.column}>
-                <Input
-                  id='time_to_full_charge'
-                  className={styles.inputField}
-                  value={input.time_to_full_charge}
-                  type='text'
-                  size='large'
-                  fluid
-                  required
-                  placeholder='Ladezeit'
-                  onChange={this.handleFieldChange}
-                />
+                <Dropdown
+                   id="representation_current_state"
+                   className={styles.nameField}
+                   options={this.state.representationCurrentStateOptions}
+                   search
+                   selection
+                   fluid
+                   placeholder='Repräsentation aktueller Zustand'
+                   onChange={this.handleDropdownChangeRepresentationCurrentStateOptions}
+                 />
               </Grid.Column>
             </Grid.Row>
 
+          Zielzustand
           <Grid.Row columns={2} className={styles.row}>
             <Grid.Column className={styles.column}>
               <Input
@@ -214,25 +350,85 @@ class AddBlockConfig extends React.Component {
                 size='large'
                 fluid
                 required
-                placeholder='Flexibilitätsdauer'
+                placeholder='Flexibilitätsdauer (Anfrage)'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
             <Grid.Column className={styles.column}>
               <Input
-                id='flexibility_charge_level_request'
+                id='default_charge_level'
                 className={styles.inputField}
-                value={input.flexibility_charge_level_request}
+                value={input.default_charge_level}
                 type='text'
                 size='large'
                 fluid
                 required
-                placeholder='Flexibilitätsladeziel'
+                placeholder='Defaultladeziel'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
           </Grid.Row>
 
+
+          <Grid.Row columns={2} className={styles.row}>
+            <Grid.Column className={styles.column}>
+              <Input
+                id='time_to_full_charge'
+                className={styles.inputField}
+                value={input.time_to_full_charge}
+                type='text'
+                size='large'
+                fluid
+                required
+                placeholder='Ladezeit (voll)'
+                onChange={this.handleFieldChange}
+              />
+            </Grid.Column>
+            <Grid.Column className={styles.column}>
+              <Input
+                id='full_charge_price'
+                className={styles.inputField}
+                value={input.full_charge_price}
+                type='text'
+                size='large'
+                fluid
+                required
+                placeholder='Aufladepreis (voll)'
+                onChange={this.handleFieldChange}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
+
+          <Grid.Row columns={2} className={styles.row}>
+            <Grid.Column className={styles.column}>
+              <Input
+                id='minimum_charge_level'
+                className={styles.inputField}
+                value={input.minimum_charge_level}
+                type='text'
+                size='large'
+                fluid
+                required
+                placeholder='Mindestladezustand'
+                onChange={this.handleFieldChange}
+              />
+            </Grid.Column>
+            <Grid.Column className={styles.column}>
+              <Dropdown
+                 id="representation_target_state"
+                 className={styles.nameField}
+                 options={this.state.representationTargetStateOptions}
+                 search
+                 selection
+                 fluid
+                 placeholder='Repräsentation Zielzustand'
+                 onChange={this.handleDropdownChangeRepresentationTargetStateOptions}
+               />
+            </Grid.Column>
+          </Grid.Row>
+
+          Nutzen
           <Grid.Row columns={2} className={styles.row}>
             <Grid.Column className={styles.column}>
               <Input
@@ -249,14 +445,14 @@ class AddBlockConfig extends React.Component {
             </Grid.Column>
             <Grid.Column className={styles.column}>
               <Input
-                id='flexibility_charge_level_provision'
+                id='saved_emissions'
                 className={styles.inputField}
-                value={input.flexibility_charge_level_provision}
+                value={input.saved_emissions}
                 type='text'
                 size='large'
                 fluid
                 required
-                placeholder='Provision für Flexibilitätsladeziel'
+                placeholder='Eingesparte CO2-Emissionen'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
@@ -265,27 +461,58 @@ class AddBlockConfig extends React.Component {
           <Grid.Row columns={2} className={styles.row}>
             <Grid.Column className={styles.column}>
               <Input
-                id='full_charge_price'
+                id='avoided_environmental_costs'
                 className={styles.inputField}
-                value={input.full_charge_price}
+                value={input.avoided_environmental_costs}
                 type='text'
                 size='large'
                 fluid
                 required
-                placeholder='Aufladepreis (voll)'
+                placeholder='Vermiedene Umweltkosten'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
             <Grid.Column className={styles.column}>
+              <Input
+                id='avoided_energy_costs'
+                className={styles.inputField}
+                value={input.avoided_energy_costs}
+                type='text'
+                size='large'
+                fluid
+                required
+                placeholder='Vermiedene Energieausgleichskosten'
+                onChange={this.handleFieldChange}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
+
+
+          Nudge
+          <Grid.Row columns={2} className={styles.row}>
+            <Grid.Column className={styles.column}>
               <Dropdown
-                 id="nudge_name"
+                 id="nudge_static_name"
                  className={styles.nameField}
-                 options={this.state.nudgeOptions}
+                 options={this.state.nudgeStaticOptions}
                  search
                  selection
                  fluid
-                 placeholder='Nudge Name'
-                 onChange={this.handleDropdownChange}
+                 placeholder='Statischer Nudge Name'
+                 onChange={this.handleDropdownChangeNudgeStatic}
+               />
+            </Grid.Column>
+            <Grid.Column className={styles.column}>
+              <Dropdown
+                 id="nudge_dynamic_name"
+                 className={styles.nameField}
+                 options={this.state.nudgeDynamicDOptions}
+                 search
+                 selection
+                 fluid
+                 placeholder='Dynamischer Nudge Name'
+                 onChange={this.handleDropdownChangeNudgeDynamic}
                />
             </Grid.Column>
           </Grid.Row>
@@ -317,7 +544,7 @@ export default createRefetchContainer(
   graphql`
     fragment AddBlockConfig_viewer on Viewer {
       ...Page_viewer
-      nudgeConfigs{
+      nudgeStaticConfigs{
         id
         name
       }

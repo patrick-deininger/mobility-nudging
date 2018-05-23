@@ -79,6 +79,7 @@ class ConfigList extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className={styles.standardSessionConfig}>Name</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardSessionConfig}>Beschreibung</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Geplante Durchläufe</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Begonnene Durchläufe</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Beendete Durchläufe</Table.HeaderCell>
@@ -91,6 +92,7 @@ class ConfigList extends React.Component {
               {sessionConfigs.map(e => { return(
                 <Table.Row key={e.id}>
                   <Table.Cell>{e.name}</Table.Cell>
+                  <Table.Cell>{e.description}</Table.Cell>
                   <Table.Cell textAlign='right'>{e.numberOfSessions}</Table.Cell>
                   <Table.Cell textAlign='right'>{this.countNumberOfSessionsRunning(e.id)}</Table.Cell>
                   <Table.Cell textAlign='right'>{this.countNumberOfSessionsFinished(e.id)}</Table.Cell>
@@ -126,6 +128,52 @@ class ConfigList extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className={styles.standardBlockConfig}>Name</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Beschreibung</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Context</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Feedback</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Statischer Nudge</Table.HeaderCell>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Dynamischer Nudge</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {blockConfigs.map(e => { return(
+                <Table.Row key={e.id}>
+                  <Table.Cell>{e.name}</Table.Cell>
+                  <Table.Cell>{e.description}</Table.Cell>
+                  <Table.Cell>{e.context.name}</Table.Cell>
+                  <Table.Cell>{e.feedback.name}</Table.Cell>
+                  <Table.Cell>{e.nudgeStatic.name}</Table.Cell>
+                  <Table.Cell>{e.nudgeDynamic.name}</Table.Cell>
+                  <Table.Cell>
+                    <Popup
+                      trigger={
+                        <Button icon='search'/>
+                       }
+                       content={
+                         <div className={styles.to_read}>
+                           <ConfigList viewer={this.props.viewer} show="BlockConfigParams"/>
+                         </div>
+                       }
+                     />
+                   </Table.Cell>
+                </Table.Row>)
+              }
+              )}
+            </Table.Body>
+          </Table>
+        </div>
+      );
+    }
+
+
+    if (this.props.show == "blockConfigParams"){
+      const blockConfigs = this.props.viewer.blockConfigs;
+      return (
+        <div className={styles.root}>
+          <Table singleLine>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell className={styles.standardBlockConfig}>Name</Table.HeaderCell>
                 <Table.HeaderCell className={styles.standardBlockConfig}>Uhrzeit</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Ladezustand</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Reichweite</Table.HeaderCell>
@@ -135,7 +183,7 @@ class ConfigList extends React.Component {
                 <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Provision für F.-Dauer</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Provision für F.-Ladeziel</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Aufladepreis (voll)</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Nudge</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Statischer Nudge</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -151,7 +199,7 @@ class ConfigList extends React.Component {
                   <Table.Cell textAlign='right'>{e.flexibilityTimeProvision}</Table.Cell>
                   <Table.Cell textAlign='right'>{e.flexibilityChargeLevelProvision}</Table.Cell>
                   <Table.Cell textAlign='right'>{e.fullChargePrice}</Table.Cell>
-                  <Table.Cell textAlign='right'>{e.nudge.name}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.nudgeStatic.name}</Table.Cell>
                 </Table.Row>)
               }
               )}
@@ -161,8 +209,8 @@ class ConfigList extends React.Component {
       );
     }
 
-    if (this.props.show == "nudgeConfig"){
-      const nudgeConfigs = this.props.viewer.nudgeConfigs;
+    if (this.props.show == "nudgeStaticConfig"){
+      const nudgeConfigs = this.props.viewer.nudgeStaticConfigs;
 
       return (
         <div className={styles.root}>
@@ -170,6 +218,7 @@ class ConfigList extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className={styles.nudgeStandard}>Name</Table.HeaderCell>
+                  <Table.HeaderCell className={styles.nudgeStandard}>Beschreibung</Table.HeaderCell>
                 <Table.HeaderCell  className={styles.nudgeStandard}>Heading</Table.HeaderCell>
                 <Table.HeaderCell className={styles.nudgeText}>Text</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.nudgeStandard}>Image</Table.HeaderCell>
@@ -179,6 +228,7 @@ class ConfigList extends React.Component {
               {nudgeConfigs.map(e => { return(
                 <Table.Row key={e.id}>
                   <Table.Cell>{e.name}</Table.Cell>
+                  <Table.Cell>{e.description}</Table.Cell>
                   <Table.Cell>{e.heading}</Table.Cell>
                   <Table.Cell>{e.text}</Table.Cell>
                   <Table.Cell textAlign='right'>{e.image}</Table.Cell>
@@ -204,7 +254,7 @@ class ConfigList extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className={styles.sessionBlockStandard}>Name</Table.HeaderCell>
-                <Table.HeaderCell  className={styles.sessionBlockStandard}>Nudge</Table.HeaderCell>
+                <Table.HeaderCell  className={styles.sessionBlockStandard}>Statischer Nudge</Table.HeaderCell>
 
               </Table.Row>
             </Table.Header>
@@ -212,7 +262,7 @@ class ConfigList extends React.Component {
               {relevantSessionBlockConfigs.map(e => { return(
                 <Table.Row key={e.id}>
                   <Table.Cell>{e.blockConfig.name}</Table.Cell>
-                  <Table.Cell>{e.blockConfig.nudge.name}</Table.Cell>
+                  <Table.Cell>{e.blockConfig.nudgeStatic.name}</Table.Cell>
                 </Table.Row>)
               }
               )}
@@ -232,29 +282,61 @@ export default createFragmentContainer(
     sessionConfigs{
       id
       name
+      description
       numberOfSessions
       sessionConfigStatus
     }
     blockConfigs{
       id
       name
+      description
+      context{
+        id
+        name
+      }
+      feedback{
+        id
+        name
+      }
+
       clocktime
       chargeStatus
       chargeDistance
-      timeToFullCharge
+      representationCurrentState
+
       flexibilityTimeRequest
-      flexibilityChargeLevelRequest
-      flexibilityTimeProvision
-      flexibilityChargeLevelProvision
+      defaultChargeLevel
+      timeToFullCharge
       fullChargePrice
-      nudge{
+      minumum_charge_level
+      representationTargetState
+
+      flexibilityTimeProvision
+      savedEmissions
+      avoidedEnvironmentalCosts
+      avoidedEnergyCosts
+
+      nudgeStatic{
+        id
+        name
+      }
+      nudgeDynamic{
         id
         name
       }
     }
-    nudgeConfigs{
+    nudgeStaticConfigs{
       id
       name
+      description
+      heading
+      text
+      image
+    }
+    nudgeDynamicConfigs{
+      id
+      name
+      description
       heading
       text
       image
@@ -274,7 +356,11 @@ export default createFragmentContainer(
       blockConfig{
         id
         name
-        nudge{
+        nudgeStatic{
+          id
+          name
+        }
+        nudgeDynamic{
           id
           name
         }

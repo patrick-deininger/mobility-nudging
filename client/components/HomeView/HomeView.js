@@ -44,11 +44,11 @@ class HomeView extends React.Component {
     endTime: flexibilityEndTime,
     active: 'flexibility',
     parameters: {
-      flexibilityChargeLevelRequest: 85,
+      defaultChargeLevel: 85,
       chargeStatus: 55,
     },
     batteryIcon: 'battery full',
-    nudge: {
+    nudgeStatic: {
       heading: "",
       text: "",
       imagesrc: "",
@@ -64,6 +64,18 @@ class HomeView extends React.Component {
     this.initialize()
   }
 
+  // shouldComponentUpdate(){
+  //
+  //   console.log("Update")
+  //   const blockNumber = parseInt(this.props.location.pathname.split("/run/")[1].split("/")[0])
+  //   const sessionId = this.props.location.pathname.split("/run/")[1].split("/")[1]
+  //   const blockConfig = this.props.viewer.blockConfigs[parseInt(this.props.location.pathname.split("/run/")[1].split("/")[0])-1].id
+  //
+  //
+  //   this.setState({ blockNumber: blockNumber, sessionId: sessionId, blockConfig: blockConfig });
+  //
+  // }
+
   setErrors = (errors) => {
   this.setState({ ...this.state, errors });
   }
@@ -76,22 +88,22 @@ class HomeView extends React.Component {
 
       const parameters = this.state.parameters
       const chargeStatus = parseInt(blockConfigs[this.state.blockNumber-1].chargeStatus * 100)
-      const flexibilityChargeLevelRequest = parseInt(blockConfigs[this.state.blockNumber-1].flexibilityChargeLevelRequest * 100)
+      const defaultChargeLevel = parseInt(blockConfigs[this.state.blockNumber-1].defaultChargeLevel * 100)
       parameters['chargeStatus'] = chargeStatus
-      parameters['flexibilityChargeLevelRequest'] = flexibilityChargeLevelRequest
+      parameters['defaultChargeLevel'] = defaultChargeLevel
 
-      this.setState({paramters: parameters})
+      this.setState({parameters: parameters})
 
-      const nudge = this.state.nudge
+      const nudgeStatic = this.state.nudgeStatic
 
-      const heading = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudge.heading
-      const text = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudge.text
-      const imagesrc = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudge.image
-      nudge['heading'] = heading
-      nudge['text'] = text
-      nudge['imagesrc'] = imagesrc
+      const heading = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudgeStatic.heading
+      const text = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudgeStatic.text
+      const imagesrc = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudgeStatic.image
+      nudgeStatic['heading'] = heading
+      nudgeStatic['text'] = text
+      nudgeStatic['imagesrc'] = imagesrc
 
-      this.setState({nudge: nudge})
+      this.setState({nudgeStatic: nudgeStatic})
 
       this.createBlock()
     }
@@ -138,7 +150,7 @@ class HomeView extends React.Component {
 
   handleSliderChange = (event, value) => {
     const parameters = this.state.parameters
-    parameters['flexibilityChargeLevelRequest'] = value
+    parameters['defaultChargeLevel'] = value
     this.setState({parameters: parameters});
   };
 
@@ -249,7 +261,7 @@ class HomeView extends React.Component {
               <div className={styles.chargingLevelSegment}>
                 <Statistic size='small'>
                   <Statistic.Label>Ladeziel</Statistic.Label>
-                  <Statistic.Value>{this.state.parameters.flexibilityChargeLevelRequest}%</Statistic.Value>
+                  <Statistic.Value>{this.state.parameters.defaultChargeLevel}%</Statistic.Value>
                 </Statistic>
               </div>
 
@@ -264,20 +276,20 @@ class HomeView extends React.Component {
                   min={0}
                   max={100}
                   step={1}
-                  value={this.state.parameters.flexibilityChargeLevelRequest}
+                  value={this.state.parameters.defaultChargeLevel}
                   onChange={this.handleSliderChange}/>
               </MuiThemeProvider>
 
               <div className={styles.chargingLabel}>
-                Ladeziel {this.state.parameters.flexibilityChargeLevelRequest}%
+                Ladeziel {this.state.parameters.defaultChargeLevel}%
               </div>
             </div>
 
             <Neighbour/>
             <Template
-              heading={this.state.nudge.heading}
-              text={this.state.nudge.text}
-              imagesrc={this.state.nudge.imagesrc}
+              heading={this.state.nudgeStatic.heading}
+              text={this.state.nudgeStatic.text}
+              imagesrc={this.state.nudgeStatic.imagesrc}
             />
 
         <Form className={styles.form}>
@@ -368,11 +380,11 @@ export default createRefetchContainer(
           chargeDistance
           timeToFullCharge
           flexibilityTimeRequest
-          flexibilityChargeLevelRequest
+          defaultChargeLevel
           flexibilityTimeProvision
-          flexibilityChargeLevelProvision
+
           fullChargePrice
-          nudge{
+          nudgeStatic{
             id
             name
             heading
