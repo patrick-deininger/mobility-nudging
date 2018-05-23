@@ -41,6 +41,12 @@ class Cockpit extends React.Component {
             </div>
 
             <div className={styles.to_read}>
+              <Header floated='left' as='h2'>Context</Header>
+              <Button floated='right' basic color='green' as={Link} to='/add-context-config' className={styles.upperText} floated='right'>Neu</Button>
+              <ConfigList viewer={this.props.viewer} show="contextConfig"/>
+            </div>
+
+            <div className={styles.to_read}>
               <Header floated='left' as='h2'>Feedback</Header>
               <Button floated='right' basic color='green' as={Link} to='/add-feedback-config' className={styles.upperText} floated='right'>Neu</Button>
               <ConfigList viewer={this.props.viewer} show="feedbackConfig"/>
