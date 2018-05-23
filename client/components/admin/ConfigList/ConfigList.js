@@ -68,6 +68,18 @@ class ConfigList extends React.Component {
     return(relevantSessionBlockConfigs)
   }
 
+  relevantBlockConfig = (blockConfigs, currentBlockConfigId) => {
+    var relevantBlockConfig
+    var l = blockConfigs.length
+
+    for (var i = 0; i < l; i++){
+      if(blockConfigs[i].id == currentBlockConfigId){
+        relevantBlockConfig = blockConfigs[i]
+      }
+    }
+    return(relevantBlockConfig)
+  }
+
   render() {
 
     if (this.props.show == "sessionConfig"){
@@ -122,7 +134,6 @@ class ConfigList extends React.Component {
 
     if (this.props.show == "blockConfig"){
       const blockConfigs = this.props.viewer.blockConfigs;
-      console.log(blockConfigs)
       return (
         <div className={styles.root}>
           <Table singleLine>
@@ -134,6 +145,7 @@ class ConfigList extends React.Component {
                 <Table.HeaderCell className={styles.standardBlockConfig}>Feedback</Table.HeaderCell>
                 <Table.HeaderCell className={styles.standardBlockConfig}>Statischer Nudge</Table.HeaderCell>
                 <Table.HeaderCell className={styles.standardBlockConfig}>Dynamischer Nudge</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Details</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -145,14 +157,15 @@ class ConfigList extends React.Component {
                   <Table.Cell>{e.feedback.name}</Table.Cell>
                   <Table.Cell>{e.nudgeStatic.name}</Table.Cell>
                   <Table.Cell>{e.nudgeDynamic.name}</Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell textAlign='right'>
                     <Popup
                       trigger={
                         <Button icon='search'/>
                        }
+                       position='top right'
                        content={
-                         <div className={styles.to_read}>
-                           <ConfigList viewer={this.props.viewer} show="BlockConfigParams"/>
+                         <div>
+                           <ConfigList viewer={this.props.viewer} show="blockConfigParams" currentBlockConfigId={e.id}/>
                          </div>
                        }
                      />
@@ -169,41 +182,54 @@ class ConfigList extends React.Component {
 
     if (this.props.show == "blockConfigParams"){
       const blockConfigs = this.props.viewer.blockConfigs;
+
+
+      const currentBlockConfigId = this.props.currentBlockConfigId
+      const e = this.relevantBlockConfig(blockConfigs, currentBlockConfigId);
+
+
       return (
         <div className={styles.root}>
           <Table singleLine>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell className={styles.standardBlockConfig}>Name</Table.HeaderCell>
-                <Table.HeaderCell className={styles.standardBlockConfig}>Uhrzeit</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Ladezustand</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Reichweite</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Ladezeit</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Flexibilitätsdauer</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Flexibilitätsladeziel</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Provision für F.-Dauer</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Provision für F.-Ladeziel</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Aufladepreis (voll)</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardBlockConfig}>Statischer Nudge</Table.HeaderCell>
+                <Table.HeaderCell className={styles.detailsBlockConfig}>Name</Table.HeaderCell>
+                <Table.HeaderCell className={styles.detailsBlockConfig}>Uhrzeit</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.detailsBlockConfig}>Ladezustand</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.detailsBlockConfig}>Reichweite</Table.HeaderCell>
+
+                <Table.HeaderCell textAlign='right' className={styles.detailsBlockConfig}>Flexibilitätsdauer</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.detailsBlockConfig}>Defaultladeziel</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.detailsBlockConfig}>Ladezeit</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.detailsBlockConfig}>Aufladepreis (voll)</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.detailsBlockConfig}>Mindestladezustand</Table.HeaderCell>
+
+                <Table.HeaderCell textAlign='right' className={styles.detailsBlockConfig}>Provision</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.detailsBlockConfig}>Eingesp. Emissionen</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.detailsBlockConfig}>Verm. Umweltkosten</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.detailsBlockConfig}>Verm. Energiek.</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {blockConfigs.map(e => { return(
+
                 <Table.Row key={e.id}>
                   <Table.Cell>{e.name}</Table.Cell>
                   <Table.Cell>{e.clocktime}</Table.Cell>
                   <Table.Cell textAlign='right'>{e.chargeStatus}</Table.Cell>
                   <Table.Cell textAlign='right'>{e.chargeDistance}</Table.Cell>
-                  <Table.Cell textAlign='right'>{e.timeToFullCharge}</Table.Cell>
+
                   <Table.Cell textAlign='right'>{e.flexibilityTimeRequest}</Table.Cell>
-                  <Table.Cell textAlign='right'>{e.flexibilityChargeLevelRequest}</Table.Cell>
-                  <Table.Cell textAlign='right'>{e.flexibilityTimeProvision}</Table.Cell>
-                  <Table.Cell textAlign='right'>{e.flexibilityChargeLevelProvision}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.defaultChargeLevel}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.timeToFullCharge}</Table.Cell>
                   <Table.Cell textAlign='right'>{e.fullChargePrice}</Table.Cell>
-                  <Table.Cell textAlign='right'>{e.nudgeStatic.name}</Table.Cell>
-                </Table.Row>)
-              }
-              )}
+                  <Table.Cell textAlign='right'>{e.minimumChargeLevel}</Table.Cell>
+
+                  <Table.Cell textAlign='right'>{e.flexibilityTimeProvision}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.savedEmissions}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.avoidedEnvironmentalCosts}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.avoidedEnergyCosts}</Table.Cell>
+                </Table.Row>
+
             </Table.Body>
           </Table>
         </div>
