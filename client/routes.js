@@ -11,6 +11,7 @@ import AddSessionBlockConfig from 'components/admin/AddSessionBlockConfig/AddSes
 import AddFeedbackConfig from 'components/admin/AddFeedbackConfig/AddFeedbackConfig';
 import AddContextConfig from 'components/admin/AddContextConfig/AddContextConfig';
 import FeedbackScreen from 'components/FeedbackScreen/FeedbackScreen';
+import ContextScreen from 'components/ContextScreen/ContextScreen';
 
 
 import { Route, makeRouteConfig } from 'found';
@@ -115,6 +116,14 @@ const FeedbackScreenQuery = graphql`
   }
 `;
 
+const ContextScreenQuery = graphql`
+  query routes_ContextScreen_Query {
+    viewer {
+      ...ContextScreen_viewer
+    }
+  }
+`;
+
 const AuthQuery = graphql`
   query routes_Auth_Query {
     viewer {
@@ -132,6 +141,7 @@ export default makeRouteConfig(
     </Route>
     <Route path='run/:blockNumber/:sessionId' Component={HomeView} query={HomeViewQuery} />
     <Route path='fb/:blockNumber/:sessionId' Component={FeedbackScreen} query={FeedbackScreenQuery} />
+    <Route path='context/:blockNumber/:sessionId' Component={ContextScreen} query={ContextScreenQuery} />
     <Route path='done/:sessionId' Component={FinishedScreen} query={FinishedScreenQuery} />
     <Route path='cockpit' Component={Cockpit} query={CockpitQuery} />
     <Route path='add-session-config' Component={AddSessionConfig} query={AddSessionConfigQuery} />
