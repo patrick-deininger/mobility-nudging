@@ -122,6 +122,7 @@ class ConfigList extends React.Component {
 
     if (this.props.show == "blockConfig"){
       const blockConfigs = this.props.viewer.blockConfigs;
+      console.log(blockConfigs)
       return (
         <div className={styles.root}>
           <Table singleLine>
@@ -347,6 +348,7 @@ class ConfigList extends React.Component {
               <Table.Row>
                 <Table.HeaderCell className={styles.sessionBlockStandard}>Name</Table.HeaderCell>
                 <Table.HeaderCell  className={styles.sessionBlockStandard}>Statischer Nudge</Table.HeaderCell>
+                <Table.HeaderCell  className={styles.sessionBlockStandard}>Dynamischer Nudge</Table.HeaderCell>
 
               </Table.Row>
             </Table.Header>
@@ -355,6 +357,7 @@ class ConfigList extends React.Component {
                 <Table.Row key={e.id}>
                   <Table.Cell>{e.blockConfig.name}</Table.Cell>
                   <Table.Cell>{e.blockConfig.nudgeStatic.name}</Table.Cell>
+                  <Table.Cell>{e.blockConfig.nudgeDynamic.name}</Table.Cell>
                 </Table.Row>)
               }
               )}
@@ -400,7 +403,7 @@ export default createFragmentContainer(
       defaultChargeLevel
       timeToFullCharge
       fullChargePrice
-      minumumChargeLevel
+      minimumChargeLevel
       representationTargetState
 
       flexibilityTimeProvision

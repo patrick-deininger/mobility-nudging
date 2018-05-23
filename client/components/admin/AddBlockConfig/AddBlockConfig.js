@@ -97,8 +97,14 @@ class AddBlockConfig extends React.Component {
     },
     contextOptions: [],
     feedbackOptions: [],
-    representationCurrentStateOptions: [],
-    representationTargetStateOptions: [],
+    representationCurrentStateOptions: [
+      { key: 'percent', value: 'percent', text: 'Prozent' },
+      { key: 'km', value: 'km', text: 'Kilometer' },
+    ],
+    representationTargetStateOptions: [
+      { key: 'percent', value: 'percent', text: 'Prozent' },
+      { key: 'km', value: 'km', text: 'Kilometer' },
+    ],
     nudgeStaticOptions: [],
     nudgeDynamicDOptions: [],
     errors: [],
@@ -190,11 +196,14 @@ class AddBlockConfig extends React.Component {
   }
 
   onSubmitHandler = (ev) => {
+
+    console.log(this.state.input)
+
     const BlockConfigVariables = {
       name: this.state.input.name,
       description: this.state.input.description,
-      contextId: this.state.input.context_id,
-      FeedbackId: this.state.input.feedback_id,
+      context: this.state.input.context_id,
+      feedback: this.state.input.feedback_id,
 
       //clocktime: this.state.input.clocktime,
       chargeStatus: this.state.input.charge_status,
@@ -204,7 +213,8 @@ class AddBlockConfig extends React.Component {
       flexibilityTimeRequest: this.state.input.flexibility_time_request,
       defaultChargeLevel: this.state.input.default_charge_level,
       timeToFullCharge: this.state.input.time_to_full_charge,
-      minimumChargeLevel: this.state.input.minumum_charge_level,
+      fullChargePrice: this.state.input.full_charge_price,
+      minimumChargeLevel: this.state.input.minimum_charge_level,
       representationTargetState: this.state.input.representation_target_state,
 
       flexibilityTimeProvision: this.state.input.flexibility_time_provision,
@@ -215,6 +225,7 @@ class AddBlockConfig extends React.Component {
       nudgeStatic: this.state.input.nudge_static_id,
       nudgeDynamic: this.state.input.nudge_dynamic_id,
     };
+    console.log(BlockConfigVariables)
 
     commitMutation(this.props.relay.environment, {
           mutation: CreateBlockConfigMutation,

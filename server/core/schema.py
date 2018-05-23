@@ -27,7 +27,7 @@ class BlockConfig(DjangoObjectType):
             'default_charge_level',
             'time_to_full_charge',
             'full_charge_price',
-            'minumum_charge_level',
+            'minimum_charge_level',
 
             'flexibility_time_provision',
             'saved_emissions',
@@ -603,7 +603,7 @@ class CreateBlockConfig(graphene.Mutation):
         default_charge_level = args['default_charge_level']
         time_to_full_charge = args['time_to_full_charge']
         full_charge_price = args['full_charge_price']
-        minimum_charge_level = args['minumum_charge_level']
+        minimum_charge_level = args['minimum_charge_level']
         representation_target_state = args['representation_target_state']
 
         flexibility_time_provision = args['flexibility_time_provision']

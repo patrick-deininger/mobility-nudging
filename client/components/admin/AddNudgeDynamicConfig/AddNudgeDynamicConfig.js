@@ -92,7 +92,7 @@ class AddNudgeDynamicConfig extends React.Component {
 
         <div className={styles.container}>
           <Segment padded='very'>
-            <Header as='h1'>Neue statische Nudge Konfiguration</Header>
+            <Header as='h1'>Neue dynamische Nudge Konfiguration</Header>
 
           <div className={styles.form}>
 

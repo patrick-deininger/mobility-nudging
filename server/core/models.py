@@ -92,7 +92,7 @@ class BlockConfig(models.Model):
     default_charge_level = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     time_to_full_charge = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     full_charge_price = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
-    minumum_charge_level = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    minimum_charge_level = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     representation_target_state = models.CharField(max_length=31, blank=True)
 
     flexibility_time_provision = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
