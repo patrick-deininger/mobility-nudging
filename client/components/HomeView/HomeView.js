@@ -53,8 +53,8 @@ class HomeView extends React.Component {
       text: "",
       imagesrc: "",
     },
-    blockNumber: parseInt(this.props.location.pathname.split("/run/")[1].split("/")[0]),
-    sessionId: this.props.location.pathname.split("/run/")[1].split("/")[1],
+    blockNumber: this.props.match.params.blockNumber,
+    sessionId: this.props.match.params.sessionId,
     blockConfig: this.props.viewer.blockConfigs[parseInt(this.props.location.pathname.split("/run/")[1].split("/")[0])-1].id,
     blockId: "",
     errors: [],
@@ -217,7 +217,6 @@ class HomeView extends React.Component {
 
 
   render() {
-
     return (
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>

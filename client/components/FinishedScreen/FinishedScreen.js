@@ -24,7 +24,7 @@ const FinishSessionMutation = graphql`
 
 class FinishedScreen extends React.Component {
   state = {
-    sessionId: this.props.location.pathname.split("/done/")[1]
+    sessionId: this.props.match.params.sessionId
   }
 
   onButtonClick = () => {

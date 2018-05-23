@@ -121,8 +121,8 @@ export default makeRouteConfig(
       <Route path='login' />
       <Route path='signup' />
     </Route>
-    <Route path='run/:number/:id' Component={HomeView} query={HomeViewQuery} />
-    <Route path='done/:id' Component={FinishedScreen} query={FinishedScreenQuery} />
+    <Route path='run/:blockNumber/:sessionId' Component={HomeView} query={HomeViewQuery} />
+    <Route path='done/:sessionId' Component={FinishedScreen} query={FinishedScreenQuery} />
     <Route path='cockpit' Component={Cockpit} query={CockpitQuery} />
     <Route path='add-session-config' Component={AddSessionConfig} query={AddSessionConfigQuery} />
     <Route path='add-nudge-static-config' Component={AddNudgeStaticConfig} query={AddNudgeStaticConfigQuery} />
