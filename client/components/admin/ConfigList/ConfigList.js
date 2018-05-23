@@ -241,6 +241,38 @@ class ConfigList extends React.Component {
       );
     }
 
+    if (this.props.show == "nudgeDynamicConfig"){
+      const nudgeConfigs = this.props.viewer.nudgeDynamicConfigs;
+
+      return (
+        <div className={styles.root}>
+          <Table singleLine>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell className={styles.nudgeStandard}>Name</Table.HeaderCell>
+                  <Table.HeaderCell className={styles.nudgeStandard}>Beschreibung</Table.HeaderCell>
+                <Table.HeaderCell  className={styles.nudgeStandard}>Heading</Table.HeaderCell>
+                <Table.HeaderCell className={styles.nudgeText}>Text</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.nudgeStandard}>Image</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {nudgeConfigs.map(e => { return(
+                <Table.Row key={e.id}>
+                  <Table.Cell>{e.name}</Table.Cell>
+                  <Table.Cell>{e.description}</Table.Cell>
+                  <Table.Cell>{e.heading}</Table.Cell>
+                  <Table.Cell>{e.text}</Table.Cell>
+                  <Table.Cell textAlign='right'>{e.image}</Table.Cell>
+                </Table.Row>)
+              }
+              )}
+            </Table.Body>
+          </Table>
+        </div>
+      );
+    }
+
     if (this.props.show == "contextConfig"){
       const contextConfigs = this.props.viewer.contextConfigs;
 

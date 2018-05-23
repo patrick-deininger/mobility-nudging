@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  margin-top: 50px;
+
+  .form {
+    width: 400px;
+
+    .nameField {
+      display: flex;
+      margin-bottom: 10px;
+      flex-direction: row;
+    }
+
+    .inputField {
+      margin-bottom: 10px;
+    }
+
+  }
+  .template{
+    margin-top: 32px;
+  }
+}

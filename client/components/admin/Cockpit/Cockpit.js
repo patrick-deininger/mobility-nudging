@@ -25,7 +25,6 @@ class Cockpit extends React.Component {
               <ConfigList viewer={this.props.viewer} show="sessionConfig"/>
             </div>
 
-
             <div className={styles.read}>
               <Header floated='left' as='h2'>Blöcke</Header>
               <Button floated='right' basic color='green' as={Link} to='/add-block-config' className={styles.upperText} floated='right'>Neu</Button>
@@ -33,11 +32,16 @@ class Cockpit extends React.Component {
 
             </div>
 
-
             <div className={styles.to_read}>
               <Header floated='left' as='h2'>Statische Nudges</Header>
               <Button floated='right' basic color='green' as={Link} to='/add-nudge-static-config' className={styles.upperText} floated='right'>Neu</Button>
               <ConfigList viewer={this.props.viewer} show="nudgeStaticConfig"/>
+            </div>
+
+            <div className={styles.to_read}>
+              <Header floated='left' as='h2'>Dynamische Nudges</Header>
+              <Button floated='right' basic color='green' as={Link} to='/add-nudge-dynamic-config' className={styles.upperText} floated='right'>Neu</Button>
+              <ConfigList viewer={this.props.viewer} show="nudgeDynamicConfig"/>
             </div>
 
             <div className={styles.to_read}>
