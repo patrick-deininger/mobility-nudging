@@ -106,13 +106,37 @@ class AddBlockConfig extends React.Component {
   }
 
   componentWillMount(){
-    const nudgeOptions = this.props.viewer.nudgeStaticConfigs.map((x) => (
+    const contextOptions = this.props.viewer.contextConfigs.map((x) => (
     {
       key: x.id,
       value: x.id,
       text: x.name,
     }));
-    this.setState({ ...this.state, nudgeOptions });
+    this.setState({ contextOptions: contextOptions });
+
+    const feedbackOptions = this.props.viewer.feedbackConfigs.map((x) => (
+    {
+      key: x.id,
+      value: x.id,
+      text: x.name,
+    }));
+    this.setState({ feedbackOptions: feedbackOptions });
+
+    const nudgeStaticOptions = this.props.viewer.nudgeStaticConfigs.map((x) => (
+    {
+      key: x.id,
+      value: x.id,
+      text: x.name,
+    }));
+    this.setState({ nudgeStaticOptions: nudgeStaticOptions });
+
+    const nudgeDynamicOptions = this.props.viewer.nudgeDynamicConfigs.map((x) => (
+    {
+      key: x.id,
+      value: x.id,
+      text: x.name,
+    }));
+    this.setState({ nudgeDynamicOptions: nudgeDynamicOptions });
   }
 
   setErrors = (errors) => {
@@ -507,7 +531,7 @@ class AddBlockConfig extends React.Component {
               <Dropdown
                  id="nudge_dynamic_name"
                  className={styles.nameField}
-                 options={this.state.nudgeDynamicDOptions}
+                 options={this.state.nudgeDynamicOptions}
                  search
                  selection
                  fluid
@@ -517,8 +541,6 @@ class AddBlockConfig extends React.Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-
-
 
            <Button
              color='green'
@@ -544,7 +566,19 @@ export default createRefetchContainer(
   graphql`
     fragment AddBlockConfig_viewer on Viewer {
       ...Page_viewer
+      contextConfigs{
+        id
+        name
+      }
+      feedbackConfigs{
+        id
+        name
+      }
       nudgeStaticConfigs{
+        id
+        name
+      }
+      nudgeDynamicConfigs{
         id
         name
       }
