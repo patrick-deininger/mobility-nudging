@@ -53,7 +53,7 @@ class HomeView extends React.Component {
       text: "",
       imagesrc: "",
     },
-    blockNumber: this.props.match.params.blockNumber,
+    blockNumber: parseInt(this.props.match.params.blockNumber),
     sessionId: this.props.match.params.sessionId,
     blockConfig: this.props.viewer.blockConfigs[parseInt(this.props.location.pathname.split("/run/")[1].split("/")[0])-1].id,
     blockId: "",
@@ -175,14 +175,7 @@ class HomeView extends React.Component {
   }
 
  nextScreen = () => {
-      var nextScreen = ""
-      if (this.state.blockNumber+1 > this.props.viewer.blockConfigs.length){
-          nextScreen = `/done/${this.state.sessionId}`
-      }
-      else {
-          const blockNumber = this.state.blockNumber + 1
-          nextScreen = `/run/${blockNumber}/${this.state.sessionId}`
-      }
+      var nextScreen = `/fb/${this.state.blockNumber}/${this.state.sessionId}`
       this.props.router.push(nextScreen)
   }
 

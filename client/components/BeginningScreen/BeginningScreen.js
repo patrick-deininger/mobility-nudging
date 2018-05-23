@@ -14,7 +14,7 @@ class BeginningScreen extends React.Component {
 
   state = {
     sessionConfigId: "",
-    nextScreen: "/done",
+    nextScreen: "",
     errors: []
   }
 
