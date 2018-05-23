@@ -35,9 +35,9 @@ class Cockpit extends React.Component {
 
 
             <div className={styles.to_read}>
-              <Header floated='left' as='h2'>Nudges</Header>
-              <Button floated='right' basic color='green' as={Link} to='/add-nudge-config' className={styles.upperText} floated='right'>Neu</Button>
-              <ConfigList viewer={this.props.viewer} show="nudgeConfig"/>
+              <Header floated='left' as='h2'>Statische Nudges</Header>
+              <Button floated='right' basic color='green' as={Link} to='/add-nudge-static-config' className={styles.upperText} floated='right'>Neu</Button>
+              <ConfigList viewer={this.props.viewer} show="nudgeStaticConfig"/>
             </div>
           </Segment>
       </section>

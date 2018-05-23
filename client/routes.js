@@ -4,7 +4,7 @@ import HomeView from 'components/HomeView/HomeView';
 import FinishedScreen from 'components/FinishedScreen/FinishedScreen';
 import Cockpit from 'components/admin/Cockpit/Cockpit';
 import AddSessionConfig from 'components/admin/AddSessionConfig/AddSessionConfig';
-import AddNudgeConfig from 'components/admin/AddNudgeConfig/AddNudgeConfig';
+import AddNudgeStaticConfig from 'components/admin/AddNudgeStaticConfig/AddNudgeStaticConfig';
 import AddBlockConfig from 'components/admin/AddBlockConfig/AddBlockConfig';
 import AddSessionBlockConfig from 'components/admin/AddSessionBlockConfig/AddSessionBlockConfig';
 
@@ -55,10 +55,10 @@ const AddSessionConfigQuery = graphql`
   }
 `;
 
-const AddNudgeConfigQuery = graphql`
-  query routes_AddNudgeConfig_Query {
+const AddNudgeStaticConfigQuery = graphql`
+  query routes_AddNudgeStaticConfig_Query {
     viewer {
-      ...AddNudgeConfig_viewer
+      ...AddNudgeStaticConfig_viewer
     }
   }
 `;
@@ -98,7 +98,7 @@ export default makeRouteConfig(
     <Route path='done/:id' Component={FinishedScreen} query={FinishedScreenQuery} />
     <Route path='cockpit' Component={Cockpit} query={CockpitQuery} />
     <Route path='add-session-config' Component={AddSessionConfig} query={AddSessionConfigQuery} />
-    <Route path='add-nudge-config' Component={AddNudgeConfig} query={AddNudgeConfigQuery} />
+    <Route path='add-nudge-static-config' Component={AddNudgeStaticConfig} query={AddNudgeStaticConfigQuery} />
     <Route path='add-block-config' Component={AddBlockConfig} query={AddBlockConfigQuery} />
     <Route path='add-session-block-config' Component={AddSessionBlockConfig} query={AddSessionBlockConfigQuery} />
   </Route>

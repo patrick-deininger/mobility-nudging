@@ -5,17 +5,24 @@ import { Input, Button, Segment, Header } from 'semantic-ui-react';
 import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 import Template from 'components/Nudges/Template/Template'
 
-import styles from './AddNudgeConfig.scss';
+import styles from './AddNudgeStaticConfig.scss';
 
-const CreateNudgeConfigMutation = graphql`
-  mutation AddNudgeConfigMutation (
+const CreateNudgeStaticConfigMutation = graphql`
+  mutation AddNudgeStaticConfigMutation (
     $name: String!
+    $description: String!
     $heading: String!
     $text: String!
     $image: String!
   ) {
-    createNudgeConfig(name: $name, heading: $heading, text: $text, image: $image) {
-      nudgeConfig {
+    createNudgeStaticConfig(
+      name: $name,
+      description: $description,
+      heading: $heading,
+      text: $text,
+      image: $image
+    ) {
+      nudgeStaticConfig {
         id
       }
     }
@@ -23,10 +30,11 @@ const CreateNudgeConfigMutation = graphql`
 `;
 
 
-class AddNudgeConfig extends React.Component {
+class AddNudgeStaticConfig extends React.Component {
   state = {
     input: {
       name: "",
+      description: "",
       heading: "",
       text: "",
       image: "",
@@ -49,18 +57,19 @@ class AddNudgeConfig extends React.Component {
 
   onSubmitHandler = (ev) => {
 
-    const NudgeConfigVariables = {
+    const NudgeStaticConfigVariables = {
       name: this.state.input.name,
+      description: this.state.input.description,
       heading: this.state.input.heading,
       text: this.state.input.text,
       image: this.state.input.image,
     };
 
     commitMutation(this.props.relay.environment, {
-          mutation: CreateNudgeConfigMutation,
-          variables: NudgeConfigVariables,
+          mutation: CreateNudgeStaticConfigMutation,
+          variables: NudgeStaticConfigVariables,
           onCompleted: (resp) => {
-            console.log("Created new NudgeConfig")
+            console.log("Created new NudgeStaticConfig")
             this.props.router.push('/cockpit');
           },
           onError: (err) => {
@@ -83,7 +92,7 @@ class AddNudgeConfig extends React.Component {
 
         <div className={styles.container}>
           <Segment padded='very'>
-            <Header as='h1'>Neue Nudge Konfiguration</Header>
+            <Header as='h1'>Neue statische Nudge Konfiguration</Header>
 
           <div className={styles.form}>
 
@@ -97,6 +106,18 @@ class AddNudgeConfig extends React.Component {
             fluid
             required
             placeholder='Nudge Name'
+            onChange={this.handleFieldChange}
+          />
+
+          <Input
+            id='description'
+            className={styles.inputField}
+            value={input.description}
+            type='text'
+            size='large'
+            fluid
+            required
+            placeholder='Beschreibung'
             onChange={this.handleFieldChange}
           />
 
@@ -166,9 +187,9 @@ class AddNudgeConfig extends React.Component {
 }
 
 export default createRefetchContainer(
-  withAuth(AddNudgeConfig),
+  withAuth(AddNudgeStaticConfig),
   graphql`
-    fragment AddNudgeConfig_viewer on Viewer {
+    fragment AddNudgeStaticConfig_viewer on Viewer {
       ...Page_viewer
 
     }
