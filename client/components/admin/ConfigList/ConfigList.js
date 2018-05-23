@@ -241,6 +241,36 @@ class ConfigList extends React.Component {
       );
     }
 
+    if (this.props.show == "feedbackConfig"){
+      const feedbackConfigs = this.props.viewer.feedbackConfigs;
+
+      return (
+        <div className={styles.root}>
+          <Table singleLine>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell className={styles.nudgeStandard}>Name</Table.HeaderCell>
+                  <Table.HeaderCell className={styles.nudgeStandard}>Beschreibung</Table.HeaderCell>
+                <Table.HeaderCell  className={styles.nudgeStandard}>Heading</Table.HeaderCell>
+                <Table.HeaderCell className={styles.nudgeText}>Text</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {feedbackConfigs.map(e => { return(
+                <Table.Row key={e.id}>
+                  <Table.Cell>{e.name}</Table.Cell>
+                  <Table.Cell>{e.description}</Table.Cell>
+                  <Table.Cell>{e.heading}</Table.Cell>
+                  <Table.Cell>{e.text}</Table.Cell>
+                </Table.Row>)
+              }
+              )}
+            </Table.Body>
+          </Table>
+        </div>
+      );
+    }
+
 
     if (this.props.show == "SessionBlockConfig"){
       const sessionBlockConfigs = this.props.viewer.sessionBlockConfigs
@@ -308,7 +338,7 @@ export default createFragmentContainer(
       defaultChargeLevel
       timeToFullCharge
       fullChargePrice
-      minumum_charge_level
+      minumumChargeLevel
       representationTargetState
 
       flexibilityTimeProvision
@@ -347,6 +377,20 @@ export default createFragmentContainer(
       sessionConfig{
         id
       }
+    }
+    feedbackConfigs{
+      id
+      name
+      description
+      heading
+      text
+    }
+    contextConfigs{
+      id
+      name
+      description
+      heading
+      text
     }
     sessionBlockConfigs{
       id

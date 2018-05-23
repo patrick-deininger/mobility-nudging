@@ -7,6 +7,7 @@ import AddSessionConfig from 'components/admin/AddSessionConfig/AddSessionConfig
 import AddNudgeStaticConfig from 'components/admin/AddNudgeStaticConfig/AddNudgeStaticConfig';
 import AddBlockConfig from 'components/admin/AddBlockConfig/AddBlockConfig';
 import AddSessionBlockConfig from 'components/admin/AddSessionBlockConfig/AddSessionBlockConfig';
+import AddFeedbackConfig from 'components/admin/AddFeedbackConfig/AddFeedbackConfig';
 
 
 import { Route, makeRouteConfig } from 'found';
@@ -79,6 +80,14 @@ const AddSessionBlockConfigQuery = graphql`
   }
 `;
 
+const AddFeedbackConfigQuery = graphql`
+  query routes_AddFeedbackConfig_Query {
+    viewer {
+      ...AddFeedbackConfig_viewer
+    }
+  }
+`;
+
 const AuthQuery = graphql`
   query routes_Auth_Query {
     viewer {
@@ -101,5 +110,6 @@ export default makeRouteConfig(
     <Route path='add-nudge-static-config' Component={AddNudgeStaticConfig} query={AddNudgeStaticConfigQuery} />
     <Route path='add-block-config' Component={AddBlockConfig} query={AddBlockConfigQuery} />
     <Route path='add-session-block-config' Component={AddSessionBlockConfig} query={AddSessionBlockConfigQuery} />
+    <Route path='add-feedback-config' Component={AddFeedbackConfig} query={AddFeedbackConfigQuery} />
   </Route>
 );
