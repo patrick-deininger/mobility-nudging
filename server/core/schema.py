@@ -6,22 +6,7 @@ from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType, ObjectType
 from core.user_helper.jwt_util import get_token_user_id
 from core.user_helper.jwt_schema import TokensInterface
-from .models import EventHistory as EventHistory,
-    Nudge as NudgeModal,
-    FeedbackConfig as FeedbackConfigModal,
-    ContextConfig as ContextConfigModal,
-    Session as SessionModal,
-    SessionConfig as SessionConfigModal,
-    SessionBlockConfig as SessionBlockConfigModal,
-    Block as BlockModal,
-    BlockConfig as BlockConfigModal,
-    Experiment as ExperimentModal,
-    Book as BookModal,
-    BookshelfEntry as BookshelfEntryModal,
-    BookRecommendationForFriend as BookRecommendationForFriendModal,
-    Membership as MembershipModal,
-    Group as GroupModal,
-    GroupInvite as GroupInviteModal
+from .models import EventHistory as EventHistory, NudgeStatic as NudgeStaticModal, NudgeDynamic as NudgeDynamicModal, FeedbackConfig as FeedbackConfigModal, ContextConfig as ContextConfigModal, Session as SessionModal, SessionConfig as SessionConfigModal, SessionBlockConfig as SessionBlockConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal, Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
 from .utils import Utils
 from .email import Email, EmailBuilder
 
@@ -72,10 +57,16 @@ class Session(DjangoObjectType):
         filter_fields = ['session_config', 'user']
         interfaces = (graphene.Node, )
 
-class Nudge(DjangoObjectType):
+class NudgeStatic(DjangoObjectType):
     class Meta:
-        model = NudgeModal
-        filter_fields = ['name', 'nudge_type']
+        model = NudgeStaticModal
+        filter_fields = ['name']
+        interfaces = (graphene.Node, )
+
+class NudgeDynamic(DjangoObjectType):
+    class Meta:
+        model = NudgeDynamicModal
+        filter_fields = ['name']
         interfaces = (graphene.Node, )
 
 class FeedbackConfig(DjangoObjectType):
@@ -201,8 +192,11 @@ class CoreQueries:
     session_block_config = graphene.Node.Field(SessionBlockConfig, id=graphene.ID(), session_config=graphene.ID(), block_config=graphene.ID())
     session_block_configs = graphene.List(SessionBlockConfig, session_config=graphene.ID())
 
-    nudge = graphene.Field(Nudge, id=graphene.ID(), name=graphene.String())
-    nudge_configs = graphene.List(Nudge)
+    nudge_static = graphene.Field(NudgeStatic, id=graphene.ID(), name=graphene.String())
+    nudge_static_configs = graphene.List(NudgeStatic)
+
+    nudge_dynamic = graphene.Field(NudgeDynamic, id=graphene.ID(), name=graphene.String())
+    nudge_dynamic_configs = graphene.List(NudgeDynamic)
 
     feedback_configs = graphene.List(FeedbackConfig)
 
@@ -256,16 +250,27 @@ class CoreQueries:
         session_block_configs = SessionBlockConfigModal.objects.all()
         return session_block_configs
 
-    def resolve_nudge(self, info, **args):
+    def resolve_nudge_static(self, info, **args):
         if 'id' in args:
-            return NudgeModal.objects.get(pk=args['id'])
+            return NudgeStaticModal.objects.get(pk=args['id'])
 
-        nudge = NudgeModal.objects.get(name=args['name'])
-        return nudge
+        nudge_static = NudgeStaticModal.objects.get(name=args['name'])
+        return nudge_static
 
-    def resolve_nudge_configs(self, info, **args):
-        nudge_configs = NudgeModal.objects.all()
-        return nudge_configs
+    def resolve_nudge_static_configs(self, info, **args):
+        nudge_static_configs = NudgeStaticModal.objects.all()
+        return nudge_static_configs
+
+    def resolve_nudge_dynamic(self, info, **args):
+        if 'id' in args:
+            return NudgeDynamicModal.objects.get(pk=args['id'])
+
+        nudge_dynamic = NudgeDynamicModal.objects.get(name=args['name'])
+        return nudge_dynamic
+
+    def resolve_nudge_dynamic_configs(self, info, **args):
+        nudge_dynamic_configs = NudgeDynamicModal.objects.all()
+        return nudge_dynamic_configs
 
     def resolve_feedback_configs(self, info, **args):
         feedback_configs = FeedbackConfigModal.objects.all()
@@ -438,7 +443,7 @@ class CreateSessionConfig(graphene.Mutation):
         return CreateSessionConfig(sessionConfig=sessionConfig)
 
 
-class CreateNudgeConfig(graphene.Mutation):
+class CreateNudgeStaticConfig(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
         description = graphene.String(required=True)
@@ -446,7 +451,7 @@ class CreateNudgeConfig(graphene.Mutation):
         text = graphene.String(required=True)
         image = graphene.String(required=True)
 
-    nudgeConfig = graphene.Field(Nudge)
+    nudgeStaticConfig = graphene.Field(NudgeStatic)
 
     def mutate(self, info, **args):
         get_node = graphene.Node.get_node_from_global_id
@@ -456,7 +461,7 @@ class CreateNudgeConfig(graphene.Mutation):
         text = args['text']
         image = args['image']
 
-        nudgeConfig = NudgeModal(
+        nudgeStaticConfig = NudgeStaticModal(
             name = name,
             description = description,
             heading = heading,
@@ -464,8 +469,38 @@ class CreateNudgeConfig(graphene.Mutation):
             image = image
         )
 
-        nudgeConfig.save()
-        return CreateNudgeConfig(nudgeConfig=nudgeConfig)
+        nudgeStaticConfig.save()
+        return CreateNudgeStaticConfig(nudgeStaticConfig=nudgeStaticConfig)
+
+
+class CreateNudgeDynamicConfig(graphene.Mutation):
+    class Arguments:
+        name = graphene.String(required=True)
+        description = graphene.String(required=True)
+        heading = graphene.String(required=True)
+        text = graphene.String(required=True)
+        image = graphene.String(required=True)
+
+    nudgeDynamicConfig = graphene.Field(NudgeDynamic)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+        name = args['name']
+        description = args['description']
+        heading = args['heading']
+        text = args['text']
+        image = args['image']
+
+        nudgeDynamicConfig = NudgeDynamicModal(
+            name = name,
+            description = description,
+            heading = heading,
+            text = text,
+            image = image
+        )
+
+        nudgeDynamicConfig.save()
+        return CreateNudgeDynamicConfig(nudgeDynamicConfig=nudgeDynamicConfig)
 
 
 class CreateFeedbackConfig(graphene.Mutation):
@@ -868,7 +903,8 @@ class CoreMutations:
     create_block = CreateBlock.Field()
     create_session = CreateSession.Field()
     create_session_config = CreateSessionConfig.Field()
-    create_nudge_config = CreateNudgeConfig.Field()
+    create_nudge_static_config = CreateNudgeStaticConfig.Field()
+    create_nudge_dynamic_config = CreateNudgeDynamicConfig.Field()
     create_feedback_config = CreateFeedbackConfig.Field()
     create_context_config = CreateContextConfig.Field()
     create_block_config = CreateBlockConfig.Field()

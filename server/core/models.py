@@ -50,13 +50,19 @@ class Experiment(models.Model):
     finished_at = models.DateTimeField(default=timezone.now)
     number_of_participants = models.PositiveSmallIntegerField(null=True)
 
-class Nudge(models.Model):
+class NudgeStatic(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=180)
     heading = models.CharField(max_length=30)
     text = models.CharField(max_length=200)
     image = models.CharField(max_length=30)
-    nudge_type =  models.CharField(max_length=30)
+
+class NudgeDynamic(models.Model):
+    name = models.CharField(max_length=30)
+    description = models.CharField(max_length=180)
+    heading = models.CharField(max_length=30)
+    text = models.CharField(max_length=200)
+    image = models.CharField(max_length=30)
 
 class FeedbackConfig(models.Model):
     name = models.CharField(max_length=30)
@@ -94,8 +100,8 @@ class BlockConfig(models.Model):
     avoided_environmental_costs = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     avoided_energy_costs = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
 
-    nudge_static = models.ForeignKey(Nudge)
-    nudge_dynamic = models.ForeignKey(Nudge)
+    nudge_static = models.ForeignKey(NudgeStatic)
+    nudge_dynamic = models.ForeignKey(NudgeDynamic)
 
 
 
