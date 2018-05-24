@@ -31,8 +31,35 @@ class BeginningScreen extends React.Component {
   }
 
   componentWillMount(){
-    const sessionConfigId = this.props.viewer.sessionConfigs[0].id
+    const sessionConfigId = this.chooseRandomSessionConfig()
     this.setState({ ...this.state, sessionConfigId });
+  }
+
+  chooseRandomSessionConfig = () => {
+    const sessionConfigs = this.props.viewer.sessionConfigs
+    const sessions = this.props.viewer.sessions
+    var activeSessionConfigs = []
+    var sessionConfigCount = new Array(sessionConfigs.length).fill(0);
+
+    // Count the sessions related to each sessionConfig
+    for (var i = 0; i < sessions.length; i++){
+      for (var j = 0; j < sessionConfigs.length; j++){
+        if (sessionConfigs[j].id == sessions[i].sessionConfig.id){
+          sessionConfigCount[j] += 1
+        }
+      }
+    }
+    // Check if there still sessions to be done
+    for (var j = 0; j < sessionConfigs.length; j++){
+      if (sessionConfigCount[j] < sessionConfigs[j].numberOfSessions){
+        activeSessionConfigs.push(sessionConfigs[j].id)
+      }
+    }
+
+    // Choose random active sessionConfigId
+    const sessionConfigId = activeSessionConfigs[Math.floor(Math.random() * activeSessionConfigs.length)]
+
+    return(sessionConfigId)
   }
 
   setErrors = (errors) => {
@@ -116,6 +143,13 @@ export default createRefetchContainer(
         sessionConfigs{
           id
           name
+          numberOfSessions
+        }
+        sessions{
+          id
+          sessionConfig{
+            id
+          }
         }
       }
 
