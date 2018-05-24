@@ -81,7 +81,7 @@ class HomeView extends React.Component {
 
   initialize = () => {
 
-    const blockConfigs = this.props.viewer.blockConfigs
+    const blockConfigs = this.identifyRelevantBlockConfigs()
 
     if (blockConfigs.length >= this.state.blockNumber){
       const blockConfig = blockConfigs[this.state.blockNumber-1]
@@ -128,6 +128,40 @@ class HomeView extends React.Component {
       batteryStatus = 'battery full'
     }
     this.setState({batteryIcon: batteryStatus});
+  }
+
+
+  identifyRelevantBlockConfigs = () => {
+      // Identify all blockConfigs that match to current session
+      const sessions = this.props.viewer.sessions
+      var sessionConfigId  = ""
+
+      for (var i = 0; i < sessions.length; i++){
+        if (sessions[i].id == this.state.sessionId){
+          sessionConfigId = sessions[i].sessionConfig.id
+        }
+      }
+
+      const sessionBlockConfigs = this.props.viewer.sessionBlockConfigs
+      var blockConfigIds = []
+
+      for (var i = 0; i < sessionBlockConfigs.length; i++){
+        if (sessionBlockConfigs[i].sessionConfig.id == sessionConfigId){
+          blockConfigIds.push(sessionBlockConfigs[i].blockConfig.id)
+        }
+      }
+
+      var blockConfigs = []
+      const allBlockConfigs = this.props.viewer.blockConfigs
+
+      for (var i = 0; i < blockConfigIds.length; i++){
+        for (var j = 0; j < allBlockConfigs.length; j++){
+          if (allBlockConfigs[j].id == blockConfigIds[i]){
+            blockConfigs.push(allBlockConfigs[j])
+          }
+        }
+      }
+      return(blockConfigs)
   }
 
   onClickFlexibility = () => {
@@ -313,6 +347,21 @@ export default createRefetchContainer(
         }
         user{
           id
+        }
+        sessions{
+          id
+          sessionConfig{
+            id
+          }
+        }
+        sessionBlockConfigs{
+          id
+          sessionConfig{
+            id
+          }
+          blockConfig{
+            id
+          }
         }
         blockConfigs {
           id

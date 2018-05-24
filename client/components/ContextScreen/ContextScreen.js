@@ -38,7 +38,7 @@ class ContextScreen extends React.Component {
     sessionId: this.props.match.params.sessionId,
     blockConfigId: this.props.viewer.blockConfigs[parseInt(this.props.match.params.blockNumber)-1].id,
     blockNumber: parseInt(this.props.match.params.blockNumber),
-    blockId: this.props.match.params.blockId,
+    blockId: "",
     nextScreen: "",
     contextConfig: {
       heading: "",
@@ -58,7 +58,7 @@ class ContextScreen extends React.Component {
 
   initialize = () => {
 
-    const blockConfigs = this.props.viewer.blockConfigs
+    const blockConfigs = this.identifyRelevantBlockConfigs()
 
     if (blockConfigs.length >= this.state.blockNumber){
       const blockConfig = blockConfigs[this.state.blockNumber-1]
@@ -77,6 +77,40 @@ class ContextScreen extends React.Component {
     else {
       this.props.router.push(`/done/${this.state.sessionId}`)
     }
+  }
+
+
+  identifyRelevantBlockConfigs = () => {
+      // Identify all blockConfigs that match to current session
+      const sessions = this.props.viewer.sessions
+      var sessionConfigId  = ""
+
+      for (var i = 0; i < sessions.length; i++){
+        if (sessions[i].id == this.state.sessionId){
+          sessionConfigId = sessions[i].sessionConfig.id
+        }
+      }
+
+      const sessionBlockConfigs = this.props.viewer.sessionBlockConfigs
+      var blockConfigIds = []
+
+      for (var i = 0; i < sessionBlockConfigs.length; i++){
+        if (sessionBlockConfigs[i].sessionConfig.id == sessionConfigId){
+          blockConfigIds.push(sessionBlockConfigs[i].blockConfig.id)
+        }
+      }
+
+      var blockConfigs = []
+      const allBlockConfigs = this.props.viewer.blockConfigs
+
+      for (var i = 0; i < blockConfigIds.length; i++){
+        for (var j = 0; j < allBlockConfigs.length; j++){
+          if (allBlockConfigs[j].id == blockConfigIds[i]){
+            blockConfigs.push(allBlockConfigs[j])
+          }
+        }
+      }
+      return(blockConfigs)
   }
 
 
@@ -134,8 +168,8 @@ class ContextScreen extends React.Component {
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
           <Segment padded='very'>
-            <p>Context:</p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <p>{this.state.contextConfig.heading}</p>
+            {this.state.contextConfig.text}
             <p></p>
             <Button onClick={this.handleButtonClick} fluid color="green" className={styles.Button} >
               Weiter
@@ -162,6 +196,21 @@ export default createRefetchContainer(
           }
           user{
             id
+          }
+          sessionBlockConfigs{
+            id
+            sessionConfig{
+              id
+            }
+            blockConfig{
+              id
+            }
+          }
+          sessions{
+            id
+            sessionConfig{
+              id
+            }
           }
 
           blockConfigs{

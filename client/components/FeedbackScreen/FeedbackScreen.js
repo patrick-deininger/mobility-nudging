@@ -29,6 +29,10 @@ class FeedbackScreen extends React.Component {
     blockNumber: parseInt(this.props.match.params.blockNumber),
     blockId: this.props.match.params.blockId,
     nextScreen: "",
+    feedbackConfig: {
+      heading: "",
+      text: "",
+    },
     errors: []
   }
 
@@ -36,6 +40,61 @@ class FeedbackScreen extends React.Component {
     this.setState({ ...this.state, errors });
   }
 
+
+  componentWillMount(){
+    this.initialize()
+  }
+
+  initialize = () => {
+
+    const blockConfigs = this.identifyRelevantBlockConfigs()
+
+    const blockConfig = blockConfigs[this.state.blockNumber-1]
+
+    const feedbackConfig = this.state.feedbackConfig
+    const heading = blockConfig.feedback.heading
+    const text = blockConfig.feedback.text
+
+    feedbackConfig['heading'] = heading
+    feedbackConfig['text'] = text
+
+    this.setState({feedbackConfig: feedbackConfig})
+
+
+  }
+
+  identifyRelevantBlockConfigs = () => {
+      // Identify all blockConfigs that match to current session
+      const sessions = this.props.viewer.sessions
+      var sessionConfigId  = ""
+
+      for (var i = 0; i < sessions.length; i++){
+        if (sessions[i].id == this.state.sessionId){
+          sessionConfigId = sessions[i].sessionConfig.id
+        }
+      }
+
+      const sessionBlockConfigs = this.props.viewer.sessionBlockConfigs
+      var blockConfigIds = []
+
+      for (var i = 0; i < sessionBlockConfigs.length; i++){
+        if (sessionBlockConfigs[i].sessionConfig.id == sessionConfigId){
+          blockConfigIds.push(sessionBlockConfigs[i].blockConfig.id)
+        }
+      }
+
+      var blockConfigs = []
+      const allBlockConfigs = this.props.viewer.blockConfigs
+
+      for (var i = 0; i < blockConfigIds.length; i++){
+        for (var j = 0; j < allBlockConfigs.length; j++){
+          if (allBlockConfigs[j].id == blockConfigIds[i]){
+            blockConfigs.push(allBlockConfigs[j])
+          }
+        }
+      }
+      return(blockConfigs)
+  }
 
   handleButtonClick = () => {
     const FinishBlockVariables = {
@@ -74,8 +133,8 @@ class FeedbackScreen extends React.Component {
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
           <Segment padded='very'>
-            <p>Feedback:</p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <p>{this.state.feedbackConfig.heading}</p>
+            {this.state.feedbackConfig.text}
             <p></p>
             <Button onClick={this.handleButtonClick} fluid color="green" className={styles.Button} >
               Weiter
@@ -93,8 +152,29 @@ export default createRefetchContainer(
   viewer: graphql`
       fragment FeedbackScreen_viewer on Viewer{
         ...Page_viewer
+        sessions{
+          id
+          sessionConfig{
+            id
+          }
+        }
+        sessionBlockConfigs{
+          id
+          sessionConfig{
+            id
+          }
+          blockConfig{
+            id
+          }
+        }
         blockConfigs{
           id
+          feedback{
+            id
+            name
+            heading
+            text
+          }
         }
       }
 

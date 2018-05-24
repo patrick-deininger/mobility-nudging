@@ -186,7 +186,7 @@ class CoreQueries:
     session_config = graphene.Field(SessionConfig, id=graphene.ID(), name=graphene.String())
     session_configs = graphene.List(SessionConfig)
 
-    session = graphene.Field(Session, session_config=graphene.ID(), user=graphene.ID())
+    session = graphene.Field(Session, id=graphene.ID(), session_config=graphene.ID(), user=graphene.ID())
     sessions = graphene.List(Session)
 
     session_block_config = graphene.Node.Field(SessionBlockConfig, id=graphene.ID(), session_config=graphene.ID(), block_config=graphene.ID())
@@ -231,6 +231,9 @@ class CoreQueries:
         return session_configs
 
     def resolve_session(self, info, **args):
+        if 'id' in args:
+            return SessionModal.objects.get(pk=args['id'])
+
         session = SessionModal.objects.get(session_config=args['session_config'], user=args['user'])
         return session
 
