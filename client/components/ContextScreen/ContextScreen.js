@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql, createRefetchContainer } from 'react-relay';
+import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 import Page from 'components/Page/Page';
 
 import { withAuth } from 'modules/auth/utils';
@@ -8,13 +8,45 @@ import { Link } from 'found';
 import styles from './ContextScreen.scss';
 import classNames from 'classnames';
 
+import createBlockMutation from '../../modules/core/mutations/CreateBlock';
+
+
+const CreateBlockMutation = graphql`
+    mutation ContextScreen_CreateBlock_Mutation(
+      $user: ID!,
+      $blockConfig: ID!,
+      $session: ID!
+    ) {
+      createBlock(
+        user: $user,
+        blockConfig: $blockConfig,
+        session: $session,
+      ) {
+        block {
+          user{
+            id
+          }
+          blockConfig{
+            id
+          }
+        }
+      }
+    }
+    `;
+
 
 class ContextScreen extends React.Component {
 
   state = {
     sessionId: this.props.match.params.sessionId,
+    blockConfigId: this.props.viewer.blockConfigs[parseInt(this.props.match.params.blockNumber)-1].id,
     blockNumber: parseInt(this.props.match.params.blockNumber),
+    blockId: this.props.match.params.blockId,
     nextScreen: "",
+    contextConfig: {
+      heading: "",
+      text: "",
+    },
     errors: []
   }
 
@@ -23,8 +55,77 @@ class ContextScreen extends React.Component {
   }
 
 
+  componentWillMount(){
+    this.initialize()
+  }
+
+  initialize = () => {
+
+    const blockConfigs = this.props.viewer.blockConfigs
+
+    if (blockConfigs.length >= this.state.blockNumber){
+      const blockConfig = blockConfigs[this.state.blockNumber-1]
+
+      const contextConfig = this.state.contextConfig
+      const heading = blockConfig.context.heading
+      const text = blockConfig.context.text
+
+      contextConfig['heading'] = heading
+      contextConfig['text'] = text
+
+      this.setState({contextConfig: contextConfig})
+
+      this.createBlock()
+    }
+    else {
+      this.props.router.push(`/done/${this.state.sessionId}`)
+    }
+  }
+
+
+  createBlock = () => {
+     const blockVariables = {
+       user: this.props.viewer.user.id,
+       blockConfig: this.state.blockConfigId,
+       session: this.state.sessionId
+     }
+
+     commitMutation(this.props.relay.environment, {
+           mutation: CreateBlockMutation,
+           variables: blockVariables,
+           onCompleted: (resp) => {
+             this.onCompletedCreateBlock()
+           },
+           onError: (err) => {
+             console.error(err)
+           },
+         }
+       );
+    // createBlockMutation(this.props.relay.environment, blockVariables, this.onCompletedCreateBlock, this.setErrors)
+  }
+
+
+   onCompletedCreateBlock = () => {
+     const refetchVariables = fragmentVariables => ({
+       //TODO (currently hack)
+       session: atob(this.state.sessionId).split(':')[1],
+       blockConfig: atob(this.state.blockConfigId).split(':')[1],
+     });
+     this.props.relay.refetch(refetchVariables, null, this.onCompletedRefetch);
+
+     console.log("Block created")
+
+   }
+
+   onCompletedRefetch = () => {
+     const blockId = this.props.viewer.block.id
+     this.setState({blockId: blockId});
+
+   }
+
+
   handleButtonClick = () => {
-    var nextScreen = `/run/${this.state.blockNumber}/${this.state.sessionId}`
+    var nextScreen = `/run/${this.state.blockNumber}/${this.state.sessionId}/${this.state.blockId}`
 
     this.setState({ ...this.state, nextScreen });
     this.props.router.push(nextScreen)
@@ -53,12 +154,42 @@ export default createRefetchContainer(
   withAuth(ContextScreen),
   {
   viewer: graphql`
-      fragment ContextScreen_viewer on Viewer{
-        ...Page_viewer
+      fragment ContextScreen_viewer on Viewer
+        @argumentDefinitions(
+          session: {type: "ID"},
+          blockConfig: {type: "ID"},
+        ){
+          ...Page_viewer
+          block(session: $session, blockConfig: $blockConfig){
+            id
+          }
+          user{
+            id
+          }
+
+          blockConfigs{
+            id
+            context{
+              id
+              name
+              heading
+              text
+            }
+        }
 
       }
 
       `,
   },
+
+
+    graphql`
+      query ContextScreenRefetchQuery($session: ID!, $blockConfig: ID!){
+        viewer {
+          ...ContextScreen_viewer @arguments(session: $session, blockConfig: $blockConfig)
+
+        }
+      }
+      `,
 
 );
