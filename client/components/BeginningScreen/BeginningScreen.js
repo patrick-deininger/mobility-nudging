@@ -41,6 +41,8 @@ class BeginningScreen extends React.Component {
     var activeSessionConfigs = []
     var sessionConfigCount = new Array(sessionConfigs.length).fill(0);
 
+    console.log(sessionConfigs)
+
     // Count the sessions related to each sessionConfig
     for (var i = 0; i < sessions.length; i++){
       for (var j = 0; j < sessionConfigs.length; j++){
@@ -49,13 +51,15 @@ class BeginningScreen extends React.Component {
         }
       }
     }
+
+    console.log(sessionConfigCount)
     // Check if there still sessions to be done
     for (var j = 0; j < sessionConfigs.length; j++){
       if (sessionConfigCount[j] < sessionConfigs[j].numberOfSessions){
         activeSessionConfigs.push(sessionConfigs[j].id)
       }
     }
-
+    console.log(activeSessionConfigs)
     // Choose random active sessionConfigId
     const sessionConfigId = activeSessionConfigs[Math.floor(Math.random() * activeSessionConfigs.length)]
 
