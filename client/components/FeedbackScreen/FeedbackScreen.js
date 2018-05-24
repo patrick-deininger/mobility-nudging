@@ -13,7 +13,9 @@ class FeedbackScreen extends React.Component {
 
   state = {
     sessionId: this.props.match.params.sessionId,
+    blockConfigId: this.props.viewer.blockConfigs[parseInt(this.props.match.params.blockNumber)-1].id,
     blockNumber: parseInt(this.props.match.params.blockNumber),
+    blockId: this.props.match.params.blockId,
     nextScreen: "",
     errors: []
   }

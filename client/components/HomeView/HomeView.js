@@ -55,7 +55,7 @@ class HomeView extends React.Component {
     },
     blockNumber: parseInt(this.props.match.params.blockNumber),
     sessionId: this.props.match.params.sessionId,
-    blockConfig: this.props.viewer.blockConfigs[parseInt(this.props.match.params.blockNumber)-1].id,
+    blockConfigId: this.props.viewer.blockConfigs[parseInt(this.props.match.params.blockNumber)-1].id,
     blockId: "",
     errors: [],
   }
@@ -85,10 +85,11 @@ class HomeView extends React.Component {
     const blockConfigs = this.props.viewer.blockConfigs
 
     if (blockConfigs.length >= this.state.blockNumber){
+      const blockConfig = blockConfigs[this.state.blockNumber-1]
 
       const parameters = this.state.parameters
-      const chargeStatus = parseInt(blockConfigs[this.state.blockNumber-1].chargeStatus * 100)
-      const defaultChargeLevel = parseInt(blockConfigs[this.state.blockNumber-1].defaultChargeLevel * 100)
+      const chargeStatus = parseInt(blockConfig.chargeStatus * 100)
+      const defaultChargeLevel = parseInt(blockConfig.defaultChargeLevel * 100)
       parameters['chargeStatus'] = chargeStatus
       parameters['defaultChargeLevel'] = defaultChargeLevel
 
@@ -96,16 +97,16 @@ class HomeView extends React.Component {
 
       const nudgeStatic = this.state.nudgeStatic
 
-      const heading = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudgeStatic.heading
-      const text = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudgeStatic.text
-      const imagesrc = this.props.viewer.blockConfigs[this.state.blockNumber-1].nudgeStatic.image
+      const heading = blockConfig.nudgeStatic.heading
+      const text = blockConfig.nudgeStatic.text
+      const imagesrc = blockConfig.nudgeStatic.image
       nudgeStatic['heading'] = heading
       nudgeStatic['text'] = text
       nudgeStatic['imagesrc'] = imagesrc
 
       this.setState({nudgeStatic: nudgeStatic})
 
-      this.createBlock()
+      //this.createBlock()
     }
     else {
       this.props.router.push(`/done/${this.state.sessionId}`)
@@ -175,38 +176,9 @@ class HomeView extends React.Component {
   }
 
  nextScreen = () => {
-      var nextScreen = `/fb/${this.state.blockNumber}/${this.state.sessionId}`
+      var nextScreen = `/fb/${this.state.blockNumber}/${this.state.sessionId}/${this.state.blockId}`
       this.props.router.push(nextScreen)
   }
-
-
-  createBlock = () => {
-     const blockVariables = {
-       user: this.props.viewer.user.id,
-       blockConfig: this.state.blockConfig,
-       session: this.state.sessionId
-     }
-     createBlockMutation(this.props.relay.environment, blockVariables, this.onCompletedCreateBlock, this.setErrors)
-
-   }
-   onCompletedCreateBlock = (error, data) => {
-
-     const refetchVariables = fragmentVariables => ({
-       //TODO (currently hack)
-       session: atob(this.state.sessionId).split(':')[1],
-       blockConfig: atob(this.state.blockConfig).split(':')[1],
-     });
-     this.props.relay.refetch(refetchVariables, null, this.onCompletedRefetch);
-
-     console.log("Block created")
-
-   }
-
-   onCompletedRefetch = () => {
-     const blockId = this.props.viewer.block.id
-     this.setState({blockId: blockId});
-
-   }
 
 
   render() {
@@ -383,6 +355,26 @@ export default createRefetchContainer(
             text
             image
           }
+          nudgeDynamic{
+            id
+            name
+            heading
+            text
+            image
+          }
+          context{
+            id
+            name
+            heading
+            text
+          }
+          feedback{
+            id
+            name
+            heading
+            text
+          }
+
         }
 
       }
