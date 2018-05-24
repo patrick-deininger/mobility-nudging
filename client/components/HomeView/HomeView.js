@@ -56,7 +56,7 @@ class HomeView extends React.Component {
     blockNumber: parseInt(this.props.match.params.blockNumber),
     sessionId: this.props.match.params.sessionId,
     blockConfigId: this.props.viewer.blockConfigs[parseInt(this.props.match.params.blockNumber)-1].id,
-    blockId: "",
+    blockId: this.props.match.params.blockId,
     errors: [],
   }
 
@@ -106,7 +106,6 @@ class HomeView extends React.Component {
 
       this.setState({nudgeStatic: nudgeStatic})
 
-      //this.createBlock()
     }
     else {
       this.props.router.push(`/done/${this.state.sessionId}`)
@@ -361,18 +360,6 @@ export default createRefetchContainer(
             heading
             text
             image
-          }
-          context{
-            id
-            name
-            heading
-            text
-          }
-          feedback{
-            id
-            name
-            heading
-            text
           }
 
         }
