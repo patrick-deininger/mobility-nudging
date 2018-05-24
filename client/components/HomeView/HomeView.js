@@ -9,7 +9,6 @@ import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'se
 import { Link } from 'found';
 import styles from './HomeView.scss';
 import classNames from 'classnames';
-import createBlockMutation from '../../modules/core/mutations/CreateBlock';
 import Slider from 'react-rangeslider';
 import 'react-rangeslider/lib/index.css'
 //import Slider, { Range } from 'rc-slider';
@@ -155,30 +154,9 @@ class HomeView extends React.Component {
   };
 
   onClickConfirmation = () => {
-
-    const FinishBlockVariables = {
-      blockId: this.state.blockId,
-    };
-
-    commitMutation(this.props.relay.environment, {
-          mutation: FinishBlockMutation,
-          variables: FinishBlockVariables,
-          onCompleted: (resp) => {
-            console.log("Finished Block")
-            this.nextScreen()
-          },
-          onError: (err) => {
-            console.error(err)
-          },
-        }
-      );
-  }
-
- nextScreen = () => {
       var nextScreen = `/fb/${this.state.blockNumber}/${this.state.sessionId}/${this.state.blockId}`
       this.props.router.push(nextScreen)
   }
-
 
   render() {
     return (

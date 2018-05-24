@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql, createRefetchContainer } from 'react-relay';
+import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 import Page from 'components/Page/Page';
 
 import { withAuth } from 'modules/auth/utils';
@@ -8,6 +8,18 @@ import { Link } from 'found';
 import styles from './FeedbackScreen.scss';
 import classNames from 'classnames';
 
+
+const FinishBlockMutation = graphql`
+  mutation FeedbackScreen_FinishBlock_Mutation (
+    $blockId: ID!
+  ) {
+    finishBlock(blockId: $blockId) {
+      block {
+        id
+      }
+    }
+  }
+`;
 
 class FeedbackScreen extends React.Component {
 
@@ -26,6 +38,25 @@ class FeedbackScreen extends React.Component {
 
 
   handleButtonClick = () => {
+    const FinishBlockVariables = {
+      blockId: this.state.blockId,
+    };
+
+    commitMutation(this.props.relay.environment, {
+          mutation: FinishBlockMutation,
+          variables: FinishBlockVariables,
+          onCompleted: (resp) => {
+            console.log("Finished Block")
+            this.nextScreen()
+          },
+          onError: (err) => {
+            console.error(err)
+          },
+        }
+      );
+  }
+
+  nextScreen = () => {
     var nextScreen = ""
     if (this.state.blockNumber+1 > this.props.viewer.blockConfigs.length){
         nextScreen = `/done/${this.state.sessionId}`
@@ -37,7 +68,6 @@ class FeedbackScreen extends React.Component {
     this.setState({ ...this.state, nextScreen });
     this.props.router.push(nextScreen)
   }
-
 
   render() {
     return (

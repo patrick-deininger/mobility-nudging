@@ -8,8 +8,6 @@ import { Link } from 'found';
 import styles from './ContextScreen.scss';
 import classNames from 'classnames';
 
-import createBlockMutation from '../../modules/core/mutations/CreateBlock';
-
 
 const CreateBlockMutation = graphql`
     mutation ContextScreen_CreateBlock_Mutation(
@@ -32,8 +30,7 @@ const CreateBlockMutation = graphql`
         }
       }
     }
-    `;
-
+  `;
 
 class ContextScreen extends React.Component {
 

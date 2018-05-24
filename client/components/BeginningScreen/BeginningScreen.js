@@ -1,14 +1,26 @@
 import React from 'react';
-import { graphql, createRefetchContainer } from 'react-relay';
+import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 import Page from 'components/Page/Page';
 
 import { withAuth } from 'modules/auth/utils';
 import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'semantic-ui-react';
 import { Link } from 'found';
 import styles from './BeginningScreen.scss';
-import createSessionMutation from '../../modules/core/mutations/CreateSession';
+
 import classNames from 'classnames';
 
+const CreateSessionMutation = graphql`
+  mutation BeginningScreen_CreateSession_Mutation (
+    $user: ID!
+    $sessionConfig: ID!
+  ) {
+    createSession(user: $user, sessionConfig: $sessionConfig) {
+      session {
+        id
+      }
+    }
+  }
+`;
 
 class BeginningScreen extends React.Component {
 
@@ -32,7 +44,18 @@ class BeginningScreen extends React.Component {
       user: this.props.viewer.user.id,
       sessionConfig: this.state.sessionConfigId
     };
-    createSessionMutation(this.props.relay.environment, sessionVariables, this.onCompletedCreateSession, this.setErrors)
+
+    commitMutation(this.props.relay.environment, {
+          mutation: CreateSessionMutation,
+          variables: sessionVariables,
+          onCompleted: (resp) => {
+            this.onCompletedCreateSession()
+          },
+          onError: (err) => {
+            console.error(err)
+          },
+        }
+      );
   }
 
   onCompletedCreateSession = (error, data) => {
