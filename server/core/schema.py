@@ -6,7 +6,7 @@ from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType, ObjectType
 from core.user_helper.jwt_util import get_token_user_id
 from core.user_helper.jwt_schema import TokensInterface
-from .models import EventHistory as EventHistory, NudgeStatic as NudgeStaticModal, NudgeDynamic as NudgeDynamicModal, FeedbackConfig as FeedbackConfigModal, ContextConfig as ContextConfigModal, Session as SessionModal, SessionConfig as SessionConfigModal, SessionBlockConfig as SessionBlockConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal, Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
+from .models import Event as EventModal, NudgeStatic as NudgeStaticModal, NudgeDynamic as NudgeDynamicModal, FeedbackConfig as FeedbackConfigModal, ContextConfig as ContextConfigModal, Session as SessionModal, SessionConfig as SessionConfigModal, SessionBlockConfig as SessionBlockConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal, Book as BookModal, BookshelfEntry as BookshelfEntryModal, BookRecommendationForFriend as BookRecommendationForFriendModal, Membership as MembershipModal, Group as GroupModal, GroupInvite as GroupInviteModal
 from .utils import Utils
 from .email import Email, EmailBuilder
 
@@ -85,6 +85,12 @@ class SessionBlockConfig(DjangoObjectType):
     class Meta:
         model = SessionBlockConfigModal
         filter_fields = ['session_config', 'block_config']
+        interfaces = (graphene.Node, )
+
+class Event(DjangoObjectType):
+    class Meta:
+        model = EventModal
+        filter_fields = ['event', 'user', 'block', 'session', 'screen']
         interfaces = (graphene.Node, )
 
 
@@ -202,6 +208,9 @@ class CoreQueries:
 
     context_configs = graphene.List(ContextConfig)
 
+    events = graphene.List(Event)
+
+
     def resolve_block_config(self, info, **args):
         if 'id' in args:
             return BlockConfigModal.objects.get(pk=args['id'])
@@ -282,6 +291,10 @@ class CoreQueries:
     def resolve_context_configs(self, info, **args):
         context_configs = ContextConfigModal.objects.all()
         return context_configs
+
+    def resolve_events(self, info, **args):
+        events = EventModal.objects.all()
+        return events
 
 
 
@@ -670,6 +683,58 @@ class CreateSessionBlockConfig(graphene.Mutation):
         sessionBlockConfig.save()
         return CreateSessionBlockConfig(sessionBlockConfig=sessionBlockConfig)
 
+class CreateEvent(graphene.Mutation):
+    class Arguments:
+        event = graphene.String(required=True)
+        user_id = graphene.ID(required=True)
+        block_id = graphene.ID(required=True)
+        session_id = graphene.ID(required=True)
+
+        screen = graphene.String(required=True)
+
+        provided_flexibility_time = graphene.Float(required=True)
+        target_charging_level = graphene.Float(required=True)
+        charging_level_representation = graphene.String(required=True)
+
+
+    event = graphene.Field(Event)
+
+    def mutate(self, info, **args):
+        get_node = graphene.Node.get_node_from_global_id
+
+        event = args['event']
+        user_id = get_node(info, args['user_id'])
+        block_id = get_node(info, args['block_id'])
+        session_id = get_node(info, args['session_id'])
+
+        screen = args['screen']
+
+        provided_flexibility_time = args['provided_flexibility_time']
+        target_charging_level = args['target_charging_level']
+        charging_level_representation = args['charging_level_representation']
+
+
+        event = EventModal(
+            event = event,
+            user = user_id,
+            block = block_id,
+            session = session_id,
+
+            screen = screen,
+
+            provided_flexibility_time = provided_flexibility_time,
+            target_charging_level = target_charging_level,
+            charging_level_representation = charging_level_representation,
+        )
+
+        event.save()
+        return CreateEvent(event=event)
+
+
+
+
+
+
 
 
 class CreateGroupInvite(graphene.Mutation):
@@ -914,6 +979,7 @@ class CoreMutations:
     create_session_block_config = CreateSessionBlockConfig.Field()
     finish_session = FinishSession.Field()
     finish_block = FinishBlock.Field()
+    create_event = CreateEvent.Field()
 
     create_book = CreateBook.Field()
     create_bookshelf_entry = CreateBookshelfEntry.Field()

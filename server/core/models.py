@@ -143,15 +143,18 @@ class SessionBlockConfig(models.Model):
         unique_together = ('session_config', 'block_config')
 
 
-class EventHistory(models.Model):
-    session = models.ForeignKey(Session)
+class Event(models.Model):
+    event = models.CharField(max_length=50)
+    user = models.ForeignKey(CustomUser)
     block = models.ForeignKey(Block)
-    screen = models.CharField(max_length=255)
-    event = models.CharField(max_length=255)
-    nudge = models.CharField(max_length=255)
+    session = models.ForeignKey(Session)
+
+    screen = models.CharField(max_length=50)
     time_stamp = models.DateTimeField(default=timezone.now)
 
-
+    provided_flexibility_time = models.CharField(max_length=50)
+    target_charging_level = models.CharField(max_length=50)
+    charging_level_representation = models.CharField(max_length=50)
 
 
 
