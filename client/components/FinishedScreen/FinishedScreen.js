@@ -27,8 +27,7 @@ class FinishedScreen extends React.Component {
     sessionId: this.props.match.params.sessionId
   }
 
-  onButtonClick = () => {
-
+  componentWillMount(){
     const FinishSessionVariables = {
       sessionId: this.state.sessionId,
     };
@@ -38,13 +37,17 @@ class FinishedScreen extends React.Component {
           variables: FinishSessionVariables,
           onCompleted: (resp) => {
             console.log("Finished Session")
-            this.props.router.push('/');
+
           },
           onError: (err) => {
             console.error(err)
           },
         }
       );
+  }
+
+  onButtonClick = () => {
+    this.props.router.push('/');
 
   }
 
