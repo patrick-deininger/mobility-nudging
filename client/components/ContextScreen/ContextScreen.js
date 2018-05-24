@@ -1,6 +1,7 @@
 import React from 'react';
 import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 import Page from 'components/Page/Page';
+import createEventMutation from 'components/mutations/CreateEventMutation/CreateEventMutation';
 
 import { withAuth } from 'modules/auth/utils';
 import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'semantic-ui-react';
@@ -75,7 +76,7 @@ class ContextScreen extends React.Component {
       this.createBlock()
     }
     else {
-      this.props.router.push(`/done/${this.state.sessionId}`)
+      this.props.router.push(`/done/${this.state.sessionId}/null`)
     }
   }
 
@@ -132,8 +133,9 @@ class ContextScreen extends React.Component {
            },
          }
        );
-    // createBlockMutation(this.props.relay.environment, blockVariables, this.onCompletedCreateBlock, this.setErrors)
+
   }
+
 
 
    onCompletedCreateBlock = () => {
@@ -152,6 +154,20 @@ class ContextScreen extends React.Component {
      const blockId = this.props.viewer.block.id
      this.setState({blockId: blockId});
 
+     const eventVariables =  {
+       event: "Block created - context started",
+       userId: this.props.viewer.user.id,
+       blockId: blockId,
+       sessionId: this.state.sessionId,
+
+       screen: "ContextScreen",
+       providedFlexibilityTime: 0,
+       targetChargingLevel: 0,
+       chargingLevelRepresentation: "None",
+     }
+
+     this.createEvent(eventVariables)
+
    }
 
 
@@ -159,8 +175,32 @@ class ContextScreen extends React.Component {
     var nextScreen = `/run/${this.state.blockNumber}/${this.state.sessionId}/${this.state.blockId}`
 
     this.setState({ ...this.state, nextScreen });
+
+    const eventVariables =  {
+      event: "Context finished",
+      userId: this.props.viewer.user.id,
+      blockId: this.state.blockId,
+      sessionId: this.state.sessionId,
+
+      screen: "ContextScreen",
+      providedFlexibilityTime: 0,
+      targetChargingLevel: 0,
+      chargingLevelRepresentation: "None",
+    }
+    this.createEvent(eventVariables)
+
+
     this.props.router.push(nextScreen)
   }
+
+
+    createEvent = (eventVariables) => {
+      createEventMutation(this.props.relay.environment, eventVariables, this.onCompletedCreateEvent, this.setErrors);
+    }
+
+    onCompletedCreateEvent = () => {
+      console.log('created event')
+    }
 
 
   render() {

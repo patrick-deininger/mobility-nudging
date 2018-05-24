@@ -152,8 +152,8 @@ class Event(models.Model):
     screen = models.CharField(max_length=50)
     time_stamp = models.DateTimeField(default=timezone.now)
 
-    provided_flexibility_time = models.CharField(max_length=50)
-    target_charging_level = models.CharField(max_length=50)
+    provided_flexibility_time = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    target_charging_level = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     charging_level_representation = models.CharField(max_length=50)
 
 

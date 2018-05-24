@@ -687,8 +687,8 @@ class CreateEvent(graphene.Mutation):
     class Arguments:
         event = graphene.String(required=True)
         user_id = graphene.ID(required=True)
-        block_id = graphene.ID(required=True)
-        session_id = graphene.ID(required=True)
+        block_id = graphene.ID()
+        session_id = graphene.ID()
 
         screen = graphene.String(required=True)
 

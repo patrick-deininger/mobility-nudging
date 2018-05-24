@@ -142,7 +142,7 @@ export default makeRouteConfig(
     <Route path='run/:blockNumber/:sessionId/:blockId' Component={HomeView} query={HomeViewQuery} />
     <Route path='fb/:blockNumber/:sessionId/:blockId' Component={FeedbackScreen} query={FeedbackScreenQuery} />
     <Route path='context/:blockNumber/:sessionId' Component={ContextScreen} query={ContextScreenQuery} />
-    <Route path='done/:sessionId' Component={FinishedScreen} query={FinishedScreenQuery} />
+    <Route path='done/:sessionId/:lastBlockId' Component={FinishedScreen} query={FinishedScreenQuery} />
     <Route path='cockpit' Component={Cockpit} query={CockpitQuery} />
     <Route path='add-session-config' Component={AddSessionConfig} query={AddSessionConfigQuery} />
     <Route path='add-nudge-static-config' Component={AddNudgeStaticConfig} query={AddNudgeStaticConfigQuery} />

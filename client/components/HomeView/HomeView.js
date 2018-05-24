@@ -4,6 +4,7 @@ import Page from 'components/Page/Page';
 import Neighbour from 'components/Nudges/Neighbour/Neighbour'
 import Template from 'components/Nudges/Template/Template'
 import RankingScreen from 'components/Nudges/RankingScreen/RankingScreen';
+import createEventMutation from 'components/mutations/CreateEventMutation/CreateEventMutation';
 import { withAuth } from 'modules/auth/utils';
 import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'semantic-ui-react';
 import { Link } from 'found';
@@ -188,8 +189,32 @@ class HomeView extends React.Component {
   };
 
   onClickConfirmation = () => {
+      const eventVariables =  {
+        event: "Confirmation",
+        userId: this.props.viewer.user.id,
+        blockId: this.state.blockId,
+        sessionId: this.state.sessionId,
+
+        screen: "NudgeScreen",
+        providedFlexibilityTime: 0,
+        targetChargingLevel: this.state.parameters.defaultChargeLevel,
+        chargingLevelRepresentation: "tbd",
+      }
+
+      this.createEvent(eventVariables)
+
+
+
       var nextScreen = `/fb/${this.state.blockNumber}/${this.state.sessionId}/${this.state.blockId}`
       this.props.router.push(nextScreen)
+  }
+
+  createEvent = (eventVariables) => {
+    createEventMutation(this.props.relay.environment, eventVariables, this.onCompletedCreateEvent, this.setErrors);
+  }
+
+  onCompletedCreateEvent = () => {
+    console.log('created event')
   }
 
   render() {

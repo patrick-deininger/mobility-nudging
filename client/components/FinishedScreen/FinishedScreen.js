@@ -1,6 +1,7 @@
 import React from 'react';
 import { graphql, createFragmentContainer, commitMutation } from 'react-relay';
 import Page from 'components/Page/Page';
+import createEventMutation from 'components/mutations/CreateEventMutation/CreateEventMutation';
 
 import { withAuth } from 'modules/auth/utils';
 import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'semantic-ui-react';
@@ -24,10 +25,25 @@ const FinishSessionMutation = graphql`
 
 class FinishedScreen extends React.Component {
   state = {
-    sessionId: this.props.match.params.sessionId
+    sessionId: this.props.match.params.sessionId,
+    lastBlockId: this.props.match.params.lastBlockId,
   }
 
   componentWillMount(){
+    const eventVariables =  {
+      event: "Finish session",
+      userId: this.props.viewer.user.id,
+      blockId: this.state.lastBlockId,
+      sessionId: this.state.sessionId,
+
+      screen: "FinishedScreen",
+      providedFlexibilityTime: 0,
+      targetChargingLevel: 0,
+      chargingLevelRepresentation: "None",
+    }
+
+    this.createEvent(eventVariables)
+
     const FinishSessionVariables = {
       sessionId: this.state.sessionId,
     };
@@ -47,8 +63,30 @@ class FinishedScreen extends React.Component {
   }
 
   onButtonClick = () => {
+    const eventVariables =  {
+      event: "Finished experiment",
+      userId: this.props.viewer.user.id,
+      blockId: this.state.lastBlockId,
+      sessionId: this.state.sessionId,
+
+      screen: "FinishedScreen",
+      providedFlexibilityTime: 0,
+      targetChargingLevel: 0,
+      chargingLevelRepresentation: "None",
+    }
+
+    this.createEvent(eventVariables)
+
     this.props.router.push('/');
 
+  }
+
+  createEvent = (eventVariables) => {
+    createEventMutation(this.props.relay.environment, eventVariables, this.onCompletedCreateEvent, this.setErrors);
+  }
+
+  onCompletedCreateEvent = () => {
+    console.log('created event')
   }
 
 
@@ -73,6 +111,9 @@ export default createFragmentContainer(
   graphql`
     fragment FinishedScreen_viewer on Viewer {
       ...Page_viewer
+      user{
+        id
+      }
       sessions{
         id
       }

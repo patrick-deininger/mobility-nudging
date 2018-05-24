@@ -1,6 +1,7 @@
 import React from 'react';
 import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 import Page from 'components/Page/Page';
+import createEventMutation from 'components/mutations/CreateEventMutation/CreateEventMutation';
 
 import { withAuth } from 'modules/auth/utils';
 import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'semantic-ui-react';
@@ -41,8 +42,6 @@ class BeginningScreen extends React.Component {
     var activeSessionConfigs = []
     var sessionConfigCount = new Array(sessionConfigs.length).fill(0);
 
-    console.log(sessionConfigs)
-
     // Count the sessions related to each sessionConfig
     for (var i = 0; i < sessions.length; i++){
       for (var j = 0; j < sessionConfigs.length; j++){
@@ -52,14 +51,12 @@ class BeginningScreen extends React.Component {
       }
     }
 
-    console.log(sessionConfigCount)
     // Check if there still sessions to be done
     for (var j = 0; j < sessionConfigs.length; j++){
       if (sessionConfigCount[j] < sessionConfigs[j].numberOfSessions){
         activeSessionConfigs.push(sessionConfigs[j].id)
       }
     }
-    console.log(activeSessionConfigs)
     // Choose random active sessionConfigId
     const sessionConfigId = activeSessionConfigs[Math.floor(Math.random() * activeSessionConfigs.length)]
 
@@ -100,15 +97,37 @@ class BeginningScreen extends React.Component {
 
     console.log("Session created")
 
+
+    // const eventVariables =  {
+    //   event: "Session created",
+    //   userId: this.props.viewer.user.id,
+    //   blockId: "tba",
+    //   sessionId: "tba",
+    //
+    //   screen: "BeginningScreen",
+    //   providedFlexibilityTime: 0,
+    //   targetChargingLevel: 0,
+    //   chargingLevelRepresentation: "None",
+    // }
+    //
+    // this.createEvent(eventVariables)
+
   }
 
   onCompletedRefetch = () => {
     const nextScreen = `/context/1/${this.props.viewer.session.id}`
     this.setState({ ...this.state, nextScreen });
     this.props.router.push(nextScreen)
-
-
   }
+
+//only works with sessionId and blockId which is not available at this stage
+  // createEvent = (eventVariables) => {
+  //   createEventMutation(this.props.relay.environment, eventVariables, this.onCompletedCreateEvent, this.setErrors);
+  // }
+  //
+  // onCompletedCreateEvent = () => {
+  //   console.log('created event')
+  // }
 
   render() {
     return (

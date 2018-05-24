@@ -1,6 +1,8 @@
 import React from 'react';
 import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 import Page from 'components/Page/Page';
+import createEventMutation from 'components/mutations/CreateEventMutation/CreateEventMutation';
+
 
 import { withAuth } from 'modules/auth/utils';
 import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'semantic-ui-react';
@@ -116,9 +118,24 @@ class FeedbackScreen extends React.Component {
   }
 
   nextScreen = () => {
+    const eventVariables =  {
+      event: "Block finished - feedback finished",
+      userId: this.props.viewer.user.id,
+      blockId: this.state.blockId,
+      sessionId: this.state.sessionId,
+
+      screen: "FeedbackScreen",
+      providedFlexibilityTime: 0,
+      targetChargingLevel: 0,
+      chargingLevelRepresentation: "None",
+    }
+
+    this.createEvent(eventVariables)
+
+
     var nextScreen = ""
     if (this.state.blockNumber+1 > this.props.viewer.blockConfigs.length){
-        nextScreen = `/done/${this.state.sessionId}`
+        nextScreen = `/done/${this.state.sessionId}/${this.state.blockId}`
     }
     else {
         const blockNumber = this.state.blockNumber + 1
@@ -126,6 +143,14 @@ class FeedbackScreen extends React.Component {
     }
     this.setState({ ...this.state, nextScreen });
     this.props.router.push(nextScreen)
+  }
+
+  createEvent = (eventVariables) => {
+    createEventMutation(this.props.relay.environment, eventVariables, this.onCompletedCreateEvent, this.setErrors);
+  }
+
+  onCompletedCreateEvent = () => {
+    console.log('created event')
   }
 
   render() {
@@ -152,6 +177,9 @@ export default createRefetchContainer(
   viewer: graphql`
       fragment FeedbackScreen_viewer on Viewer{
         ...Page_viewer
+        user{
+          id
+        }
         sessions{
           id
           sessionConfig{
