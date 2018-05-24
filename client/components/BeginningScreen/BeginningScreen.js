@@ -38,9 +38,9 @@ class BeginningScreen extends React.Component {
   onCompletedCreateSession = (error, data) => {
 
     const refetchVariables = fragmentVariables => ({
-      //TODO
-      sessionConfig: 1,
-      user: 1,
+      //TODO (currently hack)
+      sessionConfig: atob(this.state.sessionConfigId).split(':')[1],
+      user: atob(this.props.viewer.user.id).split(':')[1],
     });
     this.props.relay.refetch(refetchVariables, null, this.onCompletedRefetch);
 

@@ -68,13 +68,13 @@ class FeedbackConfig(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=180)
     heading = models.CharField(max_length=30)
-    text = models.CharField(max_length=200)
+    text = models.CharField(max_length=400)
 
 class ContextConfig(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=180)
     heading = models.CharField(max_length=30)
-    text = models.CharField(max_length=200)
+    text = models.CharField(max_length=400)
 
 
 class BlockConfig(models.Model):
@@ -114,7 +114,7 @@ class SessionConfig(models.Model):
 class Session(models.Model):
     #experiment = models.ForeignKey(Experiment)
     user = models.ForeignKey(CustomUser)
-    session_config = models.ForeignKey(SessionConfig, default="1")
+    session_config = models.ForeignKey(SessionConfig)
     started_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(default=timezone.now)
     session_status = models.CharField(max_length=31, blank=True)
@@ -126,7 +126,7 @@ class Session(models.Model):
 class Block(models.Model):
     user = models.ForeignKey(CustomUser)
     session = models.ForeignKey(Session)
-    block_config = models.ForeignKey(BlockConfig, default="1")
+    block_config = models.ForeignKey(BlockConfig)
     started_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(default=timezone.now)
     block_status = models.CharField(max_length=31, blank=True)

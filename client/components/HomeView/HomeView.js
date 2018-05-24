@@ -55,7 +55,7 @@ class HomeView extends React.Component {
     },
     blockNumber: parseInt(this.props.match.params.blockNumber),
     sessionId: this.props.match.params.sessionId,
-    blockConfig: this.props.viewer.blockConfigs[parseInt(this.props.location.pathname.split("/run/")[1].split("/")[0])-1].id,
+    blockConfig: this.props.viewer.blockConfigs[parseInt(this.props.match.params.blockNumber)-1].id,
     blockId: "",
     errors: [],
   }
@@ -192,9 +192,9 @@ class HomeView extends React.Component {
    onCompletedCreateBlock = (error, data) => {
 
      const refetchVariables = fragmentVariables => ({
-       //TODO
-       session: 1,
-       blockConfig: 1,
+       //TODO (currently hack)
+       session: atob(this.state.sessionId).split(':')[1],
+       blockConfig: atob(this.state.blockConfig).split(':')[1],
      });
      this.props.relay.refetch(refetchVariables, null, this.onCompletedRefetch);
 
