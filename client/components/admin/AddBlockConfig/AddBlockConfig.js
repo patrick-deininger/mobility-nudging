@@ -197,8 +197,6 @@ class AddBlockConfig extends React.Component {
 
   onSubmitHandler = (ev) => {
 
-    console.log(this.state.input)
-
     const BlockConfigVariables = {
       name: this.state.input.name,
       description: this.state.input.description,
@@ -225,7 +223,6 @@ class AddBlockConfig extends React.Component {
       nudgeStatic: this.state.input.nudge_static_id,
       nudgeDynamic: this.state.input.nudge_dynamic_id,
     };
-    console.log(BlockConfigVariables)
 
     commitMutation(this.props.relay.environment, {
           mutation: CreateBlockConfigMutation,
