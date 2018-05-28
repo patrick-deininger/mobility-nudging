@@ -2,6 +2,7 @@ import React from 'react';
 import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 import Page from 'components/Page/Page';
 import Neighbour from 'components/Nudges/Neighbour/Neighbour'
+import Timer from 'components/Timer/Timer'
 import Template from 'components/Nudges/Template/Template'
 import RankingScreen from 'components/Nudges/RankingScreen/RankingScreen';
 import createEventMutation from 'components/mutations/CreateEventMutation/CreateEventMutation';
@@ -218,7 +219,9 @@ class HomeView extends React.Component {
   }
 
   render() {
+
     return (
+
       <Page title='Mobility Nudging' viewer={this.props.viewer}>
         <section className={styles.container}>
 
@@ -230,6 +233,8 @@ class HomeView extends React.Component {
                 16:11
               </Segment>
             </div>
+
+
 
             <div className={styles.chargeStatus}>
               <Segment floated='left'>
@@ -247,24 +252,24 @@ class HomeView extends React.Component {
             content={<RankingScreen/>}
             />
 
+
+
           <div className={styles.objectivesContainer}>
 
-              <div className={styles.timeSegment}>
-                <Statistic size='small'>
-                  <Statistic.Label>Geladen um</Statistic.Label>
-                  <Statistic.Value>{this.state.endTime}</Statistic.Value>
-                </Statistic>
-              </div>
+          <div className={styles.timeSegment}>
+              <Statistic size='small'>
+                <Statistic.Label>Geladen um</Statistic.Label>
+                <Statistic.Value>{this.state.endTime}</Statistic.Value>
+            </Statistic>
+          </div>
 
 
-
-              <div className={styles.chargingLevelSegment}>
-                <Statistic size='small'>
-                  <Statistic.Label>Ladeziel</Statistic.Label>
-                  <Statistic.Value>{this.state.parameters.defaultChargeLevel}%</Statistic.Value>
-                </Statistic>
-              </div>
-
+          <div className={styles.chargingLevelSegment}>
+              <Statistic size='small'>
+                <Statistic.Label>Ladeziel</Statistic.Label>
+                <Statistic.Value>{this.state.parameters.defaultChargeLevel}%</Statistic.Value>
+              </Statistic>
+            </div>
          </div>
 
 
@@ -285,7 +290,11 @@ class HomeView extends React.Component {
               </div>
             </div>
 
-            <Neighbour/>
+            <div className={styles.timeTimer}>
+              <Timer />
+            </div>
+
+
             <Template
               heading={this.state.nudgeStatic.heading}
               text={this.state.nudgeStatic.text}
