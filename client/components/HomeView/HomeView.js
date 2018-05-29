@@ -79,6 +79,7 @@ class HomeView extends React.Component {
       flexibilityEndTime: "",
       individualFlexibilityEndTime: "",
       noFlexibilityEndTime: "",
+      originalMinimumChargeLevel: "",
 
     },
 
@@ -149,6 +150,7 @@ class HomeView extends React.Component {
       const currentTime = this.toClockFormat(date)
       const flexibilityEndTime = this.calcTime(date, flexibilityTimeRequest)
       const noFlexibilityEndTime = this.calcTime(date, timeToFullCharge)
+      const originalMinimumChargeLevel = minimumChargeLevel
       console.log(flexibilityEndTime)
       console.log(noFlexibilityEndTime)
 
@@ -179,6 +181,7 @@ class HomeView extends React.Component {
       parameters['currentTime'] = currentTime
       parameters['flexibilityEndTime'] = flexibilityEndTime
       parameters['noFlexibilityEndTime'] = noFlexibilityEndTime
+      parameters['originalMinimumChargeLevel'] = originalMinimumChargeLevel
 
 
       this.setState({parameters: parameters})
@@ -305,6 +308,7 @@ class HomeView extends React.Component {
       }
       const newStatus = 'individualFlexibility';
       const newActive= true
+
       this.setState({...this.state, activeAccordionTime: newActive, endTime: endTime, active: newStatus});
   }
 
@@ -320,10 +324,16 @@ class HomeView extends React.Component {
     this.setState({ activeAccordionCharge: newIndex })
   }
 
-  handleSliderChange = (event, value) => {
+  handleRangeChange = (event, value) => {
     const parameters = this.state.parameters
     parameters['defaultChargeLevel'] = event[1]
     parameters['minimumChargeLevel'] = event[0]
+    this.setState({parameters: parameters});
+  };
+
+  handleSliderChange = (event, value) => {
+    const parameters = this.state.parameters
+    parameters['defaultChargeLevel'] = event
     this.setState({parameters: parameters});
   };
 
@@ -333,7 +343,6 @@ class HomeView extends React.Component {
     const endTime = individualFlexibilityEndTime
     parameters['individualFlexibilityEndTime'] = individualFlexibilityEndTime
     this.setState({parameters: parameters, endTime: endTime});
-
   }
 
   onClickConfirmation = () => {
@@ -350,8 +359,6 @@ class HomeView extends React.Component {
       }
 
       this.createEvent(eventVariables)
-
-
 
       var nextScreen = `/fb/${this.state.blockNumber}/${this.state.sessionId}/${this.state.blockId}`
       this.props.router.push(nextScreen)
@@ -428,14 +435,31 @@ class HomeView extends React.Component {
            </Accordion.Title>
            <Accordion.Content active={this.state.activeAccordionCharge}>
              <div className={styles.sliderContainer}>
-               <Range
-                 min={0}
-                 max={100}
-                 defaultValue={[this.state.parameters.minimumChargeLevel , this.state.parameters.defaultChargeLevel]}
-                 onChange={this.handleSliderChange} />
+               {this.state.active != 'noFlexibility' ? (
+                 <Range
+                   min={0}
+                   max={100}
+                   defaultValue={[this.state.parameters.minimumChargeLevel , this.state.parameters.defaultChargeLevel]}
+                   value={[this.state.parameters.minimumChargeLevel , this.state.parameters.defaultChargeLevel]}
+                   onChange={this.handleRangeChange} />
+               ):(
+                 <Slider
+                   min={0}
+                   max={100}
+                   defaultValue={this.state.parameters.defaultChargeLevel}
+                   value={this.state.parameters.defaultChargeLevel}
+                   onChange={this.handleSliderChange}
+                   />
+               )}
+
 
                <div className={styles.chargingLabel}>
-                 <div>Minimum {this.state.parameters.minimumChargeLevel}%</div>
+                 {this.state.active == 'noFlexibility' ? (
+                   <div></div>
+                 ):(
+                   <div>Minimum {this.state.parameters.minimumChargeLevel}%</div>
+                 )}
+
                  <div>Ladeziel {this.state.parameters.defaultChargeLevel}%</div>
                </div>
              </div>
