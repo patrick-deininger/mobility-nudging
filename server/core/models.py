@@ -27,6 +27,7 @@ class NudgeStatic(models.Model):
     heading = models.CharField(max_length=30)
     text = models.CharField(max_length=200)
     image = models.CharField(max_length=30)
+    nudge_type = models.CharField(max_length=30)
 
 class NudgeDynamic(models.Model):
     name = models.CharField(max_length=30)
@@ -34,18 +35,21 @@ class NudgeDynamic(models.Model):
     heading = models.CharField(max_length=30)
     text = models.CharField(max_length=200)
     image = models.CharField(max_length=30)
+    nudge_type = models.CharField(max_length=30)
 
 class FeedbackConfig(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=180)
     heading = models.CharField(max_length=30)
     text = models.CharField(max_length=400)
+    feedback_type = models.CharField(max_length=30)
 
 class ContextConfig(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=180)
     heading = models.CharField(max_length=30)
     text = models.CharField(max_length=400)
+    context_type = models.CharField(max_length=30)
 
 class BlockConfig(models.Model):
     name = models.CharField(max_length=31)
@@ -56,12 +60,15 @@ class BlockConfig(models.Model):
     clocktime = models.DateTimeField(default=timezone.now)
     charge_status =  models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     charge_distance = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    charge_capacity = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    energy_price = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    power_price = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     representation_current_state = models.CharField(max_length=31, blank=True)
 
     flexibility_time_request = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     default_charge_level = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
-    time_to_full_charge = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
-    full_charge_price = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    # time_to_full_charge = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    #full_charge_price = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     minimum_charge_level = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     representation_target_state = models.CharField(max_length=31, blank=True)
 
@@ -69,6 +76,9 @@ class BlockConfig(models.Model):
     saved_emissions = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     avoided_environmental_costs = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     avoided_energy_costs = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+
+    penalty_probability = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    penalty_amount = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
 
     nudge_static = models.ForeignKey(NudgeStatic)
     nudge_dynamic = models.ForeignKey(NudgeDynamic)

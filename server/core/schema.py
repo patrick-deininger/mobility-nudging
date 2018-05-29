@@ -21,11 +21,14 @@ class BlockConfig(DjangoObjectType):
             'clocktime',
             'charge_status',
             'charge_distance',
+            'charge_capacity',
+            'energy_price',
+            'power_price',
 
             'flexibility_time_request',
             'default_charge_level',
-            'time_to_full_charge',
-            'full_charge_price',
+            # 'time_to_full_charge',
+            # 'full_charge_price',
             'minimum_charge_level',
 
             'flexibility_time_provision',
@@ -59,25 +62,25 @@ class Session(DjangoObjectType):
 class NudgeStatic(DjangoObjectType):
     class Meta:
         model = NudgeStaticModal
-        filter_fields = ['name']
+        filter_fields = ['name', 'nudge_type']
         interfaces = (graphene.Node, )
 
 class NudgeDynamic(DjangoObjectType):
     class Meta:
         model = NudgeDynamicModal
-        filter_fields = ['name']
+        filter_fields = ['name', 'nudge_type']
         interfaces = (graphene.Node, )
 
 class FeedbackConfig(DjangoObjectType):
     class Meta:
         model = FeedbackConfigModal
-        filter_fields = ['name']
+        filter_fields = ['name', 'feedback_type']
         interfaces = (graphene.Node, )
 
 class ContextConfig(DjangoObjectType):
     class Meta:
         model = ContextConfigModal
-        filter_fields = ['name']
+        filter_fields = ['name', 'context_type']
         interfaces = (graphene.Node, )
 
 class SessionBlockConfig(DjangoObjectType):
@@ -342,6 +345,7 @@ class CreateNudgeStaticConfig(graphene.Mutation):
         heading = graphene.String(required=True)
         text = graphene.String(required=True)
         image = graphene.String(required=True)
+        nudge_type = graphene.String(required=True)
 
     nudgeStaticConfig = graphene.Field(NudgeStatic)
 
@@ -352,13 +356,15 @@ class CreateNudgeStaticConfig(graphene.Mutation):
         heading = args['heading']
         text = args['text']
         image = args['image']
+        nudge_type = args['nudge_type']
 
         nudgeStaticConfig = NudgeStaticModal(
             name = name,
             description = description,
             heading = heading,
             text = text,
-            image = image
+            image = image,
+            nudge_type = nudge_type
         )
 
         nudgeStaticConfig.save()
@@ -372,6 +378,7 @@ class CreateNudgeDynamicConfig(graphene.Mutation):
         heading = graphene.String(required=True)
         text = graphene.String(required=True)
         image = graphene.String(required=True)
+        nudge_type = graphene.String(required=True)
 
     nudgeDynamicConfig = graphene.Field(NudgeDynamic)
 
@@ -382,13 +389,15 @@ class CreateNudgeDynamicConfig(graphene.Mutation):
         heading = args['heading']
         text = args['text']
         image = args['image']
+        nudge_type = args['nudge_type']
 
         nudgeDynamicConfig = NudgeDynamicModal(
             name = name,
             description = description,
             heading = heading,
             text = text,
-            image = image
+            image = image,
+            nudge_type = nudge_type
         )
 
         nudgeDynamicConfig.save()
@@ -401,6 +410,7 @@ class CreateFeedbackConfig(graphene.Mutation):
         description = graphene.String(required=True)
         heading = graphene.String(required=True)
         text = graphene.String(required=True)
+        feedback_type = graphene.String(required=True)
 
     feedbackConfig = graphene.Field(FeedbackConfig)
 
@@ -410,12 +420,14 @@ class CreateFeedbackConfig(graphene.Mutation):
         description = args['description']
         heading = args['heading']
         text = args['text']
+        feedback_type = args['feedback_type']
 
         feedbackConfig = FeedbackConfigModal(
             name = name,
             description = description,
             heading = heading,
             text = text,
+            feedback_type = feedback_type,
         )
 
         feedbackConfig.save()
@@ -427,6 +439,7 @@ class CreateContextConfig(graphene.Mutation):
         description = graphene.String(required=True)
         heading = graphene.String(required=True)
         text = graphene.String(required=True)
+        context_type = graphene.String(required=True)
 
     contextConfig = graphene.Field(ContextConfig)
 
@@ -436,12 +449,14 @@ class CreateContextConfig(graphene.Mutation):
         description = args['description']
         heading = args['heading']
         text = args['text']
+        context_type = args['context_type']
 
         contextConfig = ContextConfigModal(
             name = name,
             description = description,
             heading = heading,
             text = text,
+            context_type = context_type,
         )
 
         contextConfig.save()
@@ -459,12 +474,16 @@ class CreateBlockConfig(graphene.Mutation):
         #clocktime =
         charge_status = graphene.Float(required=True)
         charge_distance = graphene.Float(required=True)
+        charge_capacity = graphene.Float(required=True)
+        energy_price = graphene.Float(required=True)
+        power_price = graphene.Float(required=True)
         representation_current_state = graphene.String(required=True)
+
 
         flexibility_time_request = graphene.Float(required=True)
         default_charge_level = graphene.Float(required=True)
-        time_to_full_charge = graphene.Float(required=True)
-        full_charge_price = graphene.Float(required=True)
+        # time_to_full_charge = graphene.Float(required=True)
+        # full_charge_price = graphene.Float(required=True)
         minimum_charge_level = graphene.Float(required=True)
         representation_target_state = graphene.String(required=True)
 
@@ -472,6 +491,9 @@ class CreateBlockConfig(graphene.Mutation):
         saved_emissions = graphene.Float(required=True)
         avoided_environmental_costs = graphene.Float(required=True)
         avoided_energy_costs = graphene.Float(required=True)
+
+        penalty_probability = graphene.Float(required=True)
+        penalty_amount = graphene.Float(required=True)
 
         nudge_static = graphene.ID(required=True)
         nudge_dynamic = graphene.ID(required=True)
@@ -489,12 +511,15 @@ class CreateBlockConfig(graphene.Mutation):
         #clocktime = args['clocktime']
         charge_status = args['charge_status']
         charge_distance = args['charge_distance']
+        charge_capacity = args['charge_capacity']
+        energy_price = args['energy_price']
+        power_price = args['power_price']
         representation_current_state = args['representation_current_state']
 
         flexibility_time_request = args['flexibility_time_request']
         default_charge_level = args['default_charge_level']
-        time_to_full_charge = args['time_to_full_charge']
-        full_charge_price = args['full_charge_price']
+        # time_to_full_charge = args['time_to_full_charge']
+        # full_charge_price = args['full_charge_price']
         minimum_charge_level = args['minimum_charge_level']
         representation_target_state = args['representation_target_state']
 
@@ -502,6 +527,9 @@ class CreateBlockConfig(graphene.Mutation):
         saved_emissions = args['saved_emissions']
         avoided_environmental_costs = args['avoided_environmental_costs']
         avoided_energy_costs = args['avoided_energy_costs']
+
+        penalty_probability = args['penalty_probability']
+        penalty_amount = args['penalty_amount']
 
         nudge_static = get_node(info, args['nudge_static'])
         nudge_dynamic = get_node(info, args['nudge_dynamic'])
@@ -515,12 +543,15 @@ class CreateBlockConfig(graphene.Mutation):
             #clocktime = clocktime,
             charge_status = charge_status,
             charge_distance = charge_distance,
+            charge_capacity = charge_capacity,
+            energy_price = energy_price,
+            power_price = power_price,
             representation_current_state = representation_current_state,
 
             flexibility_time_request = flexibility_time_request,
             default_charge_level = default_charge_level,
-            time_to_full_charge = time_to_full_charge,
-            full_charge_price = full_charge_price,
+            # time_to_full_charge = time_to_full_charge,
+            # full_charge_price = full_charge_price,
             minimum_charge_level = minimum_charge_level,
             representation_target_state = representation_target_state,
 
@@ -528,6 +559,9 @@ class CreateBlockConfig(graphene.Mutation):
             saved_emissions = saved_emissions,
             avoided_environmental_costs = avoided_environmental_costs,
             avoided_energy_costs = avoided_energy_costs,
+
+            penalty_probability = penalty_probability,
+            penalty_amount = penalty_amount,
 
             nudge_static = nudge_static,
             nudge_dynamic = nudge_dynamic,
