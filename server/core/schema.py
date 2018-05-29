@@ -27,7 +27,7 @@ class BlockConfig(DjangoObjectType):
 
             'flexibility_time_request',
             'default_charge_level',
-            # 'time_to_full_charge',
+            'time_to_full_charge',
             # 'full_charge_price',
             'minimum_charge_level',
 
@@ -482,7 +482,7 @@ class CreateBlockConfig(graphene.Mutation):
 
         flexibility_time_request = graphene.Float(required=True)
         default_charge_level = graphene.Float(required=True)
-        # time_to_full_charge = graphene.Float(required=True)
+        time_to_full_charge = graphene.Float(required=True)
         # full_charge_price = graphene.Float(required=True)
         minimum_charge_level = graphene.Float(required=True)
         representation_target_state = graphene.String(required=True)
@@ -518,7 +518,7 @@ class CreateBlockConfig(graphene.Mutation):
 
         flexibility_time_request = args['flexibility_time_request']
         default_charge_level = args['default_charge_level']
-        # time_to_full_charge = args['time_to_full_charge']
+        time_to_full_charge = args['time_to_full_charge']
         # full_charge_price = args['full_charge_price']
         minimum_charge_level = args['minimum_charge_level']
         representation_target_state = args['representation_target_state']
@@ -550,7 +550,7 @@ class CreateBlockConfig(graphene.Mutation):
 
             flexibility_time_request = flexibility_time_request,
             default_charge_level = default_charge_level,
-            # time_to_full_charge = time_to_full_charge,
+            time_to_full_charge = time_to_full_charge,
             # full_charge_price = full_charge_price,
             minimum_charge_level = minimum_charge_level,
             representation_target_state = representation_target_state,

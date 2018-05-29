@@ -23,6 +23,7 @@ const CreateBlockConfigMutation = graphql`
 
     $flexibilityTimeRequest: Float!
     $defaultChargeLevel: Float!
+    $timeToFullCharge: Float!
     $minimumChargeLevel: Float!
     $representationTargetState: String!
 
@@ -53,6 +54,7 @@ const CreateBlockConfigMutation = graphql`
 
       flexibilityTimeRequest: $flexibilityTimeRequest
       defaultChargeLevel: $defaultChargeLevel
+      timeToFullCharge: $timeToFullCharge
       minimumChargeLevel: $minimumChargeLevel
       representationTargetState: $representationTargetState
 
@@ -94,6 +96,7 @@ class AddBlockConfig extends React.Component {
 
         flexibility_time_request: "",
         default_charge_level: "",
+        time_to_full_charge: "",
         minimum_charge_level: "",
         representation_target_state: "",
 
@@ -224,7 +227,7 @@ class AddBlockConfig extends React.Component {
 
       flexibilityTimeRequest: this.state.input.flexibility_time_request,
       defaultChargeLevel: this.state.input.default_charge_level,
-      //timeToFullCharge: this.state.input.time_to_full_charge,
+      timeToFullCharge: this.state.input.time_to_full_charge,
       //fullChargePrice: this.state.input.full_charge_price,
       minimumChargeLevel: this.state.input.minimum_charge_level,
       representationTargetState: this.state.input.representation_target_state,
@@ -354,7 +357,7 @@ class AddBlockConfig extends React.Component {
                   size='large'
                   fluid
                   required
-                  placeholder='Ladezustand (aktuell)'
+                  placeholder='Ladezustand (aktuell) [0.xx]'
                   onChange={this.handleFieldChange}
                 />
               </Grid.Column>
@@ -370,7 +373,7 @@ class AddBlockConfig extends React.Component {
                   size='large'
                   fluid
                   required
-                  placeholder='Reichweite (aktuell)'
+                  placeholder='Reichweite (aktuell) [km]'
                   onChange={this.handleFieldChange}
                 />
               </Grid.Column>
@@ -419,7 +422,6 @@ class AddBlockConfig extends React.Component {
             </Grid.Row>
 
             <Grid.Row columns={2} className={styles.row}>
-
               <Grid.Column className={styles.column}>
                 <Dropdown
                    id="representation_current_state"
@@ -433,7 +435,6 @@ class AddBlockConfig extends React.Component {
                  />
               </Grid.Column>
               <Grid.Column className={styles.column}>
-
               </Grid.Column>
             </Grid.Row>
 
@@ -448,7 +449,7 @@ class AddBlockConfig extends React.Component {
                 size='large'
                 fluid
                 required
-                placeholder='Flexibilitätsdauer (Anfrage) [€/min]'
+                placeholder='Flexibilitätsdauer (Anfrage) [min]'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
@@ -461,7 +462,7 @@ class AddBlockConfig extends React.Component {
                 size='large'
                 fluid
                 required
-                placeholder='Defaultladeziel'
+                placeholder='Defaultladeziel [0.xx]'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
@@ -478,10 +479,26 @@ class AddBlockConfig extends React.Component {
                 size='large'
                 fluid
                 required
-                placeholder='Mindestladezustand'
+                placeholder='Mindestladezustand [0.xx]'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
+            <Grid.Column className={styles.column}>
+              <Input
+                id='time_to_full_charge'
+                className={styles.inputField}
+                value={input.time_to_full_charge}
+                type='text'
+                size='large'
+                fluid
+                required
+                placeholder='Aufladezeit (voll) [min]'
+                onChange={this.handleFieldChange}
+              />
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row columns={2} className={styles.row}>
             <Grid.Column className={styles.column}>
               <Dropdown
                  id="representation_target_state"
@@ -493,6 +510,8 @@ class AddBlockConfig extends React.Component {
                  placeholder='Repräsentation Zielzustand'
                  onChange={this.handleDropdownChangeRepresentationTargetStateOptions}
                />
+            </Grid.Column>
+            <Grid.Column className={styles.column}>
             </Grid.Column>
           </Grid.Row>
 
@@ -507,7 +526,7 @@ class AddBlockConfig extends React.Component {
                 size='large'
                 fluid
                 required
-                placeholder='Provision für Flexibilitätsdauer'
+                placeholder='Provision für Flexibilitätsdauer [€/min]'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
@@ -520,7 +539,7 @@ class AddBlockConfig extends React.Component {
                 size='large'
                 fluid
                 required
-                placeholder='Eingesparte CO2-Emissionen'
+                placeholder='Eingesparte CO2-Emissionen [g]'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
@@ -536,7 +555,7 @@ class AddBlockConfig extends React.Component {
                 size='large'
                 fluid
                 required
-                placeholder='Vermiedene Umweltkosten'
+                placeholder='Vermiedene Umweltkosten [€]'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
@@ -549,7 +568,7 @@ class AddBlockConfig extends React.Component {
                 size='large'
                 fluid
                 required
-                placeholder='Vermiedene Energieausgleichskosten'
+                placeholder='Vermiedene Energieausgleichskosten [€]'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
