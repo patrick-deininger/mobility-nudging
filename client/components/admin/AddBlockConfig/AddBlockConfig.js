@@ -187,13 +187,13 @@ class AddBlockConfig extends React.Component {
 
   handleDropdownChangeRepresentationCurrentStateOptions = (e, { value }) => {
     const input = this.state.input;
-    input['representation_current_state_id'] = value;
+    input['representation_current_state'] = value;
     this.setState({ ...this.state, input });
   }
 
   handleDropdownChangeRepresentationTargetStateOptions = (e, { value }) => {
     const input = this.state.input;
-    input['representation_target_state_id'] = value;
+    input['representation_target_state'] = value;
     this.setState({ ...this.state, input });
   }
 
