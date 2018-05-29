@@ -15,10 +15,14 @@ import classNames from 'classnames';
 import 'react-rangeslider/lib/index.css'
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
+
+import TimePicker from 'rc-time-picker'
+import moment from 'moment'
+import 'rc-time-picker/assets/index.css';
 // import HorizontalSlider from 'components/Slider/Slider';
-import SliderUI from 'material-ui/Slider';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+// import SliderUI from 'material-ui/Slider';
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 
 
@@ -98,7 +102,6 @@ class HomeView extends React.Component {
   }
 
   componentWillMount(){
-
     this.initialize()
   }
 
@@ -280,8 +283,6 @@ class HomeView extends React.Component {
     return (date.getHours() < 10 ? '0':'') + date.getHours() + ':' + (date.getMinutes() < 10 ? '0':'') + date.getMinutes()
   }
 
-
-
   onClickFlexibility = () => {
     const endTime = this.state.parameters.flexibilityEndTime
     const newStatus = 'flexibility';
@@ -295,9 +296,14 @@ class HomeView extends React.Component {
   }
 
   onClickIndividualFlexibility = () => {
-      const endTime = '18:47';
+      var endTime = ''
+      if (this.state.parameters.individualFlexibilityEndTime == ''){
+        endTime = 'tbd'
+      } else {
+        endTime = this.state.parameters.individualFlexibilityEndTime
+      }
       const newStatus = 'individualFlexibility';
-      this.setState({...this.state, endTime: IndividualFlexibilityEndTime, active: newStatus});
+      this.setState({...this.state, endTime: endTime, active: newStatus});
   }
 
   handleSliderChange = (event, value) => {
@@ -306,6 +312,15 @@ class HomeView extends React.Component {
     parameters['minimumChargeLevel'] = event[0]
     this.setState({parameters: parameters});
   };
+
+  handleTimerChange = (event, value) => {
+    const parameters = this.state.parameters
+    const individualFlexibilityEndTime = this.toClockFormat(new Date(event))
+    const endTime = individualFlexibilityEndTime
+    parameters['individualFlexibilityEndTime'] = individualFlexibilityEndTime
+    this.setState({parameters: parameters, endTime: endTime});
+
+  }
 
   onClickConfirmation = () => {
       const eventVariables =  {
@@ -337,6 +352,8 @@ class HomeView extends React.Component {
   }
 
   render() {
+
+    const now = moment(new Date(this.state.parameters.clocktime))
 
     return (
 
@@ -388,18 +405,22 @@ class HomeView extends React.Component {
               <Range
                 min={0}
                 max={100}
-                defaultValue={[this.state.parameters.chargeStatus, this.state.parameters.defaultChargeLevel]}
+                defaultValue={[this.state.parameters.minimumChargeLevel , this.state.parameters.defaultChargeLevel]}
                 onChange={this.handleSliderChange} />
 
               <div className={styles.chargingLabel}>
-                Minimum {this.state.parameters.minimumChargeLevel}%
-                Ladeziel {this.state.parameters.defaultChargeLevel}%
+                <div>Minimum {this.state.parameters.minimumChargeLevel}%</div>
+                <div>Ladeziel {this.state.parameters.defaultChargeLevel}%</div>
+
               </div>
             </div>
 
-            <div className={styles.timeTimer}>
-              <Timer />
-            </div>
+            <TimePicker
+              defaultValue={now}
+              showSecond={false}
+              onChange={this.handleTimerChange}/>
+
+
 
 
             <Template
