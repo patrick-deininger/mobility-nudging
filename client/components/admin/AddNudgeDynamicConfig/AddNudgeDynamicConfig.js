@@ -14,13 +14,15 @@ const CreateNudgeDynamicConfigMutation = graphql`
     $heading: String!
     $text: String!
     $image: String!
+    $nudgeType: String!
   ) {
     createNudgeDynamicConfig(
       name: $name,
       description: $description,
       heading: $heading,
       text: $text,
-      image: $image
+      image: $image,
+      nudgeType: $nudgeType
     ) {
       nudgeDynamicConfig {
         id
@@ -38,6 +40,7 @@ class AddNudgeDynamicConfig extends React.Component {
       heading: "",
       text: "",
       image: "",
+      nudge_type: "",
     },
     errors: [],
 
@@ -63,6 +66,7 @@ class AddNudgeDynamicConfig extends React.Component {
       heading: this.state.input.heading,
       text: this.state.input.text,
       image: this.state.input.image,
+      nudgeType: this.state.input.nudge_type
     };
 
     commitMutation(this.props.relay.environment, {
@@ -80,12 +84,8 @@ class AddNudgeDynamicConfig extends React.Component {
   }
 
 
-
-
   render() {
-
     const { input, erros } = this.state;
-
 
     return (
       <Page viewer={this.props.viewer}>
@@ -106,6 +106,18 @@ class AddNudgeDynamicConfig extends React.Component {
             fluid
             required
             placeholder='Nudge Name'
+            onChange={this.handleFieldChange}
+          />
+
+          <Input
+            id='nudge_type'
+            className={styles.inputField}
+            value={input.context_type}
+            type='text'
+            size='large'
+            fluid
+            required
+            placeholder='Nudge Template'
             onChange={this.handleFieldChange}
           />
 

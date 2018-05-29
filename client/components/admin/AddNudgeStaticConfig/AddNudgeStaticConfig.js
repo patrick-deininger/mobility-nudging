@@ -14,13 +14,15 @@ const CreateNudgeStaticConfigMutation = graphql`
     $heading: String!
     $text: String!
     $image: String!
+    $nudgeType: String!
   ) {
     createNudgeStaticConfig(
       name: $name,
       description: $description,
       heading: $heading,
       text: $text,
-      image: $image
+      image: $image,
+      nudgeType: $nudgeType
     ) {
       nudgeStaticConfig {
         id
@@ -38,6 +40,7 @@ class AddNudgeStaticConfig extends React.Component {
       heading: "",
       text: "",
       image: "",
+      nudge_type: "",
     },
     errors: [],
 
@@ -63,6 +66,7 @@ class AddNudgeStaticConfig extends React.Component {
       heading: this.state.input.heading,
       text: this.state.input.text,
       image: this.state.input.image,
+      nudgeType: this.state.input.nudge_type,
     };
 
     commitMutation(this.props.relay.environment, {
@@ -106,6 +110,18 @@ class AddNudgeStaticConfig extends React.Component {
             fluid
             required
             placeholder='Nudge Name'
+            onChange={this.handleFieldChange}
+          />
+
+          <Input
+            id='nudge_type'
+            className={styles.inputField}
+            value={input.context_type}
+            type='text'
+            size='large'
+            fluid
+            required
+            placeholder='Nudge Template'
             onChange={this.handleFieldChange}
           />
 
