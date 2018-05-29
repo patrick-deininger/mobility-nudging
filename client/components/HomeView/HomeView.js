@@ -45,14 +45,40 @@ class HomeView extends React.Component {
     endTime: flexibilityEndTime,
     active: 'flexibility',
     parameters: {
-      defaultChargeLevel: 85,
-      chargeStatus: 55,
+      clocktime: "",
+      chargeStatus: "",
+      chargeDistance: "",
+      chargeCapacity: "",
+      energyPrice: "",
+      powerPrice: "",
+      representationCurrentState: "",
+
+      flexibilityTimeRequest: "",
+      defaultChargeLevel: "",
+      minimumChargeLevel: "",
+      representationTargetState: "",
+
+      flexibilityTimeProvision: "",
+      savedEmissions: "",
+      avoidedEnvironmentalCosts: "",
+      avoidedEnergyCosts: "",
+
+      penaltyProbability: "",
+      penaltyAmount: "",
+
     },
     batteryIcon: 'battery full',
     nudgeStatic: {
       heading: "",
       text: "",
       imagesrc: "",
+      nudgeType: "",
+    },
+    nudgeDynamic: {
+      heading: "",
+      text: "",
+      imagesrc: "",
+      nudgeType: "",
     },
     blockNumber: parseInt(this.props.match.params.blockNumber),
     sessionId: this.props.match.params.sessionId,
@@ -65,17 +91,6 @@ class HomeView extends React.Component {
     this.initialize()
   }
 
-  // shouldComponentUpdate(){
-  //
-  //   console.log("Update")
-  //   const blockNumber = parseInt(this.props.location.pathname.split("/run/")[1].split("/")[0])
-  //   const sessionId = this.props.location.pathname.split("/run/")[1].split("/")[1]
-  //   const blockConfig = this.props.viewer.blockConfigs[parseInt(this.props.location.pathname.split("/run/")[1].split("/")[0])-1].id
-  //
-  //
-  //   this.setState({ blockNumber: blockNumber, sessionId: sessionId, blockConfig: blockConfig });
-  //
-  // }
 
   setErrors = (errors) => {
   this.setState({ ...this.state, errors });
@@ -88,24 +103,81 @@ class HomeView extends React.Component {
     if (blockConfigs.length >= this.state.blockNumber){
       const blockConfig = blockConfigs[this.state.blockNumber-1]
 
+      // Paramters
       const parameters = this.state.parameters
+
+      const clocktime = blockConfig.clocktime
       const chargeStatus = parseInt(blockConfig.chargeStatus * 100)
+      const chargeDistance = blockConfig.chargeDistance
+      const chargeCapacity = blockConfig.chargeCapacity
+      const energyPrice = blockConfig.energyPrice
+      const powerPrice = blockConfig.powerPrice
+      const representationCurrentState = blockConfig.representationCurrentState
+
+      const flexibilityTimeRequest = blockConfig.flexibilityTimeRequest
       const defaultChargeLevel = parseInt(blockConfig.defaultChargeLevel * 100)
+      const minimumChargeLevel = blockConfig.minimumChargeLevel
+      const representationTargetState = blockConfig.representationTargetState
+
+      const flexibilityTimeProvision = blockConfig.flexibilityTimeProvision
+      const savedEmissions = blockConfig.savedEmissions
+      const avoidedEnvironmentalCosts = blockConfig.avoidedEnvironmentalCosts
+      const avoidedEnergyCosts = blockConfig.avoidedEnergyCosts
+
+      const penaltyProbability = blockConfig.penaltyProbability
+      const penaltyAmount = blockConfig.penaltyAmount
+
+
+      parameters['clocktime'] = clocktime
       parameters['chargeStatus'] = chargeStatus
+      parameters['chargeDistance'] = chargeDistance
+      parameters['chargeCapacity'] = chargeCapacity
+      parameters['energyPrice'] = energyPrice
+      parameters['powerPrice'] = powerPrice
+      parameters['representationCurrentState'] = representationCurrentState
+
+      parameters['flexibilityTimeRequest'] = flexibilityTimeRequest
       parameters['defaultChargeLevel'] = defaultChargeLevel
+      parameters['minimumChargeLevel'] = minimumChargeLevel
+      parameters['representationTargetState'] = representationTargetState
+
+      parameters['flexibilityTimeProvision'] = flexibilityTimeProvision
+      parameters['savedEmissions'] = savedEmissions
+      parameters['avoidedEnvironmentalCosts'] = avoidedEnvironmentalCosts
+      parameters['avoidedEnergyCosts'] = avoidedEnergyCosts
+
+      parameters['penaltyProbability'] = penaltyProbability
+      parameters['penaltyAmount'] = penaltyAmount
 
       this.setState({parameters: parameters})
 
+      // Nudge Static
       const nudgeStatic = this.state.nudgeStatic
 
-      const heading = blockConfig.nudgeStatic.heading
-      const text = blockConfig.nudgeStatic.text
-      const imagesrc = blockConfig.nudgeStatic.image
-      nudgeStatic['heading'] = heading
-      nudgeStatic['text'] = text
-      nudgeStatic['imagesrc'] = imagesrc
+      const headingS = blockConfig.nudgeStatic.heading
+      const textS = blockConfig.nudgeStatic.text
+      const imagesrcS = blockConfig.nudgeStatic.image
+      const nudgeTypeS = blockConfig.nudgeStatic.nudgeType
+      nudgeStatic['heading'] = headingS
+      nudgeStatic['text'] = textS
+      nudgeStatic['imagesrc'] = imagesrcS
+      nudgeStatic['nudgeType'] = nudgeTypeS
 
       this.setState({nudgeStatic: nudgeStatic})
+
+      // Nudge Dynamic
+      const nudgeDynamic = this.state.nudgeDynamic
+
+      const headingD = blockConfig.nudgeDynamic.heading
+      const textD = blockConfig.nudgeDynamic.text
+      const imagesrcD = blockConfig.nudgeDynamic.image
+      const nudgeTypeD = blockConfig.nudgeDynamic.nudgeType
+      nudgeDynamic['heading'] = headingD
+      nudgeDynamic['text'] = textD
+      nudgeDynamic['imagesrc'] = imagesrcD
+      nudgeDynamic['nudgeType'] = nudgeTypeD
+
+      this.setState({nudgeDynamic: nudgeDynamic})
 
     }
     else {
@@ -199,7 +271,7 @@ class HomeView extends React.Component {
         screen: "NudgeScreen",
         providedFlexibilityTime: 0,
         targetChargingLevel: this.state.parameters.defaultChargeLevel,
-        chargingLevelRepresentation: "tbd",
+        chargingLevelRepresentation: this.state.parameters.representationCurrentState,
       }
 
       this.createEvent(eventVariables)
@@ -402,8 +474,14 @@ export default createRefetchContainer(
           clocktime
           chargeStatus
           chargeDistance
+          chargeCapacity
+          energyPrice
+          powerPrice
           defaultChargeLevel
           flexibilityTimeProvision
+
+          penaltyProbability
+          penaltyAmount
 
           nudgeStatic{
             id
@@ -419,9 +497,7 @@ export default createRefetchContainer(
             text
             image
           }
-
         }
-
       }
 
       `,
