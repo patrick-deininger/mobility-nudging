@@ -44,6 +44,7 @@ class ContextScreen extends React.Component {
     contextConfig: {
       heading: "",
       text: "",
+      context_type: "",
     },
     errors: []
   }
@@ -67,9 +68,11 @@ class ContextScreen extends React.Component {
       const contextConfig = this.state.contextConfig
       const heading = blockConfig.context.heading
       const text = blockConfig.context.text
+      const context_type = blockConfig.context.contextType
 
       contextConfig['heading'] = heading
       contextConfig['text'] = text
+      contextConfig['context_type'] = context_type
 
       this.setState({contextConfig: contextConfig})
 
@@ -260,6 +263,7 @@ export default createRefetchContainer(
               name
               heading
               text
+              contextType
             }
         }
 

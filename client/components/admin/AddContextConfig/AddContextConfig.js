@@ -13,6 +13,7 @@ const CreateContextConfigMutation = graphql`
     $description: String!
     $heading: String!
     $text: String!
+    $contextType: String!
 
   ) {
     createContextConfig(
@@ -20,6 +21,7 @@ const CreateContextConfigMutation = graphql`
       description: $description,
       heading: $heading,
       text: $text,
+      contextType: $contextType
 
     ) {
       contextConfig {
@@ -37,7 +39,7 @@ class AddContextConfig extends React.Component {
       description: "",
       heading: "",
       text: "",
-
+      context_type: "",
     },
     errors: [],
 
@@ -62,6 +64,7 @@ class AddContextConfig extends React.Component {
       description: this.state.input.description,
       heading: this.state.input.heading,
       text: this.state.input.text,
+      contextType: this.state.input.context_type
 
     };
 
@@ -106,6 +109,18 @@ class AddContextConfig extends React.Component {
             fluid
             required
             placeholder='Name'
+            onChange={this.handleFieldChange}
+          />
+
+          <Input
+            id='context_type'
+            className={styles.inputField}
+            value={input.context_type}
+            type='text'
+            size='large'
+            fluid
+            required
+            placeholder='Context Template'
             onChange={this.handleFieldChange}
           />
 
