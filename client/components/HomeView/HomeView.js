@@ -21,9 +21,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 
-const flexibilityEndTime = '19:28';
+
 const IndividualFlexibilityEndTime = 'tbd';
-const noFlexibilityEndTime = '18:15';
+
 
 
 const FinishBlockMutation = graphql`
@@ -42,10 +42,12 @@ const FinishBlockMutation = graphql`
 class HomeView extends React.Component {
 
   state = {
-    endTime: flexibilityEndTime,
+    endTime: '',
     active: 'flexibility',
     parameters: {
+      //raw input
       clocktime: "",
+
       chargeStatus: "",
       chargeDistance: "",
       chargeCapacity: "",
@@ -66,7 +68,15 @@ class HomeView extends React.Component {
       penaltyProbability: "",
       penaltyAmount: "",
 
+      // Calculated
+      //transformed in HH:MM
+      currentTime: "",
+      flexibilityEndTime: "",
+      individualFlexibilityEndTime: "",
+      noFlexibilityEndTime: "",
+
     },
+
     batteryIcon: 'battery full',
     nudgeStatic: {
       heading: "",
@@ -88,6 +98,7 @@ class HomeView extends React.Component {
   }
 
   componentWillMount(){
+
     this.initialize()
   }
 
@@ -115,8 +126,9 @@ class HomeView extends React.Component {
       const representationCurrentState = blockConfig.representationCurrentState
 
       const flexibilityTimeRequest = blockConfig.flexibilityTimeRequest
+      const timeToFullCharge = blockConfig.timeToFullCharge
       const defaultChargeLevel = parseInt(blockConfig.defaultChargeLevel * 100)
-      const minimumChargeLevel = blockConfig.minimumChargeLevel
+      const minimumChargeLevel = parseInt(blockConfig.minimumChargeLevel * 100)
       const representationTargetState = blockConfig.representationTargetState
 
       const flexibilityTimeProvision = blockConfig.flexibilityTimeProvision
@@ -126,6 +138,15 @@ class HomeView extends React.Component {
 
       const penaltyProbability = blockConfig.penaltyProbability
       const penaltyAmount = blockConfig.penaltyAmount
+
+
+      // Calculated
+      const date = new Date(blockConfig.clocktime)
+      const currentTime = this.toClockFormat(date)
+      const flexibilityEndTime = this.calcTime(date, flexibilityTimeRequest)
+      const noFlexibilityEndTime = this.calcTime(date, timeToFullCharge)
+      console.log(flexibilityEndTime)
+      console.log(noFlexibilityEndTime)
 
 
       parameters['clocktime'] = clocktime
@@ -138,6 +159,7 @@ class HomeView extends React.Component {
 
       parameters['flexibilityTimeRequest'] = flexibilityTimeRequest
       parameters['defaultChargeLevel'] = defaultChargeLevel
+      parameters['timeToFullCharge'] = timeToFullCharge
       parameters['minimumChargeLevel'] = minimumChargeLevel
       parameters['representationTargetState'] = representationTargetState
 
@@ -149,7 +171,17 @@ class HomeView extends React.Component {
       parameters['penaltyProbability'] = penaltyProbability
       parameters['penaltyAmount'] = penaltyAmount
 
+      // calculated
+      parameters['currentTime'] = currentTime
+      parameters['flexibilityEndTime'] = flexibilityEndTime
+      parameters['noFlexibilityEndTime'] = noFlexibilityEndTime
+
+
       this.setState({parameters: parameters})
+
+      // Set initial endTime
+      const endTime = flexibilityEndTime
+      this.setState({endTime: endTime})
 
       // Nudge Static
       const nudgeStatic = this.state.nudgeStatic
@@ -238,15 +270,28 @@ class HomeView extends React.Component {
       return(blockConfigs)
   }
 
+
+  calcTime = (date, minutes) => {
+    const newDate = new Date(date.getTime() + minutes*60000)
+    return this.toClockFormat(newDate)
+  }
+
+  toClockFormat = (date) => {
+    return (date.getHours() < 10 ? '0':'') + date.getHours() + ':' + (date.getMinutes() < 10 ? '0':'') + date.getMinutes()
+  }
+
+
+
   onClickFlexibility = () => {
+    const endTime = this.state.parameters.flexibilityEndTime
     const newStatus = 'flexibility';
-    this.setState({...this.state, endTime: flexibilityEndTime, active: newStatus});
+    this.setState({...this.state, endTime: endTime, active: newStatus});
   }
 
   onClickNoFlexibility = () => {
-    const endTime = '18:15';
+    const endTime = this.state.parameters.noFlexibilityEndTime;
     const newStatus = 'noFlexibility';
-    this.setState({...this.state, endTime: noFlexibilityEndTime, active: newStatus});
+    this.setState({...this.state, endTime: endTime, active: newStatus});
   }
 
   onClickIndividualFlexibility = () => {
@@ -304,7 +349,7 @@ class HomeView extends React.Component {
             <div className={styles.currentTime}>
               <Segment floated='right'>
                   <Icon name='clock' size='large' />
-                16:11
+                {this.state.parameters.currentTime}
               </Segment>
             </div>
 
@@ -373,7 +418,7 @@ class HomeView extends React.Component {
                 active={this.state.active == "flexibility"}
                 >
                 <p>Flexibilität bereitstellen bis</p>
-                {flexibilityEndTime}
+                {this.state.parameters.flexibilityEndTime}
               </Button>
              }
              content={
@@ -406,7 +451,7 @@ class HomeView extends React.Component {
                   active={this.state.active == "noFlexibility"}
                   >
                   <p>Schnellstmögliches Laden bis</p>
-                  {noFlexibilityEndTime}
+                  {this.state.parameters.noFlexibilityEndTime}
                 </Button>
                }
                content={
@@ -467,8 +512,18 @@ export default createRefetchContainer(
           chargeCapacity
           energyPrice
           powerPrice
+          representationCurrentState
+
+          flexibilityTimeRequest
           defaultChargeLevel
+          timeToFullCharge
+          minimumChargeLevel
+          representationTargetState
+
           flexibilityTimeProvision
+          savedEmissions
+          avoidedEnvironmentalCosts
+          avoidedEnergyCosts
 
           penaltyProbability
           penaltyAmount
