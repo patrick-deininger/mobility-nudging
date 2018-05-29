@@ -79,7 +79,12 @@ class HomeView extends React.Component {
       flexibilityEndTime: "",
       individualFlexibilityEndTime: "",
       noFlexibilityEndTime: "",
-      originalMinimumChargeLevel: "",
+      targetChargeLevel: "",
+      targetMinimumChargeLevel: "",
+      maximumDistance: "",
+      sliderMax: "",
+      chargeStatusDisplay: "",
+
 
     },
 
@@ -150,9 +155,25 @@ class HomeView extends React.Component {
       const currentTime = this.toClockFormat(date)
       const flexibilityEndTime = this.calcTime(date, flexibilityTimeRequest)
       const noFlexibilityEndTime = this.calcTime(date, timeToFullCharge)
-      const originalMinimumChargeLevel = minimumChargeLevel
-      console.log(flexibilityEndTime)
-      console.log(noFlexibilityEndTime)
+      const maximumDistance = chargeDistance/defaultChargeLevel * 100
+
+      var targetChargeLevel = ''
+      var targetMinimumChargeLevel = ''
+      var sliderMax = ''
+      var chargeStatusDisplay = ''
+      if (representationCurrentState == 'percent'){
+        targetChargeLevel = defaultChargeLevel
+        targetMinimumChargeLevel = minimumChargeLevel
+        sliderMax = 100
+        chargeStatusDisplay = chargeStatus
+      } else if (representationCurrentState == 'km') {
+        targetChargeLevel = chargeDistance
+        targetMinimumChargeLevel = chargeDistance*minimumChargeLevel/defaultChargeLevel
+        sliderMax = parseInt(maximumDistance)
+        chargeStatusDisplay = chargeDistance
+
+      }
+
 
 
       parameters['clocktime'] = clocktime
@@ -181,7 +202,14 @@ class HomeView extends React.Component {
       parameters['currentTime'] = currentTime
       parameters['flexibilityEndTime'] = flexibilityEndTime
       parameters['noFlexibilityEndTime'] = noFlexibilityEndTime
-      parameters['originalMinimumChargeLevel'] = originalMinimumChargeLevel
+      parameters['targetChargeLevel'] = targetChargeLevel
+      parameters['targetMinimumChargeLevel'] = targetMinimumChargeLevel
+      parameters['maximumDistance'] = maximumDistance
+      parameters['sliderMax'] = sliderMax
+      parameters['chargeStatusDisplay'] = chargeStatusDisplay
+
+
+
 
 
       this.setState({parameters: parameters})
@@ -279,7 +307,7 @@ class HomeView extends React.Component {
 
 
   calcTime = (date, minutes) => {
-    const newDate = new Date(date.getTime() + minutes*60000)
+    const newDate = new Date(date.getTime() + minutes * 60000)
     return this.toClockFormat(newDate)
   }
 
@@ -326,14 +354,14 @@ class HomeView extends React.Component {
 
   handleRangeChange = (event, value) => {
     const parameters = this.state.parameters
-    parameters['defaultChargeLevel'] = event[1]
-    parameters['minimumChargeLevel'] = event[0]
+    parameters['targetChargeLevel'] = event[1]
+    parameters['targetMinimumChargeLevel'] = event[0]
     this.setState({parameters: parameters});
   };
 
   handleSliderChange = (event, value) => {
     const parameters = this.state.parameters
-    parameters['defaultChargeLevel'] = event
+    parameters['targetChargeLevel'] = event
     this.setState({parameters: parameters});
   };
 
@@ -354,7 +382,7 @@ class HomeView extends React.Component {
 
         screen: "NudgeScreen",
         providedFlexibilityTime: 0,
-        targetChargingLevel: this.state.parameters.defaultChargeLevel,
+        targetChargingLevel: this.state.parameters.targetChargeLevel,
         chargingLevelRepresentation: this.state.parameters.representationCurrentState,
       }
 
@@ -395,7 +423,13 @@ class HomeView extends React.Component {
               <Segment  className={styles.charge}>
 
                   <Icon name={this.state.batteryIcon} size='large' color='grey' />
-                  <span className={styles.chargeSpan}>{this.state.parameters.chargeStatus}%</span>
+                  <span className={styles.chargeSpan}>{this.state.parameters.chargeStatusDisplay}
+                    {this.state.parameters.representationCurrentState == 'percent' ? (
+                      <span>%</span>
+                    ):(
+                      <span className={styles.spanKM}>km</span>
+                    )}
+                  </span>
               </Segment>
             </div>
           </div>
@@ -428,7 +462,13 @@ class HomeView extends React.Component {
               <div className={styles.chargingLevelSegment}>
                   <Statistic size='small'>
                     <Statistic.Label>Ladeziel</Statistic.Label>
-                    <Statistic.Value>{this.state.parameters.defaultChargeLevel}%</Statistic.Value>
+                    <Statistic.Value>{this.state.parameters.targetChargeLevel}
+                      {this.state.parameters.representationCurrentState == 'percent' ? (
+                        <span>%</span>
+                      ):(
+                        <span className={styles.spanKM}>km</span>
+                      )}
+                    </Statistic.Value>
                   </Statistic>
                 </div>
 
@@ -438,16 +478,16 @@ class HomeView extends React.Component {
                {this.state.active != 'noFlexibility' ? (
                  <Range
                    min={0}
-                   max={100}
-                   defaultValue={[this.state.parameters.minimumChargeLevel , this.state.parameters.defaultChargeLevel]}
-                   value={[this.state.parameters.minimumChargeLevel , this.state.parameters.defaultChargeLevel]}
+                   max={this.state.parameters.sliderMax}
+                   defaultValue={[this.state.parameters.targetMinimumChargeLevel , this.state.parameters.targetChargeLevel]}
+                   value={[this.state.parameters.targetMinimumChargeLevel , this.state.parameters.targetChargeLevel]}
                    onChange={this.handleRangeChange} />
                ):(
                  <Slider
                    min={0}
-                   max={100}
-                   defaultValue={this.state.parameters.defaultChargeLevel}
-                   value={this.state.parameters.defaultChargeLevel}
+                   max={this.state.parameters.sliderMax}
+                   defaultValue={this.state.parameters.targetChargeLevel}
+                   value={this.state.parameters.targetChargeLevel}
                    onChange={this.handleSliderChange}
                    />
                )}
@@ -457,10 +497,22 @@ class HomeView extends React.Component {
                  {this.state.active == 'noFlexibility' ? (
                    <div></div>
                  ):(
-                   <div>Minimum {this.state.parameters.minimumChargeLevel}%</div>
+                   <div>Minimum {this.state.parameters.targetMinimumChargeLevel}
+                     {this.state.parameters.representationCurrentState == 'percent' ? (
+                       <span>%</span>
+                     ):(
+                       <span className={styles.spanKM}>km</span>
+                     )}
+                   </div>
                  )}
 
-                 <div>Ladeziel {this.state.parameters.defaultChargeLevel}%</div>
+                 <div>Ladeziel {this.state.parameters.targetChargeLevel}
+                   {this.state.parameters.representationCurrentState == 'percent' ? (
+                     <span>%</span>
+                   ):(
+                     <span className={styles.spanKM}>km</span>
+                   )}
+                 </div>
                </div>
              </div>
            </Accordion.Content>
