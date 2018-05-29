@@ -75,7 +75,6 @@ class HomeView extends React.Component {
       penaltyAmount: "",
 
       // Calculated
-      //transformed in HH:MM
       currentTime: "",
       flexibilityEndTime: "",
       individualFlexibilityEndTime: "",
@@ -379,24 +378,26 @@ class HomeView extends React.Component {
 
           <div className={styles.currentKPIsContainer}>
             <div className={styles.currentTime}>
-              <Segment floated='right'>
-                  <Icon name='clock' size='large' />
-                {this.state.parameters.currentTime}
+              <Segment  className={styles.clock}>
+                  <Icon name='clock' size='large' color='grey' />
+                  <span className={styles.clockSpan}>{this.state.parameters.currentTime}</span>
               </Segment>
             </div>
 
             <div className={styles.chargeStatus}>
-              <Segment floated='left'>
-                  <Icon name={this.state.batteryIcon} size='large' />
-                 {this.state.parameters.chargeStatus}%
+              <Segment  className={styles.charge}>
+
+                  <Icon name={this.state.batteryIcon} size='large' color='grey' />
+                  <span className={styles.chargeSpan}>{this.state.parameters.chargeStatus}%</span>
               </Segment>
             </div>
           </div>
 
-
+        <span>
+            <h1 className={styles.heading}>Ladevorgang definieren</h1>
+        </span>
 
           <div className={styles.objectivesContainer}>
-
 
           <Accordion>
             <Accordion.Title  active={this.state.activeAccordionTime} onClick={this.handleAccordionTimeClick}>
@@ -475,7 +476,7 @@ class HomeView extends React.Component {
                  onClick={this.onClickIndividualFlexibility}
                  active={this.state.active == "individualFlexibility"}
                  >
-                 Individueller Ladezeitpunkt bestimmen
+                 Individuellen Ladezeitpunkt bestimmen
                </Button>
               }
               content={

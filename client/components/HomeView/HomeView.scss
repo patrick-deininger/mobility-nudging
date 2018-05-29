@@ -21,11 +21,6 @@
     justify-content: center;
   }
 
-  .slider{
-    height: 50px;
-    weight: 500px;
-  }
-
   .form {
     width: 500px;
   }
@@ -39,10 +34,42 @@
 
   .currentTime {
     margin-bottom: 10px;
+    margin-right: 10px;
+
+    .clock{
+      height: 50px;
+      width: 100px;
+      //background-color: #BBDEFB;
+      text-align: center;
+      color: grey;
+
+      .clockSpan{
+        margin-left: 2px;
+      }
+    }
   }
 
-  .chargingStatus {
+  .chargeStatus {
     margin-bottom: 10px;
+
+    .charge{
+      height: 50px;
+      width: 100px;
+      //background-color: #BBDEFB;
+      text-align: center;
+      color: grey;
+
+      .chargeSpan{
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .heading{
+    color: grey;
+    text-align: center;
+    margin-top: 20px;
+
   }
 
   .objectivesContainer{
@@ -50,7 +77,7 @@
     justify-content: center;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-top: 98px;
+    margin-top: 42px;
     margin-bottom: 32px;
   }
 
