@@ -7,7 +7,7 @@ import Template from 'components/Nudges/Template/Template'
 import RankingScreen from 'components/Nudges/RankingScreen/RankingScreen';
 import createEventMutation from 'components/mutations/CreateEventMutation/CreateEventMutation';
 import { withAuth } from 'modules/auth/utils';
-import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'semantic-ui-react';
+import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup, Accordion } from 'semantic-ui-react';
 import { Link } from 'found';
 import styles from './HomeView.scss';
 import classNames from 'classnames';
@@ -48,6 +48,8 @@ class HomeView extends React.Component {
   state = {
     endTime: '',
     active: 'flexibility',
+    activeAccordionCharge: false,
+    activeAccordionTime: false,
     parameters: {
       //raw input
       clocktime: "",
@@ -303,7 +305,20 @@ class HomeView extends React.Component {
         endTime = this.state.parameters.individualFlexibilityEndTime
       }
       const newStatus = 'individualFlexibility';
-      this.setState({...this.state, endTime: endTime, active: newStatus});
+      const newActive= true
+      this.setState({...this.state, activeAccordionTime: newActive, endTime: endTime, active: newStatus});
+  }
+
+  handleAccordionTimeClick = (e, titleProps) => {
+    const { activeAccordionTime } = this.state
+    const newIndex = !activeAccordionTime
+    this.setState({ activeAccordionTime: newIndex })
+  }
+
+  handleAccordionChargeClick = (e, titleProps) => {
+    const { activeAccordionCharge } = this.state
+    const newIndex = !activeAccordionCharge
+    this.setState({ activeAccordionCharge: newIndex })
   }
 
   handleSliderChange = (event, value) => {
@@ -382,46 +397,51 @@ class HomeView extends React.Component {
 
           <div className={styles.objectivesContainer}>
 
-          <div className={styles.timeSegment}>
-              <Statistic size='small'>
-                <Statistic.Label>Geladen um</Statistic.Label>
-                <Statistic.Value>{this.state.endTime}</Statistic.Value>
-            </Statistic>
-          </div>
 
-
-          <div className={styles.chargingLevelSegment}>
-              <Statistic size='small'>
-                <Statistic.Label>Ladeziel</Statistic.Label>
-                <Statistic.Value>{this.state.parameters.defaultChargeLevel}%</Statistic.Value>
-              </Statistic>
-            </div>
-         </div>
-
-
-            <div className={styles.sliderContainer}>
-
-
-              <Range
-                min={0}
-                max={100}
-                defaultValue={[this.state.parameters.minimumChargeLevel , this.state.parameters.defaultChargeLevel]}
-                onChange={this.handleSliderChange} />
-
-              <div className={styles.chargingLabel}>
-                <div>Minimum {this.state.parameters.minimumChargeLevel}%</div>
-                <div>Ladeziel {this.state.parameters.defaultChargeLevel}%</div>
-
+          <Accordion>
+            <Accordion.Title  active={this.state.activeAccordionTime} onClick={this.handleAccordionTimeClick}>
+              <div className={styles.timeSegment}>
+                  <Statistic size='small'>
+                    <Statistic.Label>Geladen um</Statistic.Label>
+                    <Statistic.Value>{this.state.endTime}</Statistic.Value>
+                </Statistic>
               </div>
-            </div>
+            </Accordion.Title>
+            <Accordion.Content active={this.state.activeAccordionTime}>
+              <TimePicker
+                defaultValue={now}
+                showSecond={false}
+                onChange={this.handleTimerChange}/>
+            </Accordion.Content>
+          </Accordion>
 
-            <TimePicker
-              defaultValue={now}
-              showSecond={false}
-              onChange={this.handleTimerChange}/>
+          <Accordion>
+            <Accordion.Title active={this.state.activeAccordionCharge} onClick={this.handleAccordionChargeClick}>
+              <div className={styles.chargingLevelSegment}>
+                  <Statistic size='small'>
+                    <Statistic.Label>Ladeziel</Statistic.Label>
+                    <Statistic.Value>{this.state.parameters.defaultChargeLevel}%</Statistic.Value>
+                  </Statistic>
+                </div>
 
+           </Accordion.Title>
+           <Accordion.Content active={this.state.activeAccordionCharge}>
+             <div className={styles.sliderContainer}>
+               <Range
+                 min={0}
+                 max={100}
+                 defaultValue={[this.state.parameters.minimumChargeLevel , this.state.parameters.defaultChargeLevel]}
+                 onChange={this.handleSliderChange} />
 
+               <div className={styles.chargingLabel}>
+                 <div>Minimum {this.state.parameters.minimumChargeLevel}%</div>
+                 <div>Ladeziel {this.state.parameters.defaultChargeLevel}%</div>
+               </div>
+             </div>
+           </Accordion.Content>
+         </Accordion>
 
+       </div>
 
             <Template
               heading={this.state.nudgeStatic.heading}
