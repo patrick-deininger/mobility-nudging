@@ -34,6 +34,7 @@ class FeedbackScreen extends React.Component {
     feedbackConfig: {
       heading: "",
       text: "",
+      feedback_type: "",
     },
     errors: []
   }
@@ -56,9 +57,11 @@ class FeedbackScreen extends React.Component {
     const feedbackConfig = this.state.feedbackConfig
     const heading = blockConfig.feedback.heading
     const text = blockConfig.feedback.text
+    const feedback_type = blockConfig.feedback.feedbackType
 
     feedbackConfig['heading'] = heading
     feedbackConfig['text'] = text
+    feedbackConfig['feedback_type'] = feedback_type
 
     this.setState({feedbackConfig: feedbackConfig})
 
@@ -202,6 +205,7 @@ export default createRefetchContainer(
             name
             heading
             text
+            feedbackType
           }
         }
       }

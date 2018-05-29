@@ -13,14 +13,14 @@ const CreateFeedbackConfigMutation = graphql`
     $description: String!
     $heading: String!
     $text: String!
-
+    $feedbackType: String!
   ) {
     createFeedbackConfig(
       name: $name,
       description: $description,
       heading: $heading,
       text: $text,
-
+      feedbackType: $feedbackType,
     ) {
       feedbackConfig {
         id
@@ -37,7 +37,7 @@ class AddFeedbackConfig extends React.Component {
       description: "",
       heading: "",
       text: "",
-
+      feedback_type: "",
     },
     errors: [],
 
@@ -62,7 +62,7 @@ class AddFeedbackConfig extends React.Component {
       description: this.state.input.description,
       heading: this.state.input.heading,
       text: this.state.input.text,
-
+      feedbackType: this.state.input.feedback_type
     };
 
     commitMutation(this.props.relay.environment, {
@@ -106,6 +106,18 @@ class AddFeedbackConfig extends React.Component {
             fluid
             required
             placeholder='Name'
+            onChange={this.handleFieldChange}
+          />
+
+          <Input
+            id='feedback_type'
+            className={styles.inputField}
+            value={input.feedback_type}
+            type='text'
+            size='large'
+            fluid
+            required
+            placeholder='Feedback Template'
             onChange={this.handleFieldChange}
           />
 
