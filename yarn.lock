@@ -5566,19 +5566,9 @@ rc-tooltip@^3.7.0, rc-tooltip@^3.7.2:
     prop-types "^15.5.8"
     rc-trigger "^2.2.2"
 
-rc-trigger@^2.2.0:
+rc-trigger@^2.2.0, rc-trigger@^2.2.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/rc-trigger/-/rc-trigger-2.4.2.tgz#8274249b3af51ff2c9c8a0c403d68e17bc775d7e"
-  dependencies:
-    babel-runtime "6.x"
-    prop-types "15.x"
-    rc-align "2.x"
-    rc-animate "2.x"
-    rc-util "^4.4.0"
-
-rc-trigger@^2.2.2:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/rc-trigger/-/rc-trigger-2.3.4.tgz#389dfa5e834ecc3a446fe9cefc0b4a32900f4227"
   dependencies:
     babel-runtime "6.x"
     prop-types "15.x"

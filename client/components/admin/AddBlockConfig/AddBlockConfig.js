@@ -15,12 +15,14 @@ const CreateBlockConfigMutation = graphql`
 
     $chargeStatus: Float!
     $chargeDistance: Float!
+    $chargeCapacity: Float!
+    $energyPrice: Float!
+    $powerPrice: Float!
     $representationCurrentState: String!
+
 
     $flexibilityTimeRequest: Float!
     $defaultChargeLevel: Float!
-    $timeToFullCharge: Float!
-    $fullChargePrice: Float!
     $minimumChargeLevel: Float!
     $representationTargetState: String!
 
@@ -28,6 +30,9 @@ const CreateBlockConfigMutation = graphql`
     $savedEmissions: Float!
     $avoidedEnvironmentalCosts: Float!
     $avoidedEnergyCosts: Float!
+
+    $penaltyProbability: Float!
+    $penaltyAmount: Float!
 
     $nudgeStatic: ID!
     $nudgeDynamic: ID!
@@ -41,12 +46,13 @@ const CreateBlockConfigMutation = graphql`
 
       chargeStatus: $chargeStatus
       chargeDistance: $chargeDistance
+      chargeCapacity: $chargeCapacity
+      energyPrice: $energyPrice
+      powerPrice: $powerPrice
       representationCurrentState: $representationCurrentState
 
       flexibilityTimeRequest: $flexibilityTimeRequest
       defaultChargeLevel: $defaultChargeLevel
-      timeToFullCharge: $timeToFullCharge
-      fullChargePrice: $fullChargePrice
       minimumChargeLevel: $minimumChargeLevel
       representationTargetState: $representationTargetState
 
@@ -54,6 +60,9 @@ const CreateBlockConfigMutation = graphql`
       savedEmissions: $savedEmissions
       avoidedEnvironmentalCosts: $avoidedEnvironmentalCosts
       avoidedEnergyCosts: $avoidedEnergyCosts
+
+      penaltyProbability: $penaltyProbability
+      penaltyAmount: $penaltyAmount
 
       nudgeStatic: $nudgeStatic
       nudgeDynamic: $nudgeDynamic
@@ -78,12 +87,13 @@ class AddBlockConfig extends React.Component {
         clocktime: "",
         charge_status: "",
         charge_distance: "",
+        charge_capacity: "",
+        energy_price: "",
+        power_price: "",
         representation_current_state: "",
 
         flexibility_time_request: "",
         default_charge_level: "",
-        time_to_full_charge: "",
-        full_charge_price: "",
         minimum_charge_level: "",
         representation_target_state: "",
 
@@ -91,6 +101,9 @@ class AddBlockConfig extends React.Component {
         saved_emissions: "",
         avoided_environmental_costs: "",
         avoided_energy_costs: "",
+
+        penalty_probability: "",
+        penalty_amount: "",
 
         nudge_static_id: "",
         nudge_dynamic_id: "",
@@ -157,8 +170,6 @@ class AddBlockConfig extends React.Component {
   }
 
 
-
-
   handleDropdownChangeContext = (e, { value }) => {
     const input = this.state.input;
     input['context_id'] = value;
@@ -206,12 +217,15 @@ class AddBlockConfig extends React.Component {
       //clocktime: this.state.input.clocktime,
       chargeStatus: this.state.input.charge_status,
       chargeDistance: this.state.input.charge_distance,
+      chargeCapacity: this.state.input.charge_capacity,
+      energyPrice: this.state.input.energy_price,
+      powerPrice: this.state.input.power_price,
       representationCurrentState: this.state.input.representation_current_state,
 
       flexibilityTimeRequest: this.state.input.flexibility_time_request,
       defaultChargeLevel: this.state.input.default_charge_level,
-      timeToFullCharge: this.state.input.time_to_full_charge,
-      fullChargePrice: this.state.input.full_charge_price,
+      //timeToFullCharge: this.state.input.time_to_full_charge,
+      //fullChargePrice: this.state.input.full_charge_price,
       minimumChargeLevel: this.state.input.minimum_charge_level,
       representationTargetState: this.state.input.representation_target_state,
 
@@ -219,6 +233,9 @@ class AddBlockConfig extends React.Component {
       savedEmissions: this.state.input.saved_emissions,
       avoidedEnvironmentalCosts: this.state.input.avoided_environmental_costs,
       avoidedEnergyCosts: this.state.input.avoided_energy_costs,
+
+      penaltyProbability: this.state.input.penalty_probability,
+      penaltyAmount: this.state.input.penalty_amount,
 
       nudgeStatic: this.state.input.nudge_static_id,
       nudgeDynamic: this.state.input.nudge_dynamic_id,
@@ -313,7 +330,7 @@ class AddBlockConfig extends React.Component {
               </Grid.Column>
             </Grid.Row>
 
-            Aktueller Zustand
+            Aktueller Zustand/Paramter
             <Grid.Row columns={2} className={styles.row}>
               <Grid.Column className={styles.column}>
               <Input
@@ -358,6 +375,52 @@ class AddBlockConfig extends React.Component {
                 />
               </Grid.Column>
               <Grid.Column className={styles.column}>
+                <Input
+                  id='charge_capacity'
+                  className={styles.inputField}
+                  value={input.charge_capacity}
+                  type='text'
+                  size='large'
+                  fluid
+                  required
+                  placeholder='Gesamtkapazität [kWh]'
+                  onChange={this.handleFieldChange}
+                />
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row columns={2} className={styles.row}>
+              <Grid.Column className={styles.column}>
+                <Input
+                  id='energy_price'
+                  className={styles.inputField}
+                  value={input.energy_price}
+                  type='text'
+                  size='large'
+                  fluid
+                  required
+                  placeholder='Arbeitspreis [€/kWh]'
+                  onChange={this.handleFieldChange}
+                />
+              </Grid.Column>
+              <Grid.Column className={styles.column}>
+                <Input
+                  id='power_price'
+                  className={styles.inputField}
+                  value={input.power_price}
+                  type='text'
+                  size='large'
+                  fluid
+                  required
+                  placeholder='Leistungspreis [€/kW]'
+                  onChange={this.handleFieldChange}
+                />
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row columns={2} className={styles.row}>
+
+              <Grid.Column className={styles.column}>
                 <Dropdown
                    id="representation_current_state"
                    className={styles.nameField}
@@ -368,6 +431,9 @@ class AddBlockConfig extends React.Component {
                    placeholder='Repräsentation aktueller Zustand'
                    onChange={this.handleDropdownChangeRepresentationCurrentStateOptions}
                  />
+              </Grid.Column>
+              <Grid.Column className={styles.column}>
+
               </Grid.Column>
             </Grid.Row>
 
@@ -382,7 +448,7 @@ class AddBlockConfig extends React.Component {
                 size='large'
                 fluid
                 required
-                placeholder='Flexibilitätsdauer (Anfrage)'
+                placeholder='Flexibilitätsdauer (Anfrage) [€/min]'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
@@ -396,36 +462,6 @@ class AddBlockConfig extends React.Component {
                 fluid
                 required
                 placeholder='Defaultladeziel'
-                onChange={this.handleFieldChange}
-              />
-            </Grid.Column>
-          </Grid.Row>
-
-
-          <Grid.Row columns={2} className={styles.row}>
-            <Grid.Column className={styles.column}>
-              <Input
-                id='time_to_full_charge'
-                className={styles.inputField}
-                value={input.time_to_full_charge}
-                type='text'
-                size='large'
-                fluid
-                required
-                placeholder='Ladezeit (voll)'
-                onChange={this.handleFieldChange}
-              />
-            </Grid.Column>
-            <Grid.Column className={styles.column}>
-              <Input
-                id='full_charge_price'
-                className={styles.inputField}
-                value={input.full_charge_price}
-                type='text'
-                size='large'
-                fluid
-                required
-                placeholder='Aufladepreis (voll)'
                 onChange={this.handleFieldChange}
               />
             </Grid.Column>
@@ -519,7 +555,35 @@ class AddBlockConfig extends React.Component {
             </Grid.Column>
           </Grid.Row>
 
-
+          Penalty
+          <Grid.Row columns={2} className={styles.row}>
+            <Grid.Column className={styles.column}>
+              <Input
+                id='penalty_probability'
+                className={styles.inputField}
+                value={input.penalty_probability}
+                type='text'
+                size='large'
+                fluid
+                required
+                placeholder='Penalty-Wahrscheinlichkeit'
+                onChange={this.handleFieldChange}
+              />
+            </Grid.Column>
+            <Grid.Column className={styles.column}>
+              <Input
+                id='penalty_amount'
+                className={styles.inputField}
+                value={input.penalty_amount}
+                type='text'
+                size='large'
+                fluid
+                required
+                placeholder='Penalty-Höhe'
+                onChange={this.handleFieldChange}
+              />
+            </Grid.Column>
+          </Grid.Row>
 
           Nudge
           <Grid.Row columns={2} className={styles.row}>

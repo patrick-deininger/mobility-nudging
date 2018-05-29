@@ -423,12 +423,13 @@ export default createFragmentContainer(
       clocktime
       chargeStatus
       chargeDistance
+      chargeCapacity
+      energyPrice
+      powerPrice
       representationCurrentState
 
       flexibilityTimeRequest
       defaultChargeLevel
-      timeToFullCharge
-      fullChargePrice
       minimumChargeLevel
       representationTargetState
 
@@ -436,6 +437,9 @@ export default createFragmentContainer(
       savedEmissions
       avoidedEnvironmentalCosts
       avoidedEnergyCosts
+
+      penaltyProbability
+      penaltyAmount
 
       nudgeStatic{
         id

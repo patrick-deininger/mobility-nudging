@@ -402,12 +402,9 @@ export default createRefetchContainer(
           clocktime
           chargeStatus
           chargeDistance
-          timeToFullCharge
-          flexibilityTimeRequest
           defaultChargeLevel
           flexibilityTimeProvision
 
-          fullChargePrice
           nudgeStatic{
             id
             name
