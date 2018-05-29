@@ -11,10 +11,10 @@ import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup } from 'se
 import { Link } from 'found';
 import styles from './HomeView.scss';
 import classNames from 'classnames';
-import Slider from 'react-rangeslider';
+//import Slider from 'react-rangeslider';
 import 'react-rangeslider/lib/index.css'
-//import Slider, { Range } from 'rc-slider';
-//import 'rc-slider/assets/index.css';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 // import HorizontalSlider from 'components/Slider/Slider';
 import SliderUI from 'material-ui/Slider';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -257,7 +257,8 @@ class HomeView extends React.Component {
 
   handleSliderChange = (event, value) => {
     const parameters = this.state.parameters
-    parameters['defaultChargeLevel'] = value
+    parameters['defaultChargeLevel'] = event[1]
+    parameters['minimumChargeLevel'] = event[0]
     this.setState({parameters: parameters});
   };
 
@@ -298,6 +299,7 @@ class HomeView extends React.Component {
         <section className={styles.container}>
 
           <Segment padded='very'>
+
           <div className={styles.currentKPIsContainer}>
             <div className={styles.currentTime}>
               <Segment floated='right'>
@@ -306,8 +308,6 @@ class HomeView extends React.Component {
               </Segment>
             </div>
 
-
-
             <div className={styles.chargeStatus}>
               <Segment floated='left'>
                   <Icon name={this.state.batteryIcon} size='large' />
@@ -315,14 +315,6 @@ class HomeView extends React.Component {
               </Segment>
             </div>
           </div>
-
-
-           <Popup
-           trigger={
-              <Icon name='winner' size='huge' />
-            }
-            content={<RankingScreen/>}
-            />
 
 
 
@@ -346,18 +338,16 @@ class HomeView extends React.Component {
 
 
             <div className={styles.sliderContainer}>
-              <MuiThemeProvider>
-                <SliderUI
 
-                  className={styles.slider}
-                  min={0}
-                  max={100}
-                  step={1}
-                  value={this.state.parameters.defaultChargeLevel}
-                  onChange={this.handleSliderChange}/>
-              </MuiThemeProvider>
+
+              <Range
+                min={0}
+                max={100}
+                defaultValue={[this.state.parameters.chargeStatus, this.state.parameters.defaultChargeLevel]}
+                onChange={this.handleSliderChange} />
 
               <div className={styles.chargingLabel}>
+                Minimum {this.state.parameters.minimumChargeLevel}%
                 Ladeziel {this.state.parameters.defaultChargeLevel}%
               </div>
             </div>
