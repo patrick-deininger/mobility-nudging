@@ -128,7 +128,6 @@ class HomeView extends React.Component {
       const parameters = this.state.parameters
 
       const clocktime = blockConfig.clocktime
-      console.log(typeof(clocktime))
       const chargeStatus = parseInt(blockConfig.chargeStatus * 100)
       const chargeDistance = blockConfig.chargeDistance
       const chargeCapacity = blockConfig.chargeCapacity
@@ -404,7 +403,9 @@ class HomeView extends React.Component {
 
   render() {
 
-    const now = moment(new Date(this.state.parameters.clocktime))
+
+    const {parameters, nudgeStatic, nudgeDynamic} = this.state;
+    const now = moment(new Date(parameters.clocktime))
 
     return (
 
@@ -417,7 +418,7 @@ class HomeView extends React.Component {
             <div className={styles.currentTime}>
               <Segment  className={styles.clock}>
                   <Icon name='clock' size='large' color='grey' />
-                  <span className={styles.clockSpan}>{this.state.parameters.currentTime}</span>
+                  <span className={styles.clockSpan}>{parameters.currentTime}</span>
               </Segment>
             </div>
 
@@ -425,8 +426,8 @@ class HomeView extends React.Component {
               <Segment  className={styles.charge}>
 
                   <Icon name={this.state.batteryIcon} size='large' color='grey' />
-                  <span className={styles.chargeSpan}>{this.state.parameters.chargeStatusDisplay}
-                    {this.state.parameters.representationCurrentState == 'percent' ? (
+                  <span className={styles.chargeSpan}>{parameters.chargeStatusDisplay}
+                    {parameters.representationCurrentState == 'percent' ? (
                       <span>%</span>
                     ):(
                       <span className={styles.spanKM}>km</span>
@@ -464,8 +465,8 @@ class HomeView extends React.Component {
               <div className={styles.chargingLevelSegment}>
                   <Statistic size='small'>
                     <Statistic.Label>Ladeziel</Statistic.Label>
-                    <Statistic.Value>{this.state.parameters.targetChargeLevel}
-                      {this.state.parameters.representationCurrentState == 'percent' ? (
+                    <Statistic.Value>{parameters.targetChargeLevel}
+                      {parameters.representationCurrentState == 'percent' ? (
                         <span>%</span>
                       ):(
                         <span className={styles.spanKM}>km</span>
@@ -480,16 +481,16 @@ class HomeView extends React.Component {
                {this.state.active != 'noFlexibility' ? (
                  <Range
                    min={0}
-                   max={this.state.parameters.sliderMax}
-                   defaultValue={[this.state.parameters.targetMinimumChargeLevel, this.state.parameters.targetChargeLevel]}
-                   value={[this.state.parameters.targetMinimumChargeLevel, this.state.parameters.targetChargeLevel]}
+                   max={parameters.sliderMax}
+                   defaultValue={[parameters.targetMinimumChargeLevel, parameters.targetChargeLevel]}
+                   value={[parameters.targetMinimumChargeLevel, parameters.targetChargeLevel]}
                    onChange={this.handleRangeChange} />
                ):(
                  <Slider
                    min={0}
-                   max={this.state.parameters.sliderMax}
-                   defaultValue={this.state.parameters.targetChargeLevel}
-                   value={this.state.parameters.targetChargeLevel}
+                   max={parameters.sliderMax}
+                   defaultValue={parameters.targetChargeLevel}
+                   value={parameters.targetChargeLevel}
                    onChange={this.handleSliderChange}
                    />
                )}
@@ -499,8 +500,8 @@ class HomeView extends React.Component {
                  {this.state.active == 'noFlexibility' ? (
                    <div></div>
                  ):(
-                   <div>Minimum {this.state.parameters.targetMinimumChargeLevel}
-                     {this.state.parameters.representationCurrentState == 'percent' ? (
+                   <div>Minimum {parameters.targetMinimumChargeLevel}
+                     {parameters.representationCurrentState == 'percent' ? (
                        <span>%</span>
                      ):(
                        <span className={styles.spanKM}>km</span>
@@ -508,8 +509,8 @@ class HomeView extends React.Component {
                    </div>
                  )}
 
-                 <div>Ladeziel {this.state.parameters.targetChargeLevel}
-                   {this.state.parameters.representationCurrentState == 'percent' ? (
+                 <div>Ladeziel {parameters.targetChargeLevel}
+                   {parameters.representationCurrentState == 'percent' ? (
                      <span>%</span>
                    ):(
                      <span className={styles.spanKM}>km</span>
@@ -522,11 +523,17 @@ class HomeView extends React.Component {
 
        </div>
 
-            <Template
-              heading={this.state.nudgeStatic.heading}
-              text={this.state.nudgeStatic.text}
-              imagesrc={this.state.nudgeStatic.imagesrc}
-            />
+       <Template
+         heading={nudgeDynamic.heading}
+         text={nudgeDynamic.text}
+         imagesrc={nudgeDynamic.imagesrc}
+       />
+
+        <Template
+          heading={nudgeStatic.heading}
+          text={nudgeStatic.text}
+          imagesrc={nudgeStatic.imagesrc}
+        />
 
         <Form className={styles.form}>
           <Button.Group widths="3" basic className={styles.buttonGroup}>
@@ -538,7 +545,7 @@ class HomeView extends React.Component {
                 active={this.state.active == "flexibility"}
                 >
                 <p>Flexibilität bereitstellen bis</p>
-                {this.state.parameters.flexibilityEndTime}
+                {parameters.flexibilityEndTime}
               </Button>
              }
              content={
@@ -571,7 +578,7 @@ class HomeView extends React.Component {
                   active={this.state.active == "noFlexibility"}
                   >
                   <p>Schnellstmögliches Laden bis</p>
-                  {this.state.parameters.noFlexibilityEndTime}
+                  {parameters.noFlexibilityEndTime}
                 </Button>
                }
                content={
