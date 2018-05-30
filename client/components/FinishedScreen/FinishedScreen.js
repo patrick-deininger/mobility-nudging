@@ -39,6 +39,7 @@ class FinishedScreen extends React.Component {
       screen: "FinishedScreen",
       providedFlexibilityTime: 0,
       targetChargingLevel: 0,
+      targetMinimumChargingLevel: 0,
       chargingLevelRepresentation: "None",
     }
 
