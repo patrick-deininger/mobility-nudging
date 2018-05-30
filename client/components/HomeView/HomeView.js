@@ -50,6 +50,7 @@ class HomeView extends React.Component {
     active: 'flexibility',
     activeAccordionCharge: false,
     activeAccordionTime: false,
+    timeRealistic: true,
     parameters: {
       //raw input
       clocktime: "",
@@ -84,6 +85,7 @@ class HomeView extends React.Component {
       maximumDistance: "",
       sliderMax: "",
       chargeStatusDisplay: "",
+      earliestFinishTime: "",
 
 
     },
@@ -153,9 +155,11 @@ class HomeView extends React.Component {
       // Calculated
       const date = new Date(blockConfig.clocktime)
       const currentTime = this.toClockFormat(date)
-      const flexibilityEndTime = this.calcTime(date, flexibilityTimeRequest)
-      const noFlexibilityEndTime = this.calcTime(date, timeToFullCharge)
+      const flexibilityEndTime = this.toClockFormat(this.calcTime(date, flexibilityTimeRequest))
+      const noFlexibilityEndTime = this.toClockFormat(this.calcTime(date, timeToFullCharge))
       const maximumDistance = chargeDistance/defaultChargeLevel * 100
+      const earliestFinishTime = this.calcTime(date, (chargeCapacity - (chargeStatus/100 * chargeCapacity))/timeToFullCharge)
+      console.log(earliestFinishTime)
 
       var targetChargeLevel = ''
       var targetMinimumChargeLevel = ''
@@ -207,6 +211,7 @@ class HomeView extends React.Component {
       parameters['maximumDistance'] = maximumDistance
       parameters['sliderMax'] = sliderMax
       parameters['chargeStatusDisplay'] = chargeStatusDisplay
+      parameters['earliestFinishTime'] = earliestFinishTime
 
 
 
@@ -308,7 +313,7 @@ class HomeView extends React.Component {
 
   calcTime = (date, minutes) => {
     const newDate = new Date(date.getTime() + minutes * 60000)
-    return this.toClockFormat(newDate)
+    return newDate
   }
 
   toClockFormat = (date) => {
@@ -367,10 +372,23 @@ class HomeView extends React.Component {
 
   handleTimerChange = (event, value) => {
     const parameters = this.state.parameters
-    const individualFlexibilityEndTime = this.toClockFormat(new Date(event))
-    const endTime = individualFlexibilityEndTime
-    parameters['individualFlexibilityEndTime'] = individualFlexibilityEndTime
-    this.setState({parameters: parameters, endTime: endTime});
+    const individualDate = new Date(event)
+
+    const individualFlexibilityEndTime = this.toClockFormat(individualDate)
+    const earliestFinishTime = this.state.parameters.earliestFinishTime
+
+
+    // check if individualFlexibilityEndTime is realistic
+    if (individualDate.getTime() >= earliestFinishTime.getTime()){
+      const endTime = individualFlexibilityEndTime
+      const timeRealistic = true
+      parameters['individualFlexibilityEndTime'] = individualFlexibilityEndTime
+      this.setState({parameters: parameters, endTime: endTime, timeRealistic: timeRealistic});
+    } else {
+      const timeRealistic = false
+      this.setState({timeRealistic: timeRealistic});
+    }
+
   }
 
   onClickConfirmation = () => {
@@ -402,8 +420,6 @@ class HomeView extends React.Component {
   }
 
   render() {
-
-
     const {parameters, nudgeStatic, nudgeDynamic} = this.state;
     const now = moment(new Date(parameters.clocktime))
 
@@ -453,6 +469,11 @@ class HomeView extends React.Component {
               </div>
             </Accordion.Title>
             <Accordion.Content active={this.state.activeAccordionTime}>
+              {this.state.timeRealistic == false && (
+                <div>
+                  Frühester Zeitpunkt {this.toClockFormat(parameters.earliestFinishTime)}
+                </div>
+              )}
               <TimePicker
                 defaultValue={now}
                 showSecond={false}
