@@ -6,7 +6,7 @@ You will need python 3.6 and node installed.
 You will also need to have a virtualenv activated before running npm install/yarn or the post install build step will fail as django needs to be available to dump the graphql_schema
 ```
 source ~/.virtualenvs/mobility-nudging/bin/activate
-pip3 install -r ./deps/dev.txt
+pip3 install -r ./lib/deps/dev.txt
 yarn
 ```
 
