@@ -130,6 +130,7 @@ class FeedbackScreen extends React.Component {
       screen: "FeedbackScreen",
       providedFlexibilityTime: 0,
       targetChargingLevel: 0,
+      targetMinimumChargingLevel: 0,
       chargingLevelRepresentation: "None",
     }
 

@@ -166,6 +166,7 @@ class ContextScreen extends React.Component {
        screen: "ContextScreen",
        providedFlexibilityTime: 0,
        targetChargingLevel: 0,
+       targetMinimumChargingLevel: 0,
        chargingLevelRepresentation: "None",
      }
 
@@ -188,6 +189,7 @@ class ContextScreen extends React.Component {
       screen: "ContextScreen",
       providedFlexibilityTime: 0,
       targetChargingLevel: 0,
+      targetMinimumChargingLevel: 0,
       chargingLevelRepresentation: "None",
     }
     this.createEvent(eventVariables)

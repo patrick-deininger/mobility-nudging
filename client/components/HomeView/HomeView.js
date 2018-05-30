@@ -383,6 +383,7 @@ class HomeView extends React.Component {
         screen: "NudgeScreen",
         providedFlexibilityTime: 0,
         targetChargingLevel: this.state.parameters.targetChargeLevel,
+        targetMinimumChargingLevel: this.state.parameters.targetMinimumChargeLevel,
         chargingLevelRepresentation: this.state.parameters.representationCurrentState,
       }
 

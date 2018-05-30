@@ -132,4 +132,5 @@ class Event(models.Model):
 
     provided_flexibility_time = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     target_charging_level = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
+    target_minimum_charging_level = models.DecimalField(max_digits=30, decimal_places=5, blank=True)
     charging_level_representation = models.CharField(max_length=50)

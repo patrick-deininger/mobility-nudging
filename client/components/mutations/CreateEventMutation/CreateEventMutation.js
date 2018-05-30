@@ -11,6 +11,7 @@ const mutation = graphql`
 
     $providedFlexibilityTime: Float!
     $targetChargingLevel: Float!
+    $targetMinimumChargingLevel: Float!
     $chargingLevelRepresentation: String!
 
   ) {
@@ -24,6 +25,7 @@ const mutation = graphql`
 
        providedFlexibilityTime: $providedFlexibilityTime
        targetChargingLevel: $targetChargingLevel
+       targetMinimumChargingLevel: $targetMinimumChargingLevel
        chargingLevelRepresentation: $chargingLevelRepresentation
 
      ) {

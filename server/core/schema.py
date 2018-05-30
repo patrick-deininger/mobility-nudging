@@ -604,6 +604,7 @@ class CreateEvent(graphene.Mutation):
 
         provided_flexibility_time = graphene.Float(required=True)
         target_charging_level = graphene.Float(required=True)
+        target_minimum_charging_level = graphene.Float(required=True)
         charging_level_representation = graphene.String(required=True)
 
 
@@ -621,6 +622,7 @@ class CreateEvent(graphene.Mutation):
 
         provided_flexibility_time = args['provided_flexibility_time']
         target_charging_level = args['target_charging_level']
+        target_minimum_charging_level = args['target_minimum_charging_level']
         charging_level_representation = args['charging_level_representation']
 
 
@@ -634,6 +636,7 @@ class CreateEvent(graphene.Mutation):
 
             provided_flexibility_time = provided_flexibility_time,
             target_charging_level = target_charging_level,
+            target_minimum_charging_level = target_minimum_charging_level,
             charging_level_representation = charging_level_representation,
         )
 
