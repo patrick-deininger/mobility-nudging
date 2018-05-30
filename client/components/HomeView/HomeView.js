@@ -367,6 +367,11 @@ class HomeView extends React.Component {
   handleSliderChange = (event, value) => {
     const parameters = this.state.parameters
     parameters['targetChargeLevel'] = event
+
+    if (event < parameters.minimumChargeLevel){
+      parameters['targetMinimumChargeLevel'] = event
+    }
+
     this.setState({parameters: parameters});
   };
 
