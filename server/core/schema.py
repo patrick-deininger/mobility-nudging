@@ -471,7 +471,7 @@ class CreateBlockConfig(graphene.Mutation):
         context = graphene.ID(required=True)
         feedback = graphene.ID(required=True)
 
-        #clocktime =
+        clocktime = graphene.String(required=True)
         charge_status = graphene.Float(required=True)
         charge_distance = graphene.Float(required=True)
         charge_capacity = graphene.Float(required=True)
@@ -508,7 +508,7 @@ class CreateBlockConfig(graphene.Mutation):
         context = get_node(info, args['context'])
         feedback = get_node(info, args['feedback'])
 
-        #clocktime = args['clocktime']
+        clocktime = args['clocktime']
         charge_status = args['charge_status']
         charge_distance = args['charge_distance']
         charge_capacity = args['charge_capacity']
@@ -540,7 +540,7 @@ class CreateBlockConfig(graphene.Mutation):
             context = context,
             feedback = feedback,
 
-            #clocktime = clocktime,
+            clocktime = clocktime,
             charge_status = charge_status,
             charge_distance = charge_distance,
             charge_capacity = charge_capacity,

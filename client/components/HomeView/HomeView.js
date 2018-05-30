@@ -128,6 +128,7 @@ class HomeView extends React.Component {
       const parameters = this.state.parameters
 
       const clocktime = blockConfig.clocktime
+      console.log(typeof(clocktime))
       const chargeStatus = parseInt(blockConfig.chargeStatus * 100)
       const chargeDistance = blockConfig.chargeDistance
       const chargeCapacity = blockConfig.chargeCapacity
@@ -480,8 +481,8 @@ class HomeView extends React.Component {
                  <Range
                    min={0}
                    max={this.state.parameters.sliderMax}
-                   defaultValue={[this.state.parameters.targetMinimumChargeLevel , this.state.parameters.targetChargeLevel]}
-                   value={[this.state.parameters.targetMinimumChargeLevel , this.state.parameters.targetChargeLevel]}
+                   defaultValue={[this.state.parameters.targetMinimumChargeLevel, this.state.parameters.targetChargeLevel]}
+                   value={[this.state.parameters.targetMinimumChargeLevel, this.state.parameters.targetChargeLevel]}
                    onChange={this.handleRangeChange} />
                ):(
                  <Slider

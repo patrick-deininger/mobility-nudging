@@ -4,6 +4,10 @@ import { withAuth } from 'modules/auth//utils';
 import { Input, Button, Segment, Header, Grid, Dropdown } from 'semantic-ui-react';
 import { graphql, createRefetchContainer, commitMutation } from 'react-relay';
 
+import TimePicker from 'rc-time-picker'
+import moment from 'moment'
+import 'rc-time-picker/assets/index.css';
+
 import styles from './AddBlockConfig.scss';
 
 const CreateBlockConfigMutation = graphql`
@@ -13,13 +17,13 @@ const CreateBlockConfigMutation = graphql`
     $context: ID!
     $feedback: ID!
 
+    $clocktime: String!
     $chargeStatus: Float!
     $chargeDistance: Float!
     $chargeCapacity: Float!
     $energyPrice: Float!
     $powerPrice: Float!
     $representationCurrentState: String!
-
 
     $flexibilityTimeRequest: Float!
     $defaultChargeLevel: Float!
@@ -45,6 +49,7 @@ const CreateBlockConfigMutation = graphql`
       context: $context
       feedback: $feedback
 
+      clocktime: $clocktime
       chargeStatus: $chargeStatus
       chargeDistance: $chargeDistance
       chargeCapacity: $chargeCapacity
@@ -86,7 +91,7 @@ class AddBlockConfig extends React.Component {
         context_id: "",
         feedback_id: "",
 
-        clocktime: "",
+        clocktime: new Date(),
         charge_status: "",
         charge_distance: "",
         charge_capacity: "",
@@ -172,7 +177,6 @@ class AddBlockConfig extends React.Component {
     this.setState({ ...this.state, input });
   }
 
-
   handleDropdownChangeContext = (e, { value }) => {
     const input = this.state.input;
     input['context_id'] = value;
@@ -209,6 +213,12 @@ class AddBlockConfig extends React.Component {
     this.setState({ ...this.state, input });
   }
 
+  handleTimerChange = (event, value) => {
+    const input = this.state.input;
+    input['clocktime'] = new Date(event);
+    this.setState({ ...this.state, input });
+  }
+
   onSubmitHandler = (ev) => {
 
     const BlockConfigVariables = {
@@ -217,7 +227,7 @@ class AddBlockConfig extends React.Component {
       context: this.state.input.context_id,
       feedback: this.state.input.feedback_id,
 
-      //clocktime: this.state.input.clocktime,
+      clocktime: this.state.input.clocktime,
       chargeStatus: this.state.input.charge_status,
       chargeDistance: this.state.input.charge_distance,
       chargeCapacity: this.state.input.charge_capacity,
@@ -260,9 +270,8 @@ class AddBlockConfig extends React.Component {
 
 
   render() {
-
     const { input, erros } = this.state;
-
+    const now = moment(new Date());
 
     return (
       <Page viewer={this.props.viewer}>
@@ -333,20 +342,15 @@ class AddBlockConfig extends React.Component {
               </Grid.Column>
             </Grid.Row>
 
-            Aktueller Zustand/Paramter
+            Aktueller Zustand/Parameter
             <Grid.Row columns={2} className={styles.row}>
               <Grid.Column className={styles.column}>
-              <Input
-                id='clocktime'
-                className={styles.inputField}
-                value={input.clocktime}
-                type='text'
-                size='large'
-                fluid
-                required
-                placeholder='Uhrzeit'
-                onChange={this.handleFieldChange}
-              />
+                <TimePicker
+                  className={styles.timePicker}
+                  defaultValue={now}
+                  showSecond={false}
+                  onChange={this.handleTimerChange}/>
+                <span className={styles.span}>Uhr</span>
               </Grid.Column>
               <Grid.Column className={styles.column}>
                 <Input
