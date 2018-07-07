@@ -12,6 +12,7 @@ import AddFeedbackConfig from 'components/admin/AddFeedbackConfig/AddFeedbackCon
 import AddContextConfig from 'components/admin/AddContextConfig/AddContextConfig';
 import FeedbackScreen from 'components/FeedbackScreen/FeedbackScreen';
 import ContextScreen from 'components/ContextScreen/ContextScreen';
+import SurveyScreen from 'components/SurveyScreen/SurveyScreen';
 
 
 import { Route, makeRouteConfig } from 'found';
@@ -124,6 +125,14 @@ const ContextScreenQuery = graphql`
   }
 `;
 
+const SurveyScreenQuery = graphql`
+  query routes_SurveyScreen_Query {
+    viewer {
+      ...SurveyScreen_viewer
+    }
+  }
+`;
+
 const AuthQuery = graphql`
   query routes_Auth_Query {
     viewer {
@@ -151,5 +160,6 @@ export default makeRouteConfig(
     <Route path='add-session-block-config' Component={AddSessionBlockConfig} query={AddSessionBlockConfigQuery} />
     <Route path='add-feedback-config' Component={AddFeedbackConfig} query={AddFeedbackConfigQuery} />
     <Route path='add-context-config' Component={AddContextConfig} query={AddContextConfigQuery} />
+    <Route path='q' Component={SurveyScreen} query={SurveyScreenQuery} />
   </Route>
 );
