@@ -11,7 +11,8 @@ import styles from './SurveyScreen.scss';
 class SurveyScreen extends React.Component {
   state = {
     sessionId: this.props.match.params.sessionId,
-    blockID: this.props.match.params.blockId,
+    blockId: this.props.match.params.blockId,
+    userId: this.props.viewer.user.id,
   }
 
   onSubmitHandler = (ev) => {
@@ -20,18 +21,15 @@ class SurveyScreen extends React.Component {
   //  this.props.router.push(nextScreen);
   }
   onLoadChange = (x) => {
-    console.log("location")
-    console.log(x.target)
-    if (x.target.src == "http://localhost:8000/cockpit") {
-      var nextScreen = `/done/${this.state.sessionId}/${this.state.blockId}`
-      this.props.router.push(nextScreen);
-    }
+    var nextScreen = `/done/${this.state.sessionId}/${this.state.blockId}`
+    //this.props.router.push(nextScreen);
 
   }
 
 
 
   render() {
+    const lime_src = "https://experiment123.limequery.com/464639?lang=en&id="+this.state.sessionId+"|"+this.state.blockId
 
 
 
@@ -49,7 +47,7 @@ class SurveyScreen extends React.Component {
             className={styles.limesurvey}
             id="iframe_id"
             title="My Survey"
-            src="https://experiment123.limequery.com/464639?lang=en&id=test"
+            src={lime_src}
             onLoad={this.onLoadChange}
           />
 
@@ -80,7 +78,9 @@ export default createRefetchContainer(
   graphql`
     fragment SurveyScreen_viewer on Viewer {
       ...Page_viewer
-
+      user{
+        id
+      }
     }
   `,
 );

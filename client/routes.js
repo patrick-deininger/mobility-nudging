@@ -160,6 +160,6 @@ export default makeRouteConfig(
     <Route path='add-session-block-config' Component={AddSessionBlockConfig} query={AddSessionBlockConfigQuery} />
     <Route path='add-feedback-config' Component={AddFeedbackConfig} query={AddFeedbackConfigQuery} />
     <Route path='add-context-config' Component={AddContextConfig} query={AddContextConfigQuery} />
-    <Route path='q/:sessionId/:lastBlockId' Component={SurveyScreen} query={SurveyScreenQuery} />
+    <Route path='q/:sessionId/:blockId' Component={SurveyScreen} query={SurveyScreenQuery} />
   </Route>
 );
