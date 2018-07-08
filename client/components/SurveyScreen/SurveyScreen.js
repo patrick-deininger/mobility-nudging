@@ -15,8 +15,18 @@ class SurveyScreen extends React.Component {
   }
 
   onSubmitHandler = (ev) => {
+
     var nextScreen = `/done/${this.state.sessionId}/${this.state.blockId}`
-    this.props.router.push(nextScreen);
+  //  this.props.router.push(nextScreen);
+  }
+  onLoadChange = (x) => {
+    console.log("location")
+    console.log(x.target)
+    if (x.target.src == "http://localhost:8000/cockpit") {
+      var nextScreen = `/done/${this.state.sessionId}/${this.state.blockId}`
+      this.props.router.push(nextScreen);
+    }
+
   }
 
 
@@ -35,7 +45,13 @@ class SurveyScreen extends React.Component {
           <div className={styles.form}>
 
 
-          <iframe className={styles.limesurvey} id="enid" title="My Survey"  src="https://experiment123.limequery.com/464639?lang=en&id=test"></iframe>
+          <iframe
+            className={styles.limesurvey}
+            id="iframe_id"
+            title="My Survey"
+            src="https://experiment123.limequery.com/464639?lang=en&id=test"
+            onLoad={this.onLoadChange}
+          />
 
            <Button
              color='green'
