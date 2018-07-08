@@ -13,6 +13,7 @@ class SurveyScreen extends React.Component {
     sessionId: this.props.match.params.sessionId,
     blockId: this.props.match.params.blockId,
     userId: this.props.viewer.user.id,
+    iframeLoadCount: 0,
   }
 
   onSubmitHandler = (ev) => {
@@ -21,11 +22,17 @@ class SurveyScreen extends React.Component {
   //  this.props.router.push(nextScreen);
   }
   onLoadChange = (x) => {
-    var nextScreen = `/done/${this.state.sessionId}/${this.state.blockId}`
-    //this.props.router.push(nextScreen);
+    const iframeLoadCount = this.state.iframeLoadCount + 1
+    this.setState({iframeLoadCount: iframeLoadCount})
+    console.log(this.state.iframeLoadCount)
+
+    // dirty hack
+    if (iframeLoadCount == 2){
+      var nextScreen = `/done/${this.state.sessionId}/${this.state.blockId}`
+      this.props.router.push(nextScreen);
+    }
 
   }
-
 
 
   render() {
