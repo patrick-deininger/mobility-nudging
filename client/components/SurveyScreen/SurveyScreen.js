@@ -9,10 +9,14 @@ import styles from './SurveyScreen.scss';
 
 
 class SurveyScreen extends React.Component {
-
+  state = {
+    sessionId: this.props.match.params.sessionId,
+    blockID: this.props.match.params.blockId,
+  }
 
   onSubmitHandler = (ev) => {
-    this.props.router.push('/cockpit');
+    var nextScreen = `/done/${this.state.sessionId}/${this.state.blockId}`
+    this.props.router.push(nextScreen);
   }
 
 
@@ -31,7 +35,7 @@ class SurveyScreen extends React.Component {
           <div className={styles.form}>
 
 
-
+          <iframe className={styles.limesurvey} id="enid" title="My Survey"  src="https://experiment123.limequery.com/464639?lang=en&id=test"></iframe>
 
            <Button
              color='green'
