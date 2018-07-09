@@ -212,7 +212,7 @@ class ContextScreen extends React.Component {
     return (
       <Page title='Edision' viewer={this.props.viewer}>
         <section className={styles.container}>
-          <Segment padded='very'>
+          <Segment padded='very' className={styles.segment}>
             <p>{this.state.contextConfig.heading}</p>
             {this.state.contextConfig.text}
             <p></p>

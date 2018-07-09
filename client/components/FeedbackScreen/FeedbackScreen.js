@@ -161,7 +161,7 @@ class FeedbackScreen extends React.Component {
     return (
       <Page title='Edision' viewer={this.props.viewer}>
         <section className={styles.container}>
-          <Segment padded='very'>
+          <Segment padded='very' className={styles.segment}>
             <p>{this.state.feedbackConfig.heading}</p>
             {this.state.feedbackConfig.text}
             <p></p>

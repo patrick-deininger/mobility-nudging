@@ -96,7 +96,7 @@ class FinishedScreen extends React.Component {
     return (
       <Page title='Edision' viewer={this.props.viewer}>
         <section className={styles.container}>
-          <Segment padded='very'>
+          <Segment padded='very' className={styles.segment}>
             Done
             <Button onClick={this.onButtonClick} fluid color="green" className={styles.conformationButton} >
               Experiment abschließen

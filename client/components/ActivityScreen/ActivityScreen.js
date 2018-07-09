@@ -453,7 +453,7 @@ class ActivityScreen extends React.Component {
       <Page title='Edision' viewer={this.props.viewer}>
         <section className={styles.container}>
 
-          <Segment padded='very'>
+          <Segment padded='very' className={styles.segment}>
 
           <div className={styles.currentKPIsContainer}>
             <div className={styles.currentTime}>
