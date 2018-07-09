@@ -9,7 +9,7 @@ import createEventMutation from 'components/mutations/CreateEventMutation/Create
 import { withAuth } from 'modules/auth/utils';
 import { Button, Segment, Header, Label, Statistic, Form, Icon, Popup, Accordion } from 'semantic-ui-react';
 import { Link } from 'found';
-import styles from './HomeView.scss';
+import styles from './ActivityScreen.scss';
 import classNames from 'classnames';
 //import Slider from 'react-rangeslider';
 import 'react-rangeslider/lib/index.css'
@@ -31,7 +31,7 @@ const IndividualFlexibilityEndTime = 'tbd';
 
 
 const FinishBlockMutation = graphql`
-  mutation HomeViewMutation (
+  mutation ActivityScreenMutation (
     $blockId: ID!
   ) {
     finishBlock(blockId: $blockId) {
@@ -43,7 +43,7 @@ const FinishBlockMutation = graphql`
 `;
 
 
-class HomeView extends React.Component {
+class ActivityScreen extends React.Component {
 
   state = {
     endTime: '',
@@ -654,10 +654,10 @@ class HomeView extends React.Component {
 }
 
 export default createRefetchContainer(
-  withAuth(HomeView),
+  withAuth(ActivityScreen),
   {
   viewer: graphql`
-      fragment HomeView_viewer on Viewer
+      fragment ActivityScreen_viewer on Viewer
       @argumentDefinitions(
         session: {type: "ID"},
         blockConfig: {type: "ID"},
@@ -730,9 +730,9 @@ export default createRefetchContainer(
 
 
   graphql`
-    query HomeViewRefetchQuery($session: ID!, $blockConfig: ID!){
+    query ActivityScreenRefetchQuery($session: ID!, $blockConfig: ID!){
       viewer {
-        ...HomeView_viewer @arguments(session: $session, blockConfig: $blockConfig)
+        ...ActivityScreen_viewer @arguments(session: $session, blockConfig: $blockConfig)
 
       }
     }

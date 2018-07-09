@@ -1,6 +1,6 @@
 import LandingRedirectView from 'components/LandingRedirectView/LandingRedirectView';
 import Auth from 'modules/auth/Auth';
-import HomeView from 'components/HomeView/HomeView';
+import ActivityScreen from 'components/ActivityScreen/ActivityScreen';
 import FinishedScreen from 'components/FinishedScreen/FinishedScreen';
 import Cockpit from 'components/admin/Cockpit/Cockpit';
 import AddSessionConfig from 'components/admin/AddSessionConfig/AddSessionConfig';
@@ -29,10 +29,10 @@ const LandingRedirectViewQuery = graphql`
 `;
 
 
-const HomeViewQuery = graphql`
-  query routes_HomeView_Query {
+const ActivityScreenQuery = graphql`
+  query routes_ActivityScreen_Query {
     viewer {
-      ...HomeView_viewer
+      ...ActivityScreen_viewer
     }
   }
 `;
@@ -148,7 +148,7 @@ export default makeRouteConfig(
       <Route path='login' />
       <Route path='signup' />
     </Route>
-    <Route path='run/:blockNumber/:sessionId/:blockId' Component={HomeView} query={HomeViewQuery} />
+    <Route path='run/:blockNumber/:sessionId/:blockId' Component={ActivityScreen} query={ActivityScreenQuery} />
     <Route path='fb/:blockNumber/:sessionId/:blockId' Component={FeedbackScreen} query={FeedbackScreenQuery} />
     <Route path='context/:blockNumber/:sessionId' Component={ContextScreen} query={ContextScreenQuery} />
     <Route path='done/:sessionId/:lastBlockId' Component={FinishedScreen} query={FinishedScreenQuery} />

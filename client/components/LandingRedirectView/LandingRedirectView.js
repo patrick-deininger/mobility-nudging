@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql, createFragmentContainer } from 'react-relay';
-import HomeView from 'components/HomeView/HomeView';
+import ActivityScreen from 'components/ActivityScreen/ActivityScreen';
 import BeginningScreen from 'components/BeginningScreen/BeginningScreen';
 import WelcomeView from 'components/WelcomeView/WelcomeView';
 import { isAuthenticated } from 'modules/auth/utils';
