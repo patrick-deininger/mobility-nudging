@@ -31,7 +31,7 @@ class Header extends React.Component {
     return (
       <header className={styles.root}>
         <h1 className={styles.brand_name}>
-          <Link to='/' className={styles.brand_name_link}>Mobility Nudging</Link>
+          <Link to='/' className={styles.brand_name_link}>Edision</Link>
         </h1>
         <nav className={styles.nav}>
           { loggedIn ? (

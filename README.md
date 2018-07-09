@@ -1,4 +1,4 @@
-# Mobility nudging
+# Edision
 Nudge testing framework based on React, Django + GraphQL Relay Modern backend.
 
 ## Quick start:

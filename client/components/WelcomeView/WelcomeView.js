@@ -14,11 +14,11 @@ class WelcomeView extends React.Component {
     return (
         <div className={styles.container} onScroll={this.onScroll}>
           <Helmet>
-            <title>Mobility Nudging</title>
+            <title>Edision</title>
           </Helmet>
           <header className={styles.header}>
             <h1 className={styles.brandName}>
-              <Link to='/' className={styles.brandNameLink}>Mobility Nudging</Link>
+              <Link to='/' className={styles.brandNameLink}>Edision</Link>
             </h1>
             <nav className={styles.nav}>
               <div>

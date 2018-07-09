@@ -94,7 +94,7 @@ class FinishedScreen extends React.Component {
 
   render() {
     return (
-      <Page title='Mobility Nudging' viewer={this.props.viewer}>
+      <Page title='Edision' viewer={this.props.viewer}>
         <section className={styles.container}>
           <Segment padded='very'>
             Done

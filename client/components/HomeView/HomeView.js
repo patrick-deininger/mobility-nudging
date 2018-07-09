@@ -450,7 +450,7 @@ class HomeView extends React.Component {
 
     return (
 
-      <Page title='Mobility Nudging' viewer={this.props.viewer}>
+      <Page title='Edision' viewer={this.props.viewer}>
         <section className={styles.container}>
 
           <Segment padded='very'>
