@@ -31,7 +31,6 @@ class SurveyScreen extends React.Component {
       var nextScreen = `/done/${this.state.sessionId}/${this.state.blockId}`
       this.props.router.push(nextScreen);
     }
-
   }
 
 

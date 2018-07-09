@@ -156,7 +156,7 @@ class HomeView extends React.Component {
       const date = new Date(blockConfig.clocktime)
       const currentTime = this.toClockFormat(date)
       const flexibilityEndTime = this.toClockFormat(this.calcTime(date, flexibilityTimeRequest))
-      const noFlexibilityEndTime = this.toClockFormat(this.calcTime(date, timeToFullCharge))
+      const noFlexibilityEndTime = this.toClockFormat(this.calcTime(date, (defaultChargeLevel - chargeStatus)*(timeToFullCharge/100)))
       const maximumDistance = chargeDistance/defaultChargeLevel * 100
       const earliestFinishTime = this.calcTime(date, (chargeCapacity - (chargeStatus/100 * chargeCapacity))/timeToFullCharge)
       console.log(earliestFinishTime)
@@ -323,37 +323,52 @@ class HomeView extends React.Component {
   onClickFlexibility = () => {
     const endTime = this.state.parameters.flexibilityEndTime
     const newStatus = 'flexibility';
-    this.setState({...this.state, endTime: endTime, active: newStatus});
+    const newActive = false
+    this.setState({...this.state, endTime: endTime, active: newStatus, activeAccordionTime: newActive});
   }
 
   onClickNoFlexibility = () => {
     const endTime = this.state.parameters.noFlexibilityEndTime;
     const newStatus = 'noFlexibility';
-    this.setState({...this.state, endTime: endTime, active: newStatus});
+    const newActive = false
+    this.setState({...this.state, endTime: endTime, active: newStatus, activeAccordionTime: newActive});
   }
 
   onClickIndividualFlexibility = () => {
-      var endTime = ''
-      if (this.state.parameters.individualFlexibilityEndTime == ''){
-        endTime = 'tbd'
-      } else {
-        endTime = this.state.parameters.individualFlexibilityEndTime
-      }
-      const newStatus = 'individualFlexibility';
-      const newActive= true
+    const individualFlexibilityEndTime = this.state.parameters.individualFlexibilityEndTime
+    const flexibilityEndTime = this.state.parameters.flexibilityEndTime
+    const noFlexibilityEndTime = this.state.parameters.noFlexibilityEndTime
+    const previousActive = this.state.active
+    var endTime = ''
 
-      this.setState({...this.state, activeAccordionTime: newActive, endTime: endTime, active: newStatus});
+    if (individualFlexibilityEndTime == ""){
+      if (previousActive == "noFlexibility"){
+        endTime = noFlexibilityEndTime
+      } else {
+        endTime = flexibilityEndTime
+      }
+
+    } else {
+      endTime = individualFlexibilityEndTime
+    }
+
+    const newStatus = 'individualFlexibility';
+    const newActive= true
+
+    this.setState({...this.state, activeAccordionTime: newActive, endTime: endTime, active: newStatus});
   }
 
   handleAccordionTimeClick = (e, titleProps) => {
     const { activeAccordionTime } = this.state
     const newIndex = !activeAccordionTime
+    this.onClickIndividualFlexibility()
     this.setState({ activeAccordionTime: newIndex })
   }
 
   handleAccordionChargeClick = (e, titleProps) => {
     const { activeAccordionCharge } = this.state
     const newIndex = !activeAccordionCharge
+
     this.setState({ activeAccordionCharge: newIndex })
   }
 
@@ -376,19 +391,24 @@ class HomeView extends React.Component {
   };
 
   handleTimerChange = (event, value) => {
+
     const parameters = this.state.parameters
     const individualDate = new Date(event)
 
     const individualFlexibilityEndTime = this.toClockFormat(individualDate)
     const earliestFinishTime = this.state.parameters.earliestFinishTime
 
+    const endTime = individualFlexibilityEndTime
+    parameters['individualFlexibilityEndTime'] = individualFlexibilityEndTime
+    this.setState({parameters: parameters, endTime: endTime});
+
 
     // check if individualFlexibilityEndTime is realistic
     if (individualDate.getTime() >= earliestFinishTime.getTime()){
-      const endTime = individualFlexibilityEndTime
+
       const timeRealistic = true
-      parameters['individualFlexibilityEndTime'] = individualFlexibilityEndTime
-      this.setState({parameters: parameters, endTime: endTime, timeRealistic: timeRealistic});
+
+      this.setState({timeRealistic: timeRealistic});
     } else {
       const timeRealistic = false
       this.setState({timeRealistic: timeRealistic});
@@ -468,6 +488,13 @@ class HomeView extends React.Component {
             <Accordion.Title  active={this.state.activeAccordionTime} onClick={this.handleAccordionTimeClick}>
               <div className={styles.timeSegment}>
                   <Statistic size='small'>
+                    {this.state.timeRealistic == false && (
+                      <Statistic.Label>Morgen</Statistic.Label>
+                    )}
+                    {this.state.timeRealistic == true && (
+                      <Statistic.Label>Heute</Statistic.Label>
+                    )}
+
                     <Statistic.Label>Geladen um</Statistic.Label>
                     <Statistic.Value>{this.state.endTime}</Statistic.Value>
                 </Statistic>
