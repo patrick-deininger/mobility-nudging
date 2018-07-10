@@ -15,6 +15,9 @@ class Page extends React.Component {
         <main className={styles.content}>
           {this.props.children}
         </main>
+        <div className={styles.imprintContainer}>
+          <a target="_blank" href="https://www.fzi.de/footer/impressum/" className={styles.imprint}>Impressum</a>
+        </div>
       </div>
     )
   }
