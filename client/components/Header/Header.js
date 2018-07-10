@@ -33,18 +33,7 @@ class Header extends React.Component {
         <h1 className={styles.brand_name}>
           <Link to='/' className={styles.brand_name_link}>Edision</Link>
         </h1>
-        <nav className={styles.nav}>
-          { loggedIn ? (
-            <div className={styles.loggedInView}>
-              <Button basic  onClick={() => { logoutViewer(); }} className={styles.item}>Log out</Button>
-            </div>
-          ) : (
-            <div className={styles.loggedOutView}>
-              <Button basic as={Link} to='/login' className={styles.item}>Log in</Button>
-              <Button color='green' as={Link} to='/signup' className={styles.item}>Sign up</Button>
-            </div>
-          )}
-        </nav>
+
       </header>
     );
   }
