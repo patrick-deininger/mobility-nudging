@@ -6,7 +6,7 @@ from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType, ObjectType
 from core.user_helper.jwt_util import get_token_user_id
 from core.user_helper.jwt_schema import TokensInterface
-from .models import Event as EventModal, NudgeStatic as NudgeStaticModal, NudgeDynamic as NudgeDynamicModal, FeedbackConfig as FeedbackConfigModal, ContextConfig as ContextConfigModal, Session as SessionModal, SessionConfig as SessionConfigModal, SessionBlockConfig as SessionBlockConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal
+from .models import CustomUser as CustomUserModal, Event as EventModal, NudgeStatic as NudgeStaticModal, NudgeDynamic as NudgeDynamicModal, FeedbackConfig as FeedbackConfigModal, ContextConfig as ContextConfigModal, Session as SessionModal, SessionConfig as SessionConfigModal, SessionBlockConfig as SessionBlockConfigModal, Block as BlockModal, BlockConfig as BlockConfigModal, Experiment as ExperimentModal
 from .utils import Utils
 
 
@@ -116,6 +116,7 @@ class User(DjangoObjectType):
 
 
 
+
 class CoreQueries:
     block_config = graphene.Field(BlockConfig, id=graphene.ID())
     block_configs = graphene.List(BlockConfig)
@@ -144,11 +145,12 @@ class CoreQueries:
 
     events = graphene.List(Event)
 
+    users = graphene.List(User)
+
 
     def resolve_block_config(self, info, **args):
         if 'id' in args:
             return BlockConfigModal.objects.get(pk=args['id'])
-
 
     def resolve_block_configs(self, info, **args):
         block_configs = BlockConfigModal.objects.all()
@@ -229,6 +231,10 @@ class CoreQueries:
     def resolve_events(self, info, **args):
         events = EventModal.objects.all()
         return events
+
+    def resolve_users(self, info, **args):
+        users = CustomUserModal.objects.all()
+        return users
 
 
 class CreateBlock(graphene.Mutation):

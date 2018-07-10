@@ -87,7 +87,7 @@ class SessionConfig(models.Model):
     name = models.CharField(max_length=31, blank=True)
     description = models.CharField(max_length=180)
     number_of_sessions = models.PositiveSmallIntegerField(blank=True)
-    survey_link = models.CharField(max_length=50)
+    survey_link = models.CharField(max_length=50    )
     session_config_status = models.CharField(max_length=31, default="active")
 
 class Session(models.Model):
