@@ -35,11 +35,6 @@ class SurveyScreen extends React.Component {
     console.log(surveyLink)
   }
 
-  onSubmitHandler = (ev) => {
-
-    var nextScreen = `/done/${this.state.sessionId}/${this.state.blockId}`
-  //  this.props.router.push(nextScreen);
-  }
   onLoadChange = (x) => {
     const iframeLoadCount = this.state.iframeLoadCount + 1
     this.setState({iframeLoadCount: iframeLoadCount})
@@ -74,18 +69,6 @@ class SurveyScreen extends React.Component {
             src={lime_src}
             onLoad={this.onLoadChange}
           />
-
-           <Button
-             color='green'
-              fluid
-              type='submit'
-              size='huge'
-              onClick={this.onSubmitHandler}
-            >
-              Bestätigen
-            </Button>
-
-
 
           </div>
 
