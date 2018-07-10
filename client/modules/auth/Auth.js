@@ -94,6 +94,28 @@ class Auth extends React.Component {
   }
 
 
+  componentWillMount = () => {
+    this.skipSignup()
+  }
+
+  // skip signup by using defaults
+  skipSignup = () => {
+    const users = this.props.viewer.users
+    const input = this.state.input
+
+    input['password'] = '12345678'
+    input['firstName'] = 'test' + users.length+1
+    input['lastName'] = 'test'
+    input['email'] = input['firstName']+'@autouser.com'
+
+    const { relay, router } = this.props
+    const postAuthAction = (user) => {
+      router.replace('/');
+    }
+    SignupUserMutation(relay.environment, this.setErrors.bind(this), postAuthAction, input)
+
+  }
+
   handleFieldChange(e) {
     const input = this.state.input
     const inputName = e.target.id
@@ -241,6 +263,9 @@ export default createFragmentContainer(
   graphql`
     fragment Auth_viewer on Viewer {
       ...Page_viewer
+      users{
+        id
+      }
     }
   `,
 )
