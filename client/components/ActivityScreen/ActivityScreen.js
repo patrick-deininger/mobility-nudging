@@ -106,6 +106,7 @@ class ActivityScreen extends React.Component {
     blockNumber: parseInt(this.props.match.params.blockNumber),
     sessionId: this.props.match.params.sessionId,
     blockConfigId: this.props.viewer.blockConfigs[parseInt(this.props.match.params.blockNumber)-1].id,
+    blockConfig: '',
     blockId: this.props.match.params.blockId,
     errors: [],
   }
@@ -125,6 +126,8 @@ class ActivityScreen extends React.Component {
 
     if (blockConfigs.length >= this.state.blockNumber){
       const blockConfig = blockConfigs[this.state.blockNumber-1]
+
+      this.setState({blockConfig: blockConfig})
 
       // Paramters
       const parameters = this.state.parameters
@@ -159,7 +162,7 @@ class ActivityScreen extends React.Component {
       const noFlexibilityEndTime = this.toClockFormat(this.calcTime(date, (defaultChargeLevel - chargeStatus)*(timeToFullCharge/100)))
       const maximumDistance = chargeDistance/defaultChargeLevel * 100
       const earliestFinishTime = this.calcTime(date, (chargeCapacity - (chargeStatus/100 * chargeCapacity))/timeToFullCharge)
-      console.log(earliestFinishTime)
+
 
       var targetChargeLevel = ''
       var targetMinimumChargeLevel = ''
@@ -177,7 +180,6 @@ class ActivityScreen extends React.Component {
         chargeStatusDisplay = chargeDistance
 
       }
-
 
 
       parameters['clocktime'] = clocktime
@@ -324,7 +326,11 @@ class ActivityScreen extends React.Component {
     const endTime = this.state.parameters.flexibilityEndTime
     const newStatus = 'flexibility';
     const newActive = false
-    this.setState({...this.state, endTime: endTime, active: newStatus, activeAccordionTime: newActive});
+
+    const parameters = this.state.parameters
+    parameters['targetChargeLevel'] = this.state.parameters.defaultChargeLevel
+    this.updateTime()
+    this.setState({...this.state, endTime: endTime, active: newStatus, activeAccordionTime: newActive, parameters: parameters});
   }
 
   onClickNoFlexibility = () => {
@@ -377,6 +383,8 @@ class ActivityScreen extends React.Component {
     parameters['targetChargeLevel'] = event[1]
     parameters['targetMinimumChargeLevel'] = event[0]
     this.setState({parameters: parameters});
+    this.updateTime()
+    this.onClickIndividualFlexibility()
   };
 
   handleSliderChange = (event, value) => {
@@ -388,7 +396,28 @@ class ActivityScreen extends React.Component {
     }
 
     this.setState({parameters: parameters});
+    this.updateTime()
   };
+
+  updateTime = () => {
+    const date = new Date(this.state.parameters.clocktime)
+    const targetChargeLevel = this.state.parameters.targetChargeLevel
+    const chargeStatus = this.state.parameters.chargeStatus
+    const timeToFullCharge = this.state.parameters.timeToFullCharge
+    var helpTime = this.calcTime(date, (targetChargeLevel - chargeStatus)*(timeToFullCharge/100))
+    var endTime = ''
+
+    if (this.calcTime(date, 0) > helpTime) {
+      endTime = this.toClockFormat(this.calcTime(date, 0))
+    } else {
+      endTime = this.toClockFormat(this.calcTime(date, (targetChargeLevel - chargeStatus)*(timeToFullCharge/100)))
+    }
+
+    const parameters = this.state.parameters
+    parameters['noFlexibilityEndTime'] = endTime
+
+    this.setState({endTime: endTime, parameters: parameters});
+  }
 
   handleTimerChange = (event, value) => {
 
