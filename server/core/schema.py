@@ -319,6 +319,7 @@ class CreateSessionConfig(graphene.Mutation):
         name = graphene.String(required=True)
         description = graphene.String(required=True)
         number_of_sessions = graphene.Int(required=True)
+        survey_link = graphene.String(required=True)
 
     sessionConfig = graphene.Field(SessionConfig)
 
@@ -327,11 +328,13 @@ class CreateSessionConfig(graphene.Mutation):
         name = args['name']
         description = args['description']
         number_of_sessions = args['number_of_sessions']
+        survey_link = args['survey_link']
 
         sessionConfig = SessionConfigModal(
             name = name,
             description = description,
             number_of_sessions = number_of_sessions,
+            survey_link = survey_link,
         )
 
         sessionConfig.save()

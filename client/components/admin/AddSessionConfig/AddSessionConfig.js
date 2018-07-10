@@ -11,8 +11,9 @@ const CreateSessionConfigMutation = graphql`
     $name: String!
     $description: String!
     $numberOfSessions: Int!
+    $surveyLink: String!
   ) {
-    createSessionConfig(name: $name, description: $description, numberOfSessions: $numberOfSessions) {
+    createSessionConfig(name: $name, description: $description, numberOfSessions: $numberOfSessions, surveyLink: $surveyLink) {
       sessionConfig {
         id
       }
@@ -27,6 +28,7 @@ class AddSessionConfig extends React.Component {
       name: "",
       description: "",
       number_of_sessions: "",
+      survey_link: "",
     },
     errors: [],
 
@@ -50,6 +52,7 @@ class AddSessionConfig extends React.Component {
       name: this.state.input.name,
       description: this.state.input.description,
       numberOfSessions: parseInt(this.state.input.number_of_sessions),
+      surveyLink: this.state.input.survey_link,
     };
 
 
@@ -118,6 +121,18 @@ class AddSessionConfig extends React.Component {
             fluid
             required
             placeholder='Anzahl geplanter Sessions'
+            onChange={this.handleFieldChange}
+          />
+
+          <Input
+            id='survey_link'
+            className={styles.inputField}
+            value={input.survey_link}
+            type='text'
+            size='large'
+            fluid
+            required
+            placeholder='Link zur LimeSurvey'
             onChange={this.handleFieldChange}
           />
 

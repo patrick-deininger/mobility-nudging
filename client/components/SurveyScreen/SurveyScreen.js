@@ -13,7 +13,26 @@ class SurveyScreen extends React.Component {
     sessionId: this.props.match.params.sessionId,
     blockId: this.props.match.params.blockId,
     userId: this.props.viewer.user.id,
+    surveyLink: '',
     iframeLoadCount: 0,
+  }
+
+  componentWillMount = () => {
+    this.identifySessionConfigId()
+  }
+
+  identifySessionConfigId = () => {
+    const sessions = this.props.viewer.sessions
+    const sessionId = this.state.sessionId
+    var surveyLink = ''
+    for (var i = 0; i < sessions.length; i++){
+      if (sessions[i].id == this.state.sessionId){
+        surveyLink = sessions[i].sessionConfig.surveyLink
+        break;
+      }
+    }
+    this.setState({surveyLink: surveyLink})
+    console.log(surveyLink)
   }
 
   onSubmitHandler = (ev) => {
@@ -33,11 +52,10 @@ class SurveyScreen extends React.Component {
     }
   }
 
-
   render() {
-    const lime_src = "https://experiment123.limequery.com/464639?lang=en&id="+this.state.sessionId+"|"+this.state.blockId
+    const lime_src = this.state.surveyLink+"&id="+this.state.sessionId+"|"+this.state.blockId
 
-
+    console.log(lime_src)
 
     return (
       <Page viewer={this.props.viewer}>
@@ -87,6 +105,13 @@ export default createRefetchContainer(
       user{
         id
       }
+      sessions{
+        id
+        sessionConfig{
+          surveyLink
+        }
+      }
+
     }
   `,
 );
