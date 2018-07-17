@@ -50,7 +50,7 @@ class ActivityScreen extends React.Component {
     active: 'flexibility',
     activeAccordionCharge: false,
     activeAccordionTime: false,
-    timeRealistic: true,
+    dayShift: false,
     parameters: {
       //raw input
       clocktime: "",
@@ -159,9 +159,10 @@ class ActivityScreen extends React.Component {
       const date = new Date(blockConfig.clocktime)
       const currentTime = this.toClockFormat(date)
       const flexibilityEndTime = this.toClockFormat(this.calcTime(date, flexibilityTimeRequest))
-      const noFlexibilityEndTime = this.toClockFormat(this.calcTime(date, (defaultChargeLevel - chargeStatus)*(timeToFullCharge/100)))
+      const noFlexibilityEndTime = this.toClockFormat(this.calcTime(date, Math.max(0, (defaultChargeLevel - chargeStatus)*(timeToFullCharge/100))))
       const maximumDistance = chargeDistance/defaultChargeLevel * 100
-      const earliestFinishTime = this.calcTime(date, (chargeCapacity - (chargeStatus/100 * chargeCapacity))/timeToFullCharge)
+      const earliestFinishTime = this.calcTime(date, Math.max(0, (defaultChargeLevel - chargeStatus)*(timeToFullCharge/100)))
+
 
 
       var targetChargeLevel = ''
@@ -323,21 +324,19 @@ class ActivityScreen extends React.Component {
   }
 
   onClickFlexibility = () => {
-    const endTime = this.state.parameters.flexibilityEndTime
     const newStatus = 'flexibility';
     const newActive = false
 
-    const parameters = this.state.parameters
-    parameters['targetChargeLevel'] = this.state.parameters.defaultChargeLevel
-    this.updateTime()
-    this.setState({...this.state, endTime: endTime, active: newStatus, activeAccordionTime: newActive, parameters: parameters});
+    this.setState({...this.state, active: newStatus, activeAccordionTime: newActive});
+    this.updateTargetChargeLevel(this.state.parameters.defaultChargeLevel)
+    this.updateEndTime(this.state.parameters.flexibilityEndTime)
   }
 
   onClickNoFlexibility = () => {
-    const endTime = this.state.parameters.noFlexibilityEndTime;
     const newStatus = 'noFlexibility';
     const newActive = false
-    this.setState({...this.state, endTime: endTime, active: newStatus, activeAccordionTime: newActive});
+    this.setState({...this.state, active: newStatus, activeAccordionTime: newActive});
+    this.updateEndTime(this.state.parameters.noFlexibilityEndTime)
   }
 
   onClickIndividualFlexibility = () => {
@@ -360,8 +359,8 @@ class ActivityScreen extends React.Component {
 
     const newStatus = 'individualFlexibility';
     const newActive= true
-
-    this.setState({...this.state, activeAccordionTime: newActive, endTime: endTime, active: newStatus});
+    this.setState({...this.state, activeAccordionTime: newActive, active: newStatus});
+    this.updateEndTime(endTime)
   }
 
   handleAccordionTimeClick = (e, titleProps) => {
@@ -380,22 +379,24 @@ class ActivityScreen extends React.Component {
 
   handleRangeChange = (event, value) => {
     const parameters = this.state.parameters
-    parameters['targetChargeLevel'] = event[1]
+    const targetChargeLevel = event[1]
     parameters['targetMinimumChargeLevel'] = event[0]
     this.setState({parameters: parameters});
+    this.updateTargetChargeLevel(targetChargeLevel)
     this.updateTime()
     this.onClickIndividualFlexibility()
   };
 
   handleSliderChange = (event, value) => {
     const parameters = this.state.parameters
-    parameters['targetChargeLevel'] = event
+    var targetChargeLevel = event
 
     if (event < parameters.minimumChargeLevel){
       parameters['targetMinimumChargeLevel'] = event
     }
 
     this.setState({parameters: parameters});
+    this.updateTargetChargeLevel(targetChargeLevel)
     this.updateTime()
   };
 
@@ -406,17 +407,92 @@ class ActivityScreen extends React.Component {
     const timeToFullCharge = this.state.parameters.timeToFullCharge
     var helpTime = this.calcTime(date, (targetChargeLevel - chargeStatus)*(timeToFullCharge/100))
     var endTime = ''
+    var earliestFinishTime = ''
 
     if (this.calcTime(date, 0) > helpTime) {
       endTime = this.toClockFormat(this.calcTime(date, 0))
     } else {
-      endTime = this.toClockFormat(this.calcTime(date, (targetChargeLevel - chargeStatus)*(timeToFullCharge/100)))
+      endTime = this.toClockFormat(this.calcTime(date, Math.max(0, (targetChargeLevel - chargeStatus)*(timeToFullCharge/100))))
+      // earliestFinishTime = calculateEarliestFinishTime()
     }
 
     const parameters = this.state.parameters
     parameters['noFlexibilityEndTime'] = endTime
 
-    this.setState({endTime: endTime, parameters: parameters});
+    this.setState({parameters: parameters});
+    this.updateEndTime(endTime)
+
+  }
+
+  updateEarliestFinishTime = () => {
+    const date = new Date(this.state.parameters.clocktime)
+    const targetChargeLevel = this.state.parameters.targetChargeLevel
+    const chargeStatus = this.state.parameters.chargeStatus
+    const timeToFullCharge = this.state.parameters.timeToFullCharge
+    const parameters = this.state.parameters
+    parameters['earliestFinishTime'] = this.calcTime(date, Math.max(0, (targetChargeLevel - chargeStatus)*(timeToFullCharge/100)))
+    parameters['individualFlexibilityEndTime'] = this.toClockFormat(parameters['earliestFinishTime'])
+    this.setState({parameters: parameters})
+    this.updateEndTime(this.toClockFormat(parameters['earliestFinishTime']))
+    this.updateDay()
+  }
+
+  updateEndTime = (newEndTime) => {
+    var endTime = newEndTime
+
+    const earliestFinishTime = this.state.parameters.earliestFinishTime
+
+    var endTimeHours = parseInt(endTime.split(":")[0])
+    var endTimeMinutes  = parseInt(endTime.split(":")[1])
+    var dayShift = ''
+
+    if (endTimeHours < earliestFinishTime.getHours()){
+      dayShift = true
+    } else if (endTimeHours == earliestFinishTime.getHours()) {
+        if (endTimeMinutes < earliestFinishTime.getMinutes()){
+          dayShift = true
+        }
+        else {
+          dayShift = false
+        }
+      }
+    else {
+      dayShift = false
+    }
+
+    this.setState({dayShift: dayShift});
+    this.setState({endTime: endTime});
+  }
+
+  updateDay = () => {
+    const earliestFinishTime = this.state.parameters.earliestFinishTime
+    const endTime = this.state.endTime
+    var endTimeHours = parseInt(endTime.split(":")[0])
+    var endTimeMinutes  = parseInt(endTime.split(":")[1])
+    var dayShift = ''
+
+    if (endTimeHours < earliestFinishTime.getHours()){
+      dayShift = true
+    } else if (endTimeHours == earliestFinishTime.getHours()) {
+        if (endTimeMinutes <= earliestFinishTime.getMinutes()){
+          dayShift = true
+        }
+        else {
+          dayShift = false
+        }
+      }
+    else {
+      dayShift = false
+    }
+
+    this.setState({dayShift: dayShift});
+  }
+
+  updateTargetChargeLevel = (newTargetChargeLevel) => {
+    const parameters = this.state.parameters
+    parameters['targetChargeLevel'] = newTargetChargeLevel
+    this.setState({parameters: parameters})
+    this.updateEarliestFinishTime()
   }
 
   handleTimerChange = (event, value) => {
@@ -427,21 +503,25 @@ class ActivityScreen extends React.Component {
     const individualFlexibilityEndTime = this.toClockFormat(individualDate)
     const earliestFinishTime = this.state.parameters.earliestFinishTime
 
-    const endTime = individualFlexibilityEndTime
-    parameters['individualFlexibilityEndTime'] = individualFlexibilityEndTime
-    this.setState({parameters: parameters, endTime: endTime});
 
+    parameters['individualFlexibilityEndTime'] = individualFlexibilityEndTime
+    this.setState({parameters: parameters});
+    this.updateEndTime(individualFlexibilityEndTime)
+
+
+    // console.log(individualDate)
+    // console.log(earliestFinishTime.getTime())
 
     // check if individualFlexibilityEndTime is realistic
-    if (individualDate.getTime() >= earliestFinishTime.getTime()){
-
-      const timeRealistic = true
-
-      this.setState({timeRealistic: timeRealistic});
-    } else {
-      const timeRealistic = false
-      this.setState({timeRealistic: timeRealistic});
-    }
+    // if (individualDate.getTime() >= earliestFinishTime.getTime()){
+    //
+    //   const dayShift = false
+    //
+    //   this.setState({dayShift: dayShift});
+    // } else {
+    //   const dayShift = true
+    //   this.setState({dayShift: dayShift});
+    // }
 
   }
 
@@ -517,10 +597,10 @@ class ActivityScreen extends React.Component {
             <Accordion.Title  active={this.state.activeAccordionTime} onClick={this.handleAccordionTimeClick}>
               <div className={styles.timeSegment}>
                   <Statistic size='small'>
-                    {this.state.timeRealistic == false && (
+                    {this.state.dayShift == true && (
                       <Statistic.Label>Morgen</Statistic.Label>
                     )}
-                    {this.state.timeRealistic == true && (
+                    {this.state.dayShift == false && (
                       <Statistic.Label>Heute</Statistic.Label>
                     )}
 
@@ -530,11 +610,7 @@ class ActivityScreen extends React.Component {
               </div>
             </Accordion.Title>
             <Accordion.Content active={this.state.activeAccordionTime}>
-              {this.state.timeRealistic == false && (
-                <div>
-                  Frühester Zeitpunkt {this.toClockFormat(parameters.earliestFinishTime)}
-                </div>
-              )}
+
               <TimePicker
                 defaultValue={now}
                 showSecond={false}
@@ -660,7 +736,8 @@ class ActivityScreen extends React.Component {
                   active={this.state.active == "noFlexibility"}
                   >
                   <p>Schnellstmögliches Laden bis</p>
-                  {parameters.noFlexibilityEndTime}
+                  {this.toClockFormat(parameters.earliestFinishTime)}
+
                 </Button>
                }
                content={
