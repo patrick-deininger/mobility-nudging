@@ -93,7 +93,7 @@ class ConfigList extends React.Component {
                 <Table.HeaderCell className={styles.standardSessionConfig}>Name</Table.HeaderCell>
                 <Table.HeaderCell className={styles.standardSessionConfig}>Beschreibung</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Geplante Durchläufe</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Begonnene Durchläufe</Table.HeaderCell>
+                <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Aktive Durchläufe</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Beendete Durchläufe</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Anzahl Blöcke</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Status</Table.HeaderCell>
