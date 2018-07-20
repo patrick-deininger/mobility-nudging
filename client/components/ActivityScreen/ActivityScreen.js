@@ -47,7 +47,8 @@ class ActivityScreen extends React.Component {
 
   state = {
     endTime: '',
-    active: 'flexibility',
+    //select active Button
+    active: '',
     activeAccordionCharge: false,
     activeAccordionTime: false,
     dayShift: false,
@@ -397,7 +398,7 @@ class ActivityScreen extends React.Component {
 
     this.setState({parameters: parameters});
     this.updateTargetChargeLevel(targetChargeLevel)
-    this.updateTime()
+
   };
 
   updateTime = () => {
@@ -474,7 +475,7 @@ class ActivityScreen extends React.Component {
     if (endTimeHours < earliestFinishTime.getHours()){
       dayShift = true
     } else if (endTimeHours == earliestFinishTime.getHours()) {
-        if (endTimeMinutes <= earliestFinishTime.getMinutes()){
+        if (endTimeMinutes < earliestFinishTime.getMinutes()){
           dayShift = true
         }
         else {
@@ -681,11 +682,7 @@ class ActivityScreen extends React.Component {
 
        </div>
 
-       <Template
-         heading={nudgeDynamic.heading}
-         text={nudgeDynamic.text}
-         imagesrc={nudgeDynamic.imagesrc}
-       />
+
 
         <Template
           heading={nudgeStatic.heading}
@@ -694,7 +691,7 @@ class ActivityScreen extends React.Component {
         />
 
         <Form className={styles.form}>
-          <Button.Group widths="3" basic className={styles.buttonGroup}>
+          <Button.Group widths="3"  fluid basic className={styles.buttonGroup} size='large'>
             <Popup
             trigger={
               <Button
@@ -702,8 +699,10 @@ class ActivityScreen extends React.Component {
                 onClick={this.onClickFlexibility}
                 active={this.state.active == "flexibility"}
                 >
-                <p>Flexibilität bereitstellen bis</p>
-                {parameters.flexibilityEndTime}
+                <div className={styles.text}>
+                  <p>Flexibilität bereitstellen bis</p>
+                  {parameters.flexibilityEndTime}
+                </div>
               </Button>
              }
              content={
@@ -718,8 +717,11 @@ class ActivityScreen extends React.Component {
                  id="individualFlexibility"
                  onClick={this.onClickIndividualFlexibility}
                  active={this.state.active == "individualFlexibility"}
+                 basic
                  >
-                 Individuellen Ladezeitpunkt bestimmen
+                 <div className={styles.text}>
+                   Individuellen Ladezeitpunkt bestimmen
+                 </div>
                </Button>
               }
               content={
@@ -734,10 +736,12 @@ class ActivityScreen extends React.Component {
                   id="noFlexibility"
                   onClick={this.onClickNoFlexibility}
                   active={this.state.active == "noFlexibility"}
+                  basic
                   >
-                  <p>Schnellstmögliches Laden bis</p>
-                  {this.toClockFormat(parameters.earliestFinishTime)}
-
+                  <div className={styles.text}>
+                    <p>Schnellstmögliches Laden bis</p>
+                    {this.toClockFormat(parameters.earliestFinishTime)}
+                  </div>
                 </Button>
                }
                content={
