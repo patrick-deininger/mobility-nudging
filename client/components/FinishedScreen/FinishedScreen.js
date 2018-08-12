@@ -27,9 +27,12 @@ class FinishedScreen extends React.Component {
   state = {
     sessionId: this.props.match.params.sessionId,
     lastBlockId: this.props.match.params.lastBlockId,
+    surveyLink: '',
   }
 
   componentWillMount(){
+    this.identifySessionConfigId()
+
     const eventVariables =  {
       event: "Finish session",
       userId: this.props.viewer.user.id,
@@ -63,25 +66,39 @@ class FinishedScreen extends React.Component {
       );
   }
 
-  onButtonClick = () => {
-    const eventVariables =  {
-      event: "Finished experiment",
-      userId: this.props.viewer.user.id,
-      blockId: this.state.lastBlockId,
-      sessionId: this.state.sessionId,
-
-      screen: "FinishedScreen",
-      providedFlexibilityTime: 0,
-      targetChargingLevel: 0,
-      targetMinimumChargingLevel: 0,
-      chargingLevelRepresentation: "None",
+  identifySessionConfigId = () => {
+    const sessions = this.props.viewer.sessions
+    const sessionId = this.state.sessionId
+    var surveyLink = ''
+    for (var i = 0; i < sessions.length; i++){
+      if (sessions[i].id == this.state.sessionId){
+        surveyLink = sessions[i].sessionConfig.surveyLink
+        break;
+      }
     }
-
-    this.createEvent(eventVariables)
-
-    this.props.router.push('/');
-
+    this.setState({surveyLink: surveyLink})
+    console.log(surveyLink)
   }
+
+  // onButtonClick = () => {
+  //   const eventVariables =  {
+  //     event: "Finished experiment",
+  //     userId: this.props.viewer.user.id,
+  //     blockId: this.state.lastBlockId,
+  //     sessionId: this.state.sessionId,
+  //
+  //     screen: "FinishedScreen",
+  //     providedFlexibilityTime: 0,
+  //     targetChargingLevel: 0,
+  //     targetMinimumChargingLevel: 0,
+  //     chargingLevelRepresentation: "None",
+  //   }
+  //
+  //   this.createEvent(eventVariables)
+  //
+  //   this.props.router.push('/');
+  //
+  // }
 
   createEvent = (eventVariables) => {
     createEventMutation(this.props.relay.environment, eventVariables, this.onCompletedCreateEvent, this.setErrors);
@@ -93,14 +110,18 @@ class FinishedScreen extends React.Component {
 
 
   render() {
+    const lime_src = this.state.surveyLink+"&id="+this.state.sessionId+"|"+this.state.lastBlockId
+    console.log(lime_src)
     return (
       <Page title='Edision' viewer={this.props.viewer}>
         <section className={styles.container}>
           <Segment padded='very' className={styles.segment}>
             Done
-            <Button onClick={this.onButtonClick} fluid color="green" className={styles.conformationButton} >
-              Experiment abschließen
-            </Button>
+            <a href={lime_src}>
+              <Button fluid color="green" className={styles.confirmationButton} >
+                Umfrage starten und Experiment abschließen
+              </Button>
+            </a>
           </Segment>
       </section>
       </Page>
@@ -118,6 +139,9 @@ export default createFragmentContainer(
       }
       sessions{
         id
+        sessionConfig{
+          surveyLink
+        }
       }
     }
   `,

@@ -139,7 +139,7 @@ class FeedbackScreen extends React.Component {
 
     var nextScreen = ""
     if (this.state.blockNumber+1 > this.props.viewer.blockConfigs.length){
-        nextScreen = `/q/${this.state.sessionId}/${this.state.blockId}`
+        nextScreen = `/done/${this.state.sessionId}/${this.state.blockId}`
     }
     else {
         const blockNumber = this.state.blockNumber + 1
