@@ -1,5 +1,5 @@
 {
-  "name": "gutenberg",
+  "name": "edison",
   "version": "1.0.0",
   "scripts": {
     "start": "yarn run clean && webpack-dev-server",
@@ -54,6 +54,7 @@
     "dotenv": "^4.0.0",
     "extract-text-webpack-plugin": "^2.1.0",
     "farce": "^0.2.1",
+    "fb-watchman": "^2.0.0",
     "file-loader": "^0.11.2",
     "found": "^0.3.4",
     "found-relay": "^0.3.0-alpha.9",
@@ -62,7 +63,7 @@
     "lodash": "^4.17.2",
     "material-ui": "^0.20.0",
     "moment": "^2.22.1",
-    "node-sass": "^4.5.3",
+    "node-sass": "^4.9.2",
     "normalize.css": "^5.0.0",
     "postcss-loader": "^1.2.0",
     "precss": "^1.4.0",
@@ -74,7 +75,7 @@
     "react-circle-clock": "^0.0.6",
     "react-dom": "^15.4.1",
     "react-dropdown": "^1.2.0",
-    "react-dropzone": "^4.2.3",
+    "react-dropzone": "^4.2.13",
     "react-helmet": "^5.2.0",
     "react-hot-loader": "3.0.0-beta.6",
     "react-mdc-web": "^0.12.2",

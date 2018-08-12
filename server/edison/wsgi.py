@@ -1,5 +1,5 @@
 """
-WSGI config for gutenberg project.
+WSGI config for edison project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -16,7 +16,7 @@ from whitenoise.django import DjangoWhiteNoise
 PROJECT_ROOT = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(PROJECT_ROOT, '..', 'apps'))
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gutenberg.settings.prod")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "edison.settings.prod")
 
 application = get_wsgi_application()
 application = DjangoWhiteNoise(application)
