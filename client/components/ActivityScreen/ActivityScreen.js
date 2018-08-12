@@ -29,7 +29,7 @@ import 'rc-time-picker/assets/index.css';
 const IndividualFlexibilityEndTime = 'tbd';
 
 
-
+// Mutation to track when block is finished
 const FinishBlockMutation = graphql`
   mutation ActivityScreenMutation (
     $blockId: ID!
@@ -44,7 +44,7 @@ const FinishBlockMutation = graphql`
 
 
 class ActivityScreen extends React.Component {
-
+  // State of component: Here are all necessary parameters stored
   state = {
     endTime: '',
     //select active Button
@@ -104,6 +104,7 @@ class ActivityScreen extends React.Component {
       imagesrc: "",
       nudgeType: "",
     },
+    // get parameters from the router
     blockNumber: parseInt(this.props.match.params.blockNumber),
     sessionId: this.props.match.params.sessionId,
     blockConfigId: this.props.viewer.blockConfigs[parseInt(this.props.match.params.blockNumber)-1].id,
@@ -112,6 +113,7 @@ class ActivityScreen extends React.Component {
     errors: [],
   }
 
+  // Executed when loading the screen
   componentWillMount(){
     this.initialize()
   }
@@ -121,16 +123,21 @@ class ActivityScreen extends React.Component {
   this.setState({ ...this.state, errors });
   }
 
+  // Initialize all state parameters according to the given parameters of the query
+  // the query (at the bottom) is executed when loading the screen and the defined parameters can be accessed via this.props.viewer.xxx
   initialize = () => {
 
+    // Identify all blockConfigs that match with current session
     const blockConfigs = this.identifyRelevantBlockConfigs()
 
+    // define the current blockConfig by selecting the next block
+    // blockNumber indicates the block of a session
     if (blockConfigs.length >= this.state.blockNumber){
       const blockConfig = blockConfigs[this.state.blockNumber-1]
 
       this.setState({blockConfig: blockConfig})
 
-      // Paramters
+      // Parameters
       const parameters = this.state.parameters
 
       const clocktime = blockConfig.clocktime
@@ -217,10 +224,6 @@ class ActivityScreen extends React.Component {
       parameters['chargeStatusDisplay'] = chargeStatusDisplay
       parameters['earliestFinishTime'] = earliestFinishTime
 
-
-
-
-
       this.setState({parameters: parameters})
 
       // Set initial endTime
@@ -260,7 +263,7 @@ class ActivityScreen extends React.Component {
       this.props.router.push(`/done/${this.state.sessionId}`)
     }
 
-
+    // Caculates different states for battery icon
     let batteryStatus = 'battery full'
     if (this.state.parameters.chargeStatus <= 20){
       batteryStatus = 'battery empty'
@@ -280,18 +283,20 @@ class ActivityScreen extends React.Component {
     this.setState({batteryIcon: batteryStatus});
   }
 
-
+  // Identify all blockConfigs that match to current session
   identifyRelevantBlockConfigs = () => {
-      // Identify all blockConfigs that match to current session
+
       const sessions = this.props.viewer.sessions
       var sessionConfigId  = ""
 
+      // Identify from all sessions the session which has the same id as the current $sessionId and get its sessionConfig
       for (var i = 0; i < sessions.length; i++){
         if (sessions[i].id == this.state.sessionId){
           sessionConfigId = sessions[i].sessionConfig.id
         }
       }
 
+      // Create a list (blockConfigIds) which contains all blockConfigIds that are part of a sessionBlockConfig with the current sessionConfigId
       const sessionBlockConfigs = this.props.viewer.sessionBlockConfigs
       var blockConfigIds = []
 
@@ -301,6 +306,7 @@ class ActivityScreen extends React.Component {
         }
       }
 
+      // Identify all blockConfigs that have the ids which were identified in the step before
       var blockConfigs = []
       const allBlockConfigs = this.props.viewer.blockConfigs
 
@@ -314,18 +320,22 @@ class ActivityScreen extends React.Component {
       return(blockConfigs)
   }
 
-
+  // Calculates and returns new date
   calcTime = (date, minutes) => {
     const newDate = new Date(date.getTime() + minutes * 60000)
     return newDate
   }
 
+  // Transforms date format into a String (clockFormat 00:00)
   toClockFormat = (date) => {
     return (date.getHours() < 10 ? '0':'') + date.getHours() + ':' + (date.getMinutes() < 10 ? '0':'') + date.getMinutes()
   }
 
+  // Executed when pressing flexibility button
   onClickFlexibility = () => {
+    // indicates the active button of the button group
     const newStatus = 'flexibility';
+    // indicates if accordion component is active
     const newActive = false
 
     this.setState({...this.state, active: newStatus, activeAccordionTime: newActive});
@@ -333,13 +343,17 @@ class ActivityScreen extends React.Component {
     this.updateEndTime(this.state.parameters.flexibilityEndTime)
   }
 
+  // Executed when pressing no flexibility button
   onClickNoFlexibility = () => {
+    // indicates the active button of the button group
     const newStatus = 'noFlexibility';
+    // indicates if accordion component is active
     const newActive = false
     this.setState({...this.state, active: newStatus, activeAccordionTime: newActive});
     this.updateEndTime(this.state.parameters.noFlexibilityEndTime)
   }
 
+  // Executed when pressing individual button
   onClickIndividualFlexibility = () => {
     const individualFlexibilityEndTime = this.state.parameters.individualFlexibilityEndTime
     const flexibilityEndTime = this.state.parameters.flexibilityEndTime
@@ -347,6 +361,7 @@ class ActivityScreen extends React.Component {
     const previousActive = this.state.active
     var endTime = ''
 
+    // If there has no individualFlexibilityEndTime been before use accordingly the noFlexibilityEndTime or flexibilityEndTime as default
     if (individualFlexibilityEndTime == ""){
       if (previousActive == "noFlexibility"){
         endTime = noFlexibilityEndTime
@@ -358,7 +373,9 @@ class ActivityScreen extends React.Component {
       endTime = individualFlexibilityEndTime
     }
 
+    // indicates the active button of the button group
     const newStatus = 'individualFlexibility';
+    // indicates if accordion component is active
     const newActive= true
     this.setState({...this.state, activeAccordionTime: newActive, active: newStatus});
     this.updateEndTime(endTime)
@@ -766,6 +783,7 @@ class ActivityScreen extends React.Component {
 export default createRefetchContainer(
   withAuth(ActivityScreen),
   {
+  // Query exectuted before rendering the component
   viewer: graphql`
       fragment ActivityScreen_viewer on Viewer
       @argumentDefinitions(
