@@ -54,12 +54,12 @@ if (process.env.NODE_ENV === 'production') {
     appEntry = [
     // activate HMR for React
     'react-hot-loader/patch',
-    `webpack-dev-server/client?http://ipe-dsm.fzi.de:${devServerPort}`,
+    `webpack-dev-server/client?http://141.21.9.128:${devServerPort}`,
     'webpack/hot/only-dev-server',
     'babel-polyfill',
     './client/index.js'
     ];
-    publicPath = `http://ipe-dsm.fzi.de:${devServerPort}/assets/bundles/`; // Tell django to use this URL to load packages and not use STATIC_URL + bundle_name
+    publicPath = `http://141.21.9.128:${devServerPort}/assets/bundles/`; // Tell django to use this URL to load packages and not use STATIC_URL + bundle_name
     devtool = 'eval';
     plugins = [
         stats,
