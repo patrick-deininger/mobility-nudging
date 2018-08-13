@@ -94,7 +94,7 @@ module.exports = {
   devtool,
   devServer: {
     hot: true,
-    host: 'http://141.21.9.128',
+    host: '141.21.9.128',
     port: devServerPort,
     historyApiFallback: true,
     stats: "errors-only",
