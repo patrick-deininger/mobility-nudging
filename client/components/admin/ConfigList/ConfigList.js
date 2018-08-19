@@ -96,7 +96,6 @@ class ConfigList extends React.Component {
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Aktive Durchläufe</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Beendete Durchläufe</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Anzahl Blöcke</Table.HeaderCell>
-                <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Status</Table.HeaderCell>
                 <Table.HeaderCell textAlign='right' className={styles.standardSessionConfig}>Blöcke</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
@@ -109,7 +108,6 @@ class ConfigList extends React.Component {
                   <Table.Cell textAlign='right'>{this.countNumberOfSessionsRunning(e.id)}</Table.Cell>
                   <Table.Cell textAlign='right'>{this.countNumberOfSessionsFinished(e.id)}</Table.Cell>
                   <Table.Cell textAlign='right'>{this.countNumberOfBlocks(e.id)}</Table.Cell>
-                  <Table.Cell textAlign='right'>{e.sessionConfigStatus}</Table.Cell>
                   <Table.Cell textAlign='right'>
                     <Popup
                     trigger={
