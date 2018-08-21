@@ -1,5 +1,7 @@
 'use strict';
 
+const url = 'http://localhost'
+
 const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
@@ -54,12 +56,12 @@ if (process.env.NODE_ENV === 'production') {
     appEntry = [
     // activate HMR for React
     'react-hot-loader/patch',
-    `webpack-dev-server/client?http://141.21.9.128:${devServerPort}`,
+    `webpack-dev-server/client?${url}:${devServerPort}`,
     'webpack/hot/only-dev-server',
     'babel-polyfill',
     './client/index.js'
     ];
-    publicPath = `http://141.21.9.128:${devServerPort}/assets/bundles/`; // Tell django to use this URL to load packages and not use STATIC_URL + bundle_name
+    publicPath = `${url}:${devServerPort}/assets/bundles/`; // Tell django to use this URL to load packages and not use STATIC_URL + bundle_name
     devtool = 'eval';
     plugins = [
         stats,
@@ -93,8 +95,9 @@ module.exports = {
   },
   devtool,
   devServer: {
+    // Add IP address for deployment
+    //host: 'xxx.xxx.xxx.xxx',
     hot: true,
-    host: '141.21.9.128',
     port: devServerPort,
     historyApiFallback: true,
     stats: "errors-only",
