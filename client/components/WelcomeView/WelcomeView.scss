@@ -12,11 +12,22 @@
   }
 
   .main_container {
-    display: flex;
-    flex: 1;
-    justify-content: center;
+    // display: flex;
+    // flex: 1;
+    // justify-content: center;
+    // flex-flow: row wrap;
+    // justify-content: space-around;
     width: $contentWidth;
     margin: 0 auto;
+  }
+
+  .segment {
+    display: flex;
+    flex-direction: row; // default
+    flex-flow: row wrap;
+    justify-content: space-around; // Hauptachse von rechts nach links (row)
+    align-items: stretch; // Kreuzachse von oben nach unten
+    flex-grow: 1;
   }
 
   .confirmationButton {

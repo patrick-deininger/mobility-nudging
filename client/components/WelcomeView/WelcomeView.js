@@ -1,9 +1,8 @@
-import React from 'react';
+import React , {image} from 'react';
 import BodyClassName from 'react-body-classname';
 import { Button, Grid, Segment, Rating, Header } from 'semantic-ui-react';
 import { Link } from 'found';
 import { Helmet } from 'react-helmet';
-
 import styles from './WelcomeView.scss';
 
 
@@ -13,22 +12,36 @@ class WelcomeView extends React.Component {
   render() {
     return (
         <div className={styles.container} onScroll={this.onScroll}>
+
           <Helmet>
-            <title>Edision</title>
+            <title>Companion</title>
           </Helmet>
+
           <header className={styles.header}>
             <h1 className={styles.brandName}>
-              <Link to='/' className={styles.brandNameLink}>Edision</Link>
+              <Link to='/' className={styles.brandNameLink}>Companion</Link>
             </h1>
-
           </header>
+
           <main>
             <section className={styles.main_container}>
-              <Segment padded='very'>
-                <p>Erläuterung:</p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                <Button fluid color="green" as={Link} to='/signup' className={styles.conformationButton}>Start</Button>
+
+              <Segment className={styles.segment} padded='very'>
+                <div className={styles.medication}>
+                  <Header as='h1'>Novalgin</Header>
+                    500 mg | intravenös
+                </div>
+
+                <div className={styles.patient}>
+                  <Header as='h1'>Vetter, Vater</Header>
+                    50 | male
+                </div>
               </Segment>
+
+              <div>
+                <Button fluid color="green" as={Link} to='/signup' className={styles.conformationButton}>Start</Button>
+              </div>
+              
           </section>
           </main>
         </div>
